@@ -21,12 +21,17 @@ app.secret_key = "clave_secreta_segura"
 # Conexión a MySQL
 # -------------------
 def get_db_connection():
+    timeout = 10
     return pymysql.connect(
-        host=os.environ.get("DB_HOST"),       # Host de Railway
-        user=os.environ.get("DB_USER"),       # Usuario MySQL
-        password=os.environ.get("DB_PASS"),   # Contraseña MySQL
-        database=os.environ.get("DB_NAME"),   # Nombre de la base
-        port=int(os.environ.get("DB_PORT", 3306)),  # Puerto (normalmente 3306)
+        host=os.environ.get("DB_HOST"),       # Ej: mysql-xxxx.aivencloud.com
+        port=int(os.environ.get("DB_PORT", 20045)),  # Puerto que te da Aiven
+        user=os.environ.get("DB_USER"),       # avnadmin
+        password=os.environ.get("DB_PASS"),   # contraseña de Aiven
+        database=os.environ.get("DB_NAME", "defaultdb"),
+        charset="utf8mb4",
+        connect_timeout=timeout,
+        read_timeout=timeout,
+        write_timeout=timeout,
         cursorclass=DictCursor
     )
 
