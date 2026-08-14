@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta
 import mysql.connector
+import os
 from pymysql.cursors import DictCursor
 from collections import defaultdict
 import psycopg2.extras
@@ -707,5 +708,6 @@ def registro():
 
 
 # ------------------ MAIN ------------------
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host="0.0.0.0", port=port)
