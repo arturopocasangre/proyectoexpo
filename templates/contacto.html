@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | Happy Paws Vet</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+   <header>
+    <nav class="navbar">
+
+    <div class="logo">
+    <a href="/">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Happy Paws Vet">
+        <span>Happy Paws Vet</span>
+    </a>
+</div>
+
+    <div class="hamburguesa" onclick="toggleMenu()">
+        ☰
+    </div>
+    
+
+<ul class="menu" id="menu">
+    <div class="menu-header">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Happy Paws Vet">
+
+    <div class="menu-header-texto">
+        <h3>Happy Paws Vet</h3>
+        <p>Tu veterinaria en casa</p>
+    </div>
+</div>
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/servicios">Servicios</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/nosotros">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+
+
+    {% if session.get('usuario_id') %}
+        {% if session.get('rol') == 'admin' %}
+            <li><a href="{{ url_for('panel_admin') }}">Panel Admin</a></li>
+        {% elif session.get('rol') == 'veterinario' %}
+            <li><a href="{{ url_for('panel_veterinario') }}">Panel de Citas</a></li>
+        {% else %}
+            <li><a class="btn-cuenta" href="{{ url_for('panel_cliente') }}">Mi Cuenta</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+        <li><a class="btn-cuenta" href="{{ url_for('login') }}">Acceso</a></li>
+    {% endif %}
+
+</ul>
+
+</nav>
+</header>
+
+    <section class="contacto">
+
+<div class="icono1">🐾</div>
+<div class="icono2">🐶</div>
+<div class="icono3">🐱</div>
+
+        <div class="contacto-contenido">
+            <h2>Contáctanos</h2>
+
+            <p>
+                Estamos aquí para cuidar a tu mejor amigo.
+                Escríbenos o agenda tu cita con nosotros.
+            </p>
+
+            <form class="formulario">
+
+                <input type="text" placeholder="Nombre completo" required>
+
+                <input type="email" placeholder="Correo electrónico" required>
+
+                <input type="text" placeholder="Número de teléfono" required>
+
+                <textarea placeholder="Escribe tu mensaje aquí..." rows="5" required></textarea>
+
+                <button type="submit">Enviar mensaje</button>
+
+            </form>
+        </div>
+
+    </section>
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+<script>
+function toggleMenu(){
+
+    document.getElementById("menu").classList.toggle("active");
+
+    document.getElementById("overlay").classList.toggle("active");
+
+}
+
+window.addEventListener("scroll", function(){
+
+    const navbar = document.querySelector(".navbar");
+
+    if(window.scrollY > 20){
+
+        navbar.classList.add("scrolled");
+
+    }else{
+
+        navbar.classList.remove("scrolled");
+
+    }
+
+});
+</script>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</body>
+</html>

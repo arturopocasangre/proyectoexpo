@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agenda del Veterinario - Happy Paws Vet</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-light">
+
+
+    <!-- HEADER -->
+    <header>
+
+        <nav class="navbar">
+
+    <div class="logo">
+        <a href="/">
+            <h2>Happy Paws Vet 🐾</h2>
+        </a>
+    </div>
+
+    <div class="hamburguesa" onclick="toggleMenu()">
+        ☰
+    </div>
+
+<ul class="menu" id="menu">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/servicios">Servicios</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/nosotros">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+
+    {% if session.get('usuario_id') %}
+        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+        <li><a href="{{ url_for('login') }}">Acceso</a></li>
+    {% endif %}
+</ul>
+
+</nav>
+    </header>
+
+
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="mb-4 text-center">🐾 Agenda de citas</h3>
+
+            {% if citas %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Estado</th>
+                            <th>Enlace</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cita in citas %}
+                        <tr>
+                            <td>{{ cita.fecha }}</td>
+                            <td>{{ cita.hora }}</td>
+                            <td>{{ cita.cliente_nombre }}</td>
+                            <td>{{ cita.cliente_email }}</td>
+                            <td>{{ cita.cliente_telefono }}</td>
+                            <td>
+                                {% if cita.estado == 'pagada' %}
+                                    <span class="badge bg-primary">Pagada</span>
+                                {% elif cita.estado == 'reservada' %}
+                                    <span class="badge bg-warning text-dark">Reservada</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ cita.estado }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if cita.link_consulta %}
+                                    <a href="{{ cita.link_consulta }}" target="_blank" class="btn btn-sm btn-success">
+                                        Entrar a consulta
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Pendiente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center text-muted">No hay citas registradas.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

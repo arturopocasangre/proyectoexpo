@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin - Happy Paws Vet</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-light">
+
+
+    <!-- HEADER -->
+    <header>
+
+        <nav class="navbar">
+
+    <div class="logo">
+        <a href="/">
+            <h2>Happy Paws Vet 🐾</h2>
+        </a>
+    </div>
+
+    <div class="hamburguesa" onclick="toggleMenu()">
+        ☰
+    </div>
+
+<ul class="menu" id="menu">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/servicios">Servicios</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/nosotros">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+
+    {% if session.get('usuario_id') %}
+        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+        <li><a href="{{ url_for('login') }}">Acceso</a></li>
+    {% endif %}
+</ul>
+
+</nav>
+    </header>
+
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">🐾 Panel de Administración</h2>
+
+    <!-- Usuarios -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Usuarios</h4>
+                <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-sm btn-primary">➕ Nuevo Usuario</a>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.rol }}</td>
+                        <td>
+                            {% if u.activo ==1 %}
+                                    Activo
+                            {% else %}
+                                <span class="text-muted">Inactivo</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('editar_usuario', usuario_id=u.id) }}" class="btn btn-sm btn-warning">
+                                ✏️ Editar
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Clientes -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h4>Clientes</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in clientes %}
+                    <tr>
+                        <td>{{ c.nombre }}</td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.telefono }}</td>
+                        <td>
+                            <a href="{{ url_for('editar_usuario', usuario_id=c.id) }}" class="btn btn-sm btn-warning">
+                                ✏️ Editar
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+<!-- Citas -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Citas</h4>
+            <a href="{{ url_for('admin_configuracion') }}" class="btn btn-sm btn-primary">🛠 Configuracion</a>
+            <a href="{{ url_for('nueva_cita') }}" class="btn btn-sm btn-primary">➕ Crear Cupo</a>
+        </div>
+
+        <!-- Filtro por fecha -->
+        <div class="mb-3">
+            <label for="filtroFecha" class="form-label">Filtrar por fecha:</label>
+            <input type="date" id="filtroFecha" class="form-control" style="max-width:250px;">
+        </div>
+
+        <table id="tablaCitas" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Enlace</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cita in citas %}
+                <tr>
+                    <td>{{ cita.fecha }}</td>
+                    <td>{{ cita.hora }}</td>
+                    <td>{{ cita.cliente_nombre or '---' }}</td>
+                    <td>{{ cita.cliente_email or '---' }}</td>
+                    <td>{{ cita.estado }}</td>
+					<td>
+					    {% if cita.link_consulta %}
+					        <a href="{{ cita.link_consulta }}" target="_blank" class="btn btn-sm btn-success">Entrar</a>
+					    {% else %}
+					        {% if cita.estado == 'pagada' %}
+					            <a href="{{ url_for('crear_enlace', cita_id=cita.id) }}" class="btn btn-sm btn-primary">Crear</a>
+					        {% else %}
+					            <span class="text-muted">Pendiente</span>
+					        {% endif %}
+					    {% endif %}
+					</td>
+
+                    <td>
+                        <a href="{{ url_for('editar_cita', cita_id=cita.id) }}" class="btn btn-sm btn-warning">✏️ Editar</a>
+                        <form method="POST" action="{{ url_for('eliminar_cita', cita_id=cita.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar cita?')">🗑️ Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- jQuery + DataTables -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<script>
+$(document).ready(function() {
+    var table = $('#tablaCitas').DataTable({
+        "order": [[0, "desc"]], // ordenar por fecha
+        "pageLength": 10,      // mostrar 10 citas por página
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+        }
+    });
+
+    // Filtro por fecha
+    $('#filtroFecha').on('change', function() {
+        var fecha = $(this).val();
+        if (fecha) {
+            table.column(0).search(fecha).draw();
+        } else {
+            table.column(0).search('').draw();
+        }
+    });
+});
+</script>
+
+
+</body>
+</html>

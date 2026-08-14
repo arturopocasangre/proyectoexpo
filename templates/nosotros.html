@@ -1,0 +1,194 @@
+<!-- nosotros.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros | Happy Paws Vet</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+    <nav class="navbar">
+
+    <div class="logo">
+    <a href="/">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Happy Paws Vet">
+        <span>Happy Paws Vet</span>
+    </a>
+</div>
+
+    <div class="hamburguesa" onclick="toggleMenu()">
+        ☰
+    </div>
+    
+
+<ul class="menu" id="menu">
+    <div class="menu-header">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Happy Paws Vet">
+
+    <div class="menu-header-texto">
+        <h3>Happy Paws Vet</h3>
+        <p>Tu veterinaria en casa</p>
+    </div>
+</div>
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/servicios">Servicios</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/nosotros">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+
+
+    {% if session.get('usuario_id') %}
+        {% if session.get('rol') == 'admin' %}
+            <li><a href="{{ url_for('panel_admin') }}">Panel Admin</a></li>
+        {% elif session.get('rol') == 'veterinario' %}
+            <li><a href="{{ url_for('panel_veterinario') }}">Panel de Citas</a></li>
+        {% else %}
+            <li><a class="btn-cuenta" href="{{ url_for('panel_cliente') }}">Mi Cuenta</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+        <li><a class="btn-cuenta" href="{{ url_for('login') }}">Acceso</a></li>
+    {% endif %}
+
+</ul>
+
+</nav>
+</header>
+
+    <!-- NOSOTROS -->
+    <section class="nosotros-premium">
+
+        <!-- Decoración opcional -->
+        <div class="decoracion1">🐾</div>
+        <div class="decoracion2">🐶</div>
+
+        <!-- TÍTULO -->
+        <div class="titulo-nosotros">
+            <h1>Pasión por la salud de tu mejor amigo</h1>
+            <p>
+                Cuidamos de ellos como si fueran nuestros,
+                porque cada mascota merece amor, respeto y atención de calidad.
+            </p>
+        </div>
+
+        <!-- QUIÉNES SOMOS -->
+        <div class="card-principal">
+            <div class="texto-card">
+                <h2>¿Quiénes Somos?</h2>
+
+                <p>
+                    En Happy Paws Vet, no solo somos profesionales de la salud animal;
+                    somos amantes de los animales dedicados a mejorar la calidad de vida
+                    de cada mascota que cruza nuestras puertas.
+
+                    Con años de experiencia en nuestra comunidad, combinamos tecnología
+                    avanzada con un trato humano, cercano y lleno de cariño.
+                </p>
+            </div>
+
+            <!-- ESPACIO PARA IMAGEN -->
+            <div class="imagen-card">
+                <img src="{{ url_for('static', filename='img/Veterinaria.png') }}" alt="Veterinaria">
+            </div>
+        </div>
+
+        <!-- MISIÓN Y VISIÓN -->
+        <div class="mision-vision">
+
+            <div class="box-info">
+                <h3>🎯 Misión</h3>
+                <p>
+                    Brindar atención médica integral y preventiva de la más alta calidad,
+                    promoviendo el bienestar de las mascotas y la tranquilidad
+                    de sus familias.
+                </p>
+            </div>
+
+            <div class="box-info">
+                <h3>🌟 Visión</h3>
+                <p>
+                    Convertirnos en el referente de cuidado veterinario integral,
+                    destacando por nuestra calidez humana y excelencia médica.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- VALORES -->
+        <div class="valores">
+
+            <h2>Nuestros Valores</h2>
+
+            <div class="valores-grid">
+
+                <div class="valor-card">
+                    <h3>🐾 Empatía</h3>
+                    <p>
+                        Entendemos el vínculo especial entre tú y tu mascota.
+                    </p>
+                </div>
+
+                <div class="valor-card">
+                    <h3>🔬 Excelencia</h3>
+                    <p>
+                        Capacitación constante y equipo de última generación.
+                    </p>
+                </div>
+
+                <div class="valor-card">
+                    <h3>🤝 Compromiso</h3>
+                    <p>
+                        Atención ética y transparente en cada diagnóstico.
+                    </p>
+                </div>
+
+                <div class="valor-card">
+                    <h3>🕒 Disponibilidad</h3>
+                    <p>
+                        Estamos cuando más nos necesitas.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+<script>
+function toggleMenu(){
+
+    document.getElementById("menu").classList.toggle("active");
+
+    document.getElementById("overlay").classList.toggle("active");
+
+}
+
+window.addEventListener("scroll", function(){
+
+    const navbar = document.querySelector(".navbar");
+
+    if(window.scrollY > 20){
+
+        navbar.classList.add("scrolled");
+
+    }else{
+
+        navbar.classList.remove("scrolled");
+
+    }
+
+});
+</script>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</body>
+</html>

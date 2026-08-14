@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis citas - Happy Paws Vet</title>
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body class="bg-light">
+
+    <!-- HEADER -->
+    <header>
+
+       
+        <nav class="navbar">
+
+    <div class="logo">
+    <a href="/">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Happy Paws Vet">
+        <span>Happy Paws Vet</span>
+    </a>
+</div>
+
+    <div class="hamburguesa" onclick="toggleMenu()">
+        ☰
+    </div>
+    
+
+<ul class="menu" id="menu">
+    <div class="menu-header">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Happy Paws Vet">
+
+    <div class="menu-header-texto">
+        <h3>Happy Paws Vet</h3>
+        <p>Tu veterinaria en casa</p>
+    </div>
+</div>
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/servicios">Servicios</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/nosotros">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+
+
+    {% if session.get('usuario_id') %}
+        {% if session.get('rol') == 'admin' %}
+            <li><a href="{{ url_for('panel_admin') }}">Panel Admin</a></li>
+        {% elif session.get('rol') == 'veterinario' %}
+            <li><a href="{{ url_for('panel_veterinario') }}">Panel de Citas</a></li>
+        {% else %}
+            <li><a class="btn-cuenta" href="{{ url_for('panel_cliente') }}">Mi Cuenta</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+        <li><a class="btn-cuenta" href="{{ url_for('login') }}">Acceso</a></li>
+    {% endif %}
+
+</ul>
+
+</nav>
+    </header>
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="mb-4 text-center">✔ Mis citas confirmadas</h3>
+
+            {% if citas %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Enlace</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cita in citas %}
+                        <tr>
+                            <td>{{ cita.fecha }}</td>
+                            <td>{{ cita.hora }}</td>
+                            <td>
+                                {% if cita.estado == 'pagada' %}
+                                    <span class="badge bg-primary">Pagada</span>
+                                {% elif cita.estado == 'reservada' %}
+                                    <span class="badge bg-warning text-dark">Reservada</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ cita.estado }}</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if cita.link_consulta %}
+                                    <button 
+                                        class="btn btn-sm {% if cita.habilitar %}btn-success{% else %}btn-secondary disabled{% endif %}" 
+                                        {% if cita.habilitar %}onclick="openConsulta('{{ cita.link_consulta }}', '{{ loop.index }}', '{{ cita.id }}')" {% endif %}>
+                                        Entrar a consulta
+                                    </button>
+
+                                    <!-- Modal para escritorio -->
+                                    <div class="modal fade" id="jitsiModal-{{ loop.index }}" tabindex="-1" aria-hidden="true"data-bs-backdrop="static" data-bs-keyboard="false">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Consulta en línea</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-0">
+                                                    <div class="ratio ratio-16x9">
+                                                        <iframe id="iframe-{{ loop.index }}" src="" 
+                                                                allow="camera; microphone; fullscreen; display-capture"
+                                                                style="border:0;" allowfullscreen></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">Pendiente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center text-muted">No tienes citas registradas.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="mb-4 text-center">📆 Agendar Cita</h3>
+
+            <h5 class="mb-3 text-secondary">Selecciona un día y horario:</h5>
+
+            {% if cupos %}
+                <!-- Contenedor del Accordion de Bootstrap -->
+                <div class="accordion" id="accordionCitas">
+                    
+                    {% for fecha, citas_del_dia in cupos.items() %}
+                    <!-- Reemplazamos los puntos en la fecha para crear un ID de HTML válido sin carácteres extraños -->
+                    {% set id_limpio = fecha.replace('-', '') %}
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{ id_limpio }}">
+                            <button class="accordion-button collapsed fw-bold text-dark" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse-{{ id_limpio }}" 
+                                    aria-expanded="false" 
+                                    aria-controls="collapse-{{ id_limpio }}">
+                                📅 {{ fecha }} <span class="badge bg-primary ms-2">{{ citas_del_dia|length }} cupos</span>
+                            </button>
+                        </h2>
+                        
+                        <div id="collapse-{{ id_limpio }}" 
+                             class="accordion-collapse collapse" 
+                             aria-labelledby="heading-{{ id_limpio }}" 
+                             data-bs-parent="#accordionCitas">
+                            
+                            <div class="accordion-body bg-light">
+                                <p class="text-muted small mb-2">Horarios disponibles para este día:</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    
+                                    {% for cita in citas_del_dia %}
+                                        <!-- Limpiamos posibles dos puntos extraños al final de horas como "8:00:" -->
+                                        {% set hora_limpia = cita.hora.rstrip(':') %}
+                                        <a href="{{ url_for('checkout', cita_id=cita.id) }}" 
+                                           class="btn btn-outline-success btn-sm px-3 py-2 fw-bold b-hora">
+                                            🕒 {{ hora_limpia }}
+                                        </a>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            {% else %}
+                <div class="alert alert-warning text-center mt-3">
+                    🐶 No hay cupos disponibles en este momento. Por favor, vuelve más tarde.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="mb-4 text-center">✖ Mis citas anteriores</h3>
+
+            {% if vencidas %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Enlace</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cita in vencidas %}
+                        <tr>
+                            <td>{{ cita.fecha }}</td>
+                            <td>{{ cita.hora }}</td>
+                            <td>
+                                {% if cita.estado == 'pagada' %}
+                                    <span class="badge bg-primary">Pagada</span>
+                                {% elif cita.estado == 'reservada' %}
+                                    <span class="badge bg-warning text-dark">Reservada</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ cita.estado }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if cita.link_consulta %}
+                                    <a href="#" class="btn btn-sm btn-disable">
+                                        Enlace Vencido
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Vencido</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center text-muted">No tienes citas anteriores.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .b-hora {
+        transition: all 0.2s ease-in-out;
+    }
+    .b-hora:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+</style>
+
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+
+<script>
+function openConsulta(link, index, citaId) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    //const isMobile = true;
+
+    if (isMobile) {
+        // En móviles abrir tu propia vista con branding
+        window.location.href = '/consulta/' + citaId;
+    } else {
+        // En escritorio abrir modal con iframe incrustado
+        const iframe = document.getElementById("iframe-" + index);
+        const modalEl = document.getElementById("jitsiModal-" + index);
+
+        iframe.src = link;
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+
+        // Al cerrar, limpiar el iframe para poder reabrir
+        modalEl.addEventListener('hidden.bs.modal', function () {
+            iframe.src = "";
+        }, { once: true });
+    }
+}
+</script>
+
+</body>
+</html>

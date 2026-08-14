@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuración de cupos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+    <h2 class="mb-4">Configuración de cupos 🐾</h2>
+
+    <!-- Formulario agregar -->
+    <form action="{{ url_for('admin_configuracion_agregar') }}" method="post" class="row g-3 mb-4">
+        <div class="col-md-2">
+            <label class="form-label">Día semana</label>
+            <select name="dia_semana" class="form-select" required>
+                <option value="0">Lunes</option>
+                <option value="1">Martes</option>
+                <option value="2">Miércoles</option>
+                <option value="3">Jueves</option>
+                <option value="4">Viernes</option>
+                <option value="5">Sábado</option>
+                <option value="6">Domingo</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Hora inicio</label>
+            <input type="time" name="hora_inicio" class="form-control" required>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Hora fin</label>
+            <input type="time" name="hora_fin" class="form-control" required>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Intervalo (min)</label>
+            <input type="number" name="intervalo" class="form-control" value="60" required>
+        </div>
+		<div class="col-md-2">
+		    <label for="precio" class="form-label">Precio ($)</label>
+		    <input type="number" step="0.01" id="precio" name="precio" class="form-control" required>
+		</div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-success w-100">Agregar</button>
+        </div>
+			<div class="text-left mt-3">
+			    <a href="{{ url_for('panel_admin') }}" class="btn btn-sm btn-primary">⬅ Volver</a>
+			</div>
+    </form>
+
+    <!-- Tabla configuraciones -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Día</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Intervalo</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+		<tbody>
+		    {% set dias = {
+		        0: 'Lunes',
+		        1: 'Martes',
+		        2: 'Miércoles',
+		        3: 'Jueves',
+		        4: 'Viernes',
+		        5: 'Sábado',
+		        6: 'Domingo'
+		    } %}
+		    {% for conf in configuraciones %}
+		    <tr>
+		        <td>{{ dias[conf.dia_semana] }}</td>
+		        <td>{{ conf.hora_inicio }}</td>
+		        <td>{{ conf.hora_fin }}</td>
+		        <td>{{ conf.intervalo }} min</td>
+		        <td>${{ conf.precio }} USD</td>
+		        <td>
+		            <form action="{{ url_for('admin_configuracion_eliminar', id=conf.id) }}" method="post">
+		                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+		            </form>
+		        </td>
+		    </tr>
+		    {% endfor %}
+		</tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda | Happy Paws Vet</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+
+<nav class="navbar">
+
+    <div class="logo">
+        <a href="/">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Happy Paws Vet">
+            <span>Happy Paws Vet</span>
+        </a>
+    </div>
+
+    <!-- Acciones del lado derecho -->
+    <div class="navbar-actions">
+
+        <div class="carrito-icono" onclick="abrirCarrito()">
+            🛒
+            <span id="contador-carrito">0</span>
+        </div>
+
+        <div class="hamburguesa" onclick="toggleMenu()">
+            ☰
+        </div>
+
+    </div>
+
+    <!-- Menú lateral -->
+    <ul class="menu" id="menu">
+
+        <div class="menu-header">
+
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Happy Paws Vet">
+
+            <div class="menu-header-texto">
+                <h3>Happy Paws Vet</h3>
+                <p>Tu veterinaria en casa</p>
+            </div>
+
+        </div>
+
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/tienda">Tienda</a></li>
+        <li><a href="/nosotros">Nosotros</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+
+        {% if session.get('usuario_id') %}
+            {% if session.get('rol') == 'admin' %}
+                <li><a href="{{ url_for('panel_admin') }}">Panel Admin</a></li>
+            {% elif session.get('rol') == 'veterinario' %}
+                <li><a href="{{ url_for('panel_veterinario') }}">Panel de Citas</a></li>
+            {% else %}
+                <li><a class="btn-cuenta" href="{{ url_for('panel_cliente') }}">Mi Cuenta</a></li>
+            {% endif %}
+
+            <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+
+        {% else %}
+
+            <li><a class="btn-cuenta" href="{{ url_for('login') }}">Acceso</a></li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+</header>
+
+<main class="tienda-page">
+
+    <section class="tienda-hero">
+        <div class="contenido-hero">
+            <h1>Tienda Happy Paws</h1>
+            <p>
+                Consiente a tu mascota con productos seleccionados para su salud,
+                diversión y bienestar.
+            </p>
+            <a href="#productos" class="btn-productos">Ver productos</a>
+        </div>
+    </section>
+
+   <section class="productos" id="productos">
+    <h2>Nuestros productos</h2>
+
+    <div class="grid-productos">
+
+        <div class="producto-card">
+            <h3> Alimentos</h3>
+            <img src="/static/img/alimentos.png" alt="Alimento para mascotas">
+            <p>Nutrición completa para tu mascota.</p>
+           
+           <button onclick="window.location.href='alimentos.html'">
+            Ver productos
+            </button>
+        </div>
+
+        <div class="producto-card">
+            <h3>Accesorios</h3>
+            <img src="/static/img/accesorios.png" alt="accesorios para mascotas">
+            <p>Accesorios divertidos para mantenerlos activos.</p>
+            
+
+
+            <button onclick="window.location.href='accesorios.html'">
+            Ver productos
+            </button>
+        </div>
+
+        <div class="producto-card">
+            <h3> Higiene</h3>
+            
+           <img src="/static/img/higiene.png" alt="higiene para mascotas">
+           <p>Shampoo, cepillos y productos de limpieza.</p>
+           <button onclick="window.location.href='higiene.html'">
+            Ver productos
+            </button>
+        </div>
+         <div class="producto-card">
+            <h3>Medicina</h3>
+            <img src="/static/img/medicinas.png" alt="medicina para mascotas">
+            <p>Tratamientos especiales para la salud de tu mascota.</p>
+            <button onclick="window.location.href='medicina.html'">
+            Ver productos
+            </button>
+        </div>
+
+
+    </div>
+</section>
+</main>
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+<div class="carrito-panel" id="carrito-panel">
+    <h3>Mi carrito</h3>
+
+    <div id="lista-carrito">
+        <p>Tu carrito está vacío.</p>
+    </div>
+
+    <div class="acciones-carrito">
+        <button onclick="vaciarCarrito()" class="btn-vaciar">
+            Vaciar carrito
+        </button>
+
+        <button onclick="comprar()" class="btn-comprar">
+            Comprar
+        </button>
+    </div>
+</div>
+<script>
+let carrito = [];
+
+function abrirCarrito() {
+    document.getElementById("carrito-panel").classList.toggle("active");
+}
+
+function agregarCarrito(nombre, imagen) {
+    carrito.push({ nombre: nombre, imagen: imagen });
+
+    document.getElementById("contador-carrito").textContent = carrito.length;
+
+    let lista = document.getElementById("lista-carrito");
+    lista.innerHTML = "";
+
+    carrito.forEach(producto => {
+        lista.innerHTML += `
+            <div class="item-carrito">
+                <img src="${producto.imagen}" alt="${producto.nombre}">
+                <p>${producto.nombre}</p>
+            </div>
+        `;
+    });
+}
+
+</script>
+<script>
+function toggleMenu(){
+
+    document.getElementById("menu").classList.toggle("active");
+    document.getElementById("overlay").classList.toggle("active");
+
+}
+
+window.addEventListener("scroll", function(){
+
+    const navbar=document.querySelector(".navbar");
+
+    if(window.scrollY>20){
+        navbar.classList.add("scrolled");
+    }else{
+        navbar.classList.remove("scrolled");
+    }
+
+});
+</script>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</body>
+</html>

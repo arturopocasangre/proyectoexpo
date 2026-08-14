@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Editar Cita' if cita else 'Nueva Cita' }} - Happy Paws Vet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <h4 class="mb-3 text-center">
+                {{ 'Editar Cita' if cita else 'Nueva Cita' }}
+            </h4>
+            <form method="POST">
+                <!-- Fecha -->
+                <div class="mb-3">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date" id="fecha" name="fecha" class="form-control"
+                           value="{{ cita.fecha if cita else '' }}" required>
+                </div>
+
+                <!-- Hora -->
+                <div class="mb-3">
+                    <label for="hora" class="form-label">Hora</label>
+                    <input type="time" id="hora" name="hora" class="form-control"
+                           value="{{ cita.hora if cita else '' }}" required>
+                </div>
+
+				<!-- Precio -->
+				<div class="mb-3">
+				    <label for="precio" class="form-label">Precio ($)</label>
+				    <input type="number" id="precio" name="precio" class="form-control"
+				           step="0.01" min="0"
+				           value="{{ cita.precio if cita else '' }}" required>
+				</div>
+                
+				<!-- Asignar -->
+				<div class="mb-3">
+				    <label for="cliente" class="form-label">Asignar Cliente</label>
+				    <select id="cliente" name="cliente" class="form-select">
+				        <!-- Opción nula -->
+				        <option value="" {% if not cita.cliente_id %}selected{% endif %}>-- Ninguno --</option>
+				        <!-- Opciones de clientes -->
+				        {% for cliente in clientes %}
+				            <option value="{{ cliente.id }}" {% if cita.cliente_id == cliente.id %}selected{% endif %}>
+				                {{ cliente.nombre }} - {{ cliente.email }}
+				            </option>
+				        {% endfor %}
+				    </select>
+				</div>
+
+				<!-- Estado -->
+				<div class="mb-3">
+				    <label for="estado" class="form-label">Estado</label>
+				    <select id="estado" name="estado" class="form-select">
+				        <option value="disponible" {% if cita and cita.estado == 'disponible' %}selected{% endif %}>Disponible</option>
+				        <option value="pendiente"  {% if cita and cita.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+				        <option value="pagada"     {% if cita and cita.estado == 'pagada' %}selected{% endif %}>Pagada</option>
+				        <option value="cancelada"  {% if cita and cita.estado == 'cancelada' %}selected{% endif %}>Cancelada</option>
+				    </select>
+				</div>
+
+                <!-- Botón Guardar -->
+                <button type="submit" class="btn btn-primary w-100">
+                    💾 Guardar
+                </button>
+                <hr>
+                <!-- Botón Cancelar -->
+                <div>
+                    <a href="{{ url_for('panel_admin') }}" class="btn btn-secondary w-100">✖ Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery + Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#cliente').select2({
+        placeholder: "Buscar cliente...",
+        allowClear: true,
+        width: '100%'
+    });
+});
+</script>
+
+</body>
+</html>

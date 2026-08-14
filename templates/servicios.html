@@ -1,0 +1,205 @@
+<!-- servicios.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios | Happy Paws Vet</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+         <nav class="navbar">
+
+    <div class="logo">
+    <a href="/">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Happy Paws Vet">
+        <span>Happy Paws Vet</span>
+    </a>
+</div>
+
+    <div class="hamburguesa" onclick="toggleMenu()">
+        ☰
+    </div>
+    
+
+<ul class="menu" id="menu">
+    <div class="menu-header">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Happy Paws Vet">
+
+    <div class="menu-header-texto">
+        <h3>Happy Paws Vet</h3>
+        <p>Tu veterinaria en casa</p>
+    </div>
+</div>
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/servicios">Servicios</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/nosotros">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+
+
+    {% if session.get('usuario_id') %}
+        {% if session.get('rol') == 'admin' %}
+            <li><a href="{{ url_for('panel_admin') }}">Panel Admin</a></li>
+        {% elif session.get('rol') == 'veterinario' %}
+            <li><a href="{{ url_for('panel_veterinario') }}">Panel de Citas</a></li>
+        {% else %}
+            <li><a class="btn-cuenta" href="{{ url_for('panel_cliente') }}">Mi Cuenta</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+        <li><a class="btn-cuenta" href="{{ url_for('login') }}">Acceso</a></li>
+    {% endif %}
+
+</ul>
+
+</nav>
+    </header>
+
+    <!-- SERVICIOS -->
+    <section class="servicios-premium">
+
+        <div class="titulo-servicios">
+            <h1>Servicios de Telemedicina Veterinaria</h1>
+            <p>
+                Cuidamos la salud de tu mascota desde donde estés.
+                Atención moderna, rápida y profesional sin salir de casa.
+            </p>
+        </div>
+
+        <!-- SERVICIOS PRINCIPALES -->
+        <div class="servicios-grid">
+
+            <div class="servicio-card">
+                <h3>📹 Videoconsulta de Orientación</h3>
+                <p>
+                    Consulta rápida con un veterinario desde casa para dudas,
+                    síntomas leves o asesoría inicial.
+                </p>
+            </div>
+
+            <div class="servicio-card">
+                <h3>📋 Seguimiento de Tratamientos</h3>
+                <p>
+                    Revisión de evolución, heridas, medicamentos y recuperación
+                    sin necesidad de traslado.
+                </p>
+            </div>
+
+            <div class="servicio-card">
+                <h3>🍎 Nutrición y Bienestar Digital</h3>
+                <p>
+                    Planes personalizados de alimentación y bienestar con informe PDF.
+                </p>
+            </div>
+
+            <div class="servicio-card">
+                <h3>🧠 Consultoría de Comportamiento</h3>
+                <p>
+                    Evaluamos el entorno real de tu mascota para mejorar su conducta.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- HERRAMIENTAS DIGITALES -->
+        <div class="herramientas">
+
+            <h2>🛠️ Herramientas Digitales Incluidas</h2>
+
+            <div class="herramientas-grid">
+
+                <div class="tool-card">
+                    <h3>📄 Receta Médica Electrónica</h3>
+                    <p>
+                        Recibe tu receta digital válida para medicamentos.
+                    </p>
+                </div>
+
+                <div class="tool-card">
+                    <h3>☁️ Historial Clínico en la Nube</h3>
+                    <p>
+                        Accede a reportes, fotos y consultas las 24 horas.
+                    </p>
+                </div>
+
+                <div class="tool-card">
+                    <h3>💬 Chat de Soporte Inmediato</h3>
+                    <p>
+                        Comunicación rápida con nuestro equipo médico post consulta.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CÓMO FUNCIONA -->
+        <div class="proceso">
+
+            <h2>💡 ¿Cómo funciona?</h2>
+
+            <div class="pasos-grid">
+
+                <div class="paso">
+                    <h3>1. Reserva</h3>
+                    <p>Elige el especialista y horario ideal para ti.</p>
+                </div>
+
+                <div class="paso">
+                    <h3>2. Conéctate</h3>
+                    <p>Recibes un link seguro para tu videollamada.</p>
+                </div>
+
+                <div class="paso">
+                    <h3>3. Diagnóstico</h3>
+                    <p>El veterinario evalúa y guía la revisión.</p>
+                </div>
+
+                <div class="paso">
+                    <h3>4. Plan de Acción</h3>
+                    <p>Obtienes informe y receta digital al instante.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+<script>
+function toggleMenu(){
+
+    document.getElementById("menu").classList.toggle("active");
+
+    document.getElementById("overlay").classList.toggle("active");
+
+}
+
+window.addEventListener("scroll", function(){
+
+    const navbar = document.querySelector(".navbar");
+
+    if(window.scrollY > 20){
+
+        navbar.classList.add("scrolled");
+
+    }else{
+
+        navbar.classList.remove("scrolled");
+
+    }
+
+});
+</script>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</body>
+</html>

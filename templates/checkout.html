@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar cita</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Confirmar cita 🐾</h3>
+
+            <p><strong>Cliente:</strong> {{ cliente_nombre }}</p>
+            <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+            <p><strong>Hora:</strong> {{ cita.hora }}</p>
+            <p><strong>Precio:</strong> ${{ cita.precio }}</p>
+
+            <form action="{{ url_for('stripe_checkout', cita_id=cita.id) }}" method="POST">
+                <button type="submit" class="btn btn-primary w-100">
+                    Pagar con Stripe
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="{{ url_for('cancel', cita_id=cita.id) }}" class="btn btn-outline-secondary btn-sm">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

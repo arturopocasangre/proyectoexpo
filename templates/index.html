@@ -1,0 +1,199 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+        
+    <title>Happy Paws Vet</title>
+
+    <!-- conexión con CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+
+        <nav class="navbar">
+
+    <div class="logo">
+    <a href="/">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Happy Paws Vet">
+        <span>Happy Paws Vet</span>
+    </a>
+</div>
+
+    <div class="hamburguesa" onclick="toggleMenu()">
+        ☰
+    </div>
+    
+
+<ul class="menu" id="menu">
+    <div class="menu-header">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Happy Paws Vet">
+
+    <div class="menu-header-texto">
+        <h3>Happy Paws Vet</h3>
+        <p>Tu veterinaria en casa</p>
+    </div>
+</div>
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/servicios">Servicios</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/nosotros">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+
+
+    {% if session.get('usuario_id') %}
+        {% if session.get('rol') == 'admin' %}
+            <li><a href="{{ url_for('panel_admin') }}">Panel Admin</a></li>
+        {% elif session.get('rol') == 'veterinario' %}
+            <li><a href="{{ url_for('panel_veterinario') }}">Panel de Citas</a></li>
+        {% else %}
+            <li><a class="btn-cuenta" href="{{ url_for('panel_cliente') }}">Mi Cuenta</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+        <li><a class="btn-cuenta" href="{{ url_for('login') }}">Acceso</a></li>
+    {% endif %}
+
+</ul>
+
+</nav>
+    </header>
+
+    <!-- SECCIÓN PRINCIPAL -->
+    <section class="hero">
+
+    <div class="hero-text">
+        <h1>La salud de tu mascota es nuestra prioridad</h1>
+
+        <p>
+            Brindamos atención veterinaria profesional,
+            amorosa y especializada para cuidar a tus
+            mejores amigos.
+        </p>
+
+        <!-- <button onclick="window.location.href='{{ url_for('panel_cliente') }}'">Mis citas</button> -->
+
+{% if not session.get('usuario_id') %}
+    {% set destino = url_for('login') %}
+{% elif session.get('rol') == 'admin' %}
+    {% set destino = url_for('inicio') %}
+{% elif session.get('rol') == 'veterinario' %}
+    {% set destino = url_for('inicio') %}
+{% else %}
+    {% set destino = url_for('panel_cliente') %}
+{% endif %}
+
+<button onclick="window.location.href='{{ destino }}'">
+    Mis citas
+</button>
+
+
+    </div>
+
+</section>
+
+<!-- FOOTER CON IMAGEN -->
+<footer class="footer-imagen">
+
+    <div class="footer-overlay">
+
+        <div class="footer-cajas">
+
+            <!-- MARCA -->
+            <div class="footer-box">
+                <h2>Happy Paws Vet</h2>
+                                <h2>🐾</h2>
+
+                <p>
+                    La salud de tu mascota es nuestra prioridad.
+                    Cuidado profesional, moderno y lleno de amor.
+                </p>
+            </div>
+
+            <!-- NAVEGACIÓN -->
+            <div class="footer-box">
+                <h3>🧭 Navegación</h3>
+                <ul>
+                    <li><a href="/servicios">Servicios</a></li>
+                    <li><a href="/tienda">Tienda</a></li>
+                    <li><a href="/nosotros">Nosotros</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
+                </ul>
+            </div>
+
+            <!-- SOPORTE ABAJO -->
+            <div class="footer-box footer-soporte">
+                <h3>💬 Soporte</h3>
+                <ul>
+                    <li><a href="/preguntas">Preguntas Frecuentes</a></li>
+                    <li><a href="/guia-videollamadas">Guía de Videollamadas</a></li>
+                    <li><a href="/terminos">Términos y Condiciones</a></li>
+                    <li><a href="/privacidad">Política de Privacidad</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- CONTACTO -->
+        <div class="footer-contacto-linea">
+            <p>📱 WhatsApp: +503 7857-2275</p>
+            <p>happypawsvet2026@gmail.com</p>
+        </div>
+
+        <!-- REDES SOCIALES -->
+      <div class="footer-redes">
+    <a href="https://wa.me/50378572275?text=Hola,%20me%20interesa%20un%20producto%20de%20Happy%20Paws%20Vet" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+    <a href="https://www.instagram.com/happypawsvet26/"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.facebook.com/people/Paws-Vet/pfbid02uCDQ6p3S6F9G2N7ie59jXP8DySXMS46FNR2KizLhgfHNexMVkh8LAery3u5r1rxal/?rdid=KNhLgRFHYrueaO1m&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F18RYLHzkHf%2F"><i class="fab fa-facebook"></i></a>
+    <a href="https://www.tiktok.com/@happypawsvet1?_r=1&_t=ZS-97DCwEIefzB"><i class="fab fa-tiktok"></i></a>
+</div>
+        <p class="footer-frase-final">
+            Hecho con ❤️ para todos los que mueven la cola al vernos.
+        </p>
+
+        <div class="footer-copy">
+            © 2026 Happy Paws Vet. Todos los derechos reservados. San Salvador, El Salvador.
+        </div>
+
+    </div>
+
+</footer>
+<script>
+
+function toggleMenu(){
+
+    document.getElementById("menu").classList.toggle("active");
+
+    document.getElementById("overlay").classList.toggle("active");
+
+}
+
+window.addEventListener("scroll",function(){
+
+    const navbar=document.querySelector(".navbar");
+
+    if(window.scrollY>20){
+
+        navbar.classList.add("scrolled");
+
+    }else{
+
+        navbar.classList.remove("scrolled");
+
+    }
+
+});
+
+</script>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</body>
+</html>
