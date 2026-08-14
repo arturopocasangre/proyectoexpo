@@ -5,7 +5,6 @@ import mysql.connector
 import os
 from pymysql.cursors import DictCursor
 from collections import defaultdict
-#import psycopg2.extras
 import stripe
 import pymysql
 import uuid
@@ -23,11 +22,12 @@ app.secret_key = "clave_secreta_segura"
 # -------------------
 def get_db_connection():
     return pymysql.connect(
-        host="localhost",
-        user="root",        # Usuario MySQL
-        password="",        # Contraseña MySQL
-        database="happy_paws",
-        cursorclass=pymysql.cursors.DictCursor
+        host=os.environ.get("DB_HOST"),       # Host de Railway
+        user=os.environ.get("DB_USER"),       # Usuario MySQL
+        password=os.environ.get("DB_PASS"),   # Contraseña MySQL
+        database=os.environ.get("DB_NAME"),   # Nombre de la base
+        port=int(os.environ.get("DB_PORT", 3306)),  # Puerto (normalmente 3306)
+        cursorclass=DictCursor
     )
 
 # -------------------
