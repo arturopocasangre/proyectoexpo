@@ -5,7 +5,7 @@ import mysql.connector
 import os
 from pymysql.cursors import DictCursor
 from collections import defaultdict
-import psycopg2.extras
+#import psycopg2.extras
 import stripe
 import pymysql
 import uuid
