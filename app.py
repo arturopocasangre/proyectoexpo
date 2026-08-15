@@ -18,16 +18,16 @@ app.secret_key = "clave_secreta_segura"
 
 
 # -------------------
-# Conexión a MySQL
+# Conexión directa a MySQL en Aiven
 # -------------------
 def get_db_connection():
     timeout = 10
     return pymysql.connect(
-        host=os.environ.get("DB_HOST"),       # Ej: mysql-xxxx.aivencloud.com
-        port=int(os.environ.get("DB_PORT", 20045)),  # Puerto que te da Aiven
-        user=os.environ.get("DB_USER"),       # avnadmin
-        password=os.environ.get("DB_PASS"),   # contraseña de Aiven
-        database=os.environ.get("DB_NAME", "defaultdb"),
+        host="mysql-1bd38ea7-arturopocasangre-7e6b.e.aivencloud.com",  # Host de Aiven
+        port=20045,                                                   # Puerto de Aiven
+        user="avnadmin",                                              # Usuario
+        password="AVNS_VZUcWWZw6qFpV1vTFf3",                          # Contraseña
+        database="happy_paws_vet",                                    # Base de datos
         charset="utf8mb4",
         connect_timeout=timeout,
         read_timeout=timeout,
