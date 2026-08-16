@@ -13,16 +13,18 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask import jsonify
 
+# -------------------
+# Inicializar Flask
+# -------------------
 app = Flask(__name__)
 app.secret_key = "clave_secreta_segura"
-
 
 # -------------------
 # Conexión directa a MySQL en Aiven
 # -------------------
 def get_db_connection():
     timeout = 10
-    return pymysql.connect(
+    conn = pymysql.connect(
         host="mysql-1bd38ea7-arturopocasangre-7e6b.e.aivencloud.com",  # Host de Aiven
         port=20045,                                                   # Puerto de Aiven
         user="avnadmin",                                              # Usuario
@@ -34,6 +36,19 @@ def get_db_connection():
         write_timeout=timeout,
         cursorclass=DictCursor
     )
+
+    # hora local de El Salvador en cada conexión
+    configurar_zona_horaria(conn)
+
+    return conn
+
+    
+def configurar_zona_horaria(conn):
+    cursor = conn.cursor()
+    cursor.execute("SET time_zone = 'America/El_Salvador';")
+    conn.commit()
+    cursor.close()
+    print("🌎 Zona horaria ajustada a America/El_Salvador.")
 
 # -------------------
 # Rutas principales
@@ -269,14 +284,6 @@ def enviar_correo(destinatario, nombre, fecha, hora, enlace):
 
         server.sendmail(remitente, destinatario, msg.as_string())
 
-
-
-# -------------------
-# guardar cliente y redirigir al checkout
-# -------------------
-#
-#
-#
 
 # -------------------
 # Panel admin: listar configuración
@@ -714,5 +721,18 @@ def registro():
 
 # ------------------ MAIN ------------------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    port = int(os.environ.get("PORT", 5000))  # Render/Vercel asignan PORT
+    try:
+        # Probar conexión inicial (opcional)
+        conn = get_db_connection()
+        configurar_zona_horaria(conn)
+        conn.close()
+    except Exception as e:
+        print(f"⚠️ No se pudo conectar a MySQL: {e}")
+
+    app.run(
+        debug=True,
+        #use_reloader=False,   # evita reinicios duplicados en Windows
+        host="0.0.0.0",
+        port=port
+    )
