@@ -453,7 +453,7 @@ def panel_cliente():
 
         cliente_id = usuario["cliente_id"]
 
-        # Traer citas confirmadas del cliente (Cambiado a filtrar por cliente_id real)
+        # Traer citas confirmadas del cliente
         cursor.execute("""
             SELECT id, fecha, hora, estado, link_consulta
             FROM citas
@@ -522,6 +522,7 @@ def panel_cliente():
     cupos_listos = dict(cupos_agrupados)
 
     return render_template("panel_cliente.html", cupos=cupos_listos, citas=citas, vencidas=vencidas)
+
 
 # -------------------
 # Rutas para gestión
