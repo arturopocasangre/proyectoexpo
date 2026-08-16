@@ -490,11 +490,12 @@ def panel_cliente():
     for cita in citas:
         fecha_hora = datetime.strptime(f"{cita['fecha']} {cita['hora']}", "%Y-%m-%d %H:%M:%S")
         ahora = datetime.now()
+        # habilitar desde 10 minutos antes hasta 30 minutos después
         inicio = fecha_hora - timedelta(minutes=10)
         fin = fecha_hora + timedelta(minutes=30)
         cita["habilitar"] = (inicio <= ahora <= fin)
-
-        # 🔹 Imprimir en consola para depuración
+        
+    # 🔹 Imprimir en consola para depuración
         print("📌 Cita ID:", cita["id"])
         print("   Fecha/Hora cita:", fecha_hora)
         print("   Hora actual:", ahora)
@@ -502,8 +503,6 @@ def panel_cliente():
         print("   Fin habilitación:", fin)
         print("   ¿Habilitada?:", cita["habilitar"])
         print("-" * 50)
-
-
 
     # Creamos un diccionario agrupado por fecha
     cupos_agrupados = defaultdict(list)
