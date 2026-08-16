@@ -37,18 +37,28 @@ def get_db_connection():
         cursorclass=DictCursor
     )
 
-    # hora local de El Salvador en cada conexión
+    #  hora local de El Salvador en cada conexión
     configurar_zona_horaria(conn)
 
     return conn
 
-    
+# -------------------
+# configurar_zona_horaria
+# -------------------
 def configurar_zona_horaria(conn):
     cursor = conn.cursor()
     cursor.execute("SET time_zone = 'America/El_Salvador';")
     conn.commit()
+
+    # Consultar la hora actual ajustada
+    cursor.execute("SELECT NOW() AS hora_local;")
+    hora_local = cursor.fetchone()
+
+    # Acceder por clave del diccionario
+    print(f"🌎 Zona horaria ajustada a America/El_Salvador → Hora actual: {hora_local['hora_local']}")
+
     cursor.close()
-    print("🌎 Zona horaria ajustada a America/El_Salvador.")
+
 
 # -------------------
 # Rutas principales
@@ -721,18 +731,13 @@ def registro():
 
 # ------------------ MAIN ------------------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render/Vercel asignan PORT
+    port = int(os.environ.get("PORT", 5000))
     try:
-        # Probar conexión inicial (opcional)
         conn = get_db_connection()
-        configurar_zona_horaria(conn)
         conn.close()
     except Exception as e:
-        print(f"⚠️ No se pudo conectar a MySQL: {e}")
+        import traceback
+        print("⚠️ No se pudo conectar a MySQL:")
+        traceback.print_exc()   # imprime el error completo en consola
 
-    app.run(
-        debug=True,
-        #use_reloader=False,   # evita reinicios duplicados en Windows
-        host="0.0.0.0",
-        port=port
-    )
+    app.run(debug=True, host="0.0.0.0", port=port)
