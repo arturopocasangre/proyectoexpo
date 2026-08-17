@@ -459,7 +459,7 @@ def panel_cliente():
             FROM citas
             WHERE cliente_id=%s
             AND estado = 'pagada'
-            AND TIMESTAMP(fecha, hora) > (NOW() - INTERVAL 2 HOUR)
+            AND TIMESTAMP(fecha, hora) > (NOW() - INTERVAL 1 HOUR)
             ORDER BY fecha, hora
         """, (usuario_id,))
         citas = cursor.fetchall()
@@ -469,7 +469,7 @@ def panel_cliente():
             SELECT * 
             FROM citas 
             WHERE estado='disponible' and cliente_id is null
-            AND CONVERT_TZ(TIMESTAMP(fecha, hora), 'UTC', 'America/El_Salvador') > NOW()
+            AND TIMESTAMP(fecha, hora) > (NOW() + INTERVAL 1 HOUR)
             ORDER BY fecha, hora
         """)
         cupos = cursor.fetchall()
@@ -480,7 +480,7 @@ def panel_cliente():
             FROM citas 
             WHERE cliente_id=%s 
               AND estado='pagada' 
-              AND TIMESTAMP(fecha, hora) < (NOW() - INTERVAL 2 HOUR) 
+              AND TIMESTAMP(fecha, hora) < (NOW() - INTERVAL 1 HOUR) 
             ORDER BY fecha, hora
         """, (usuario_id,))
         vencidas = cursor.fetchall()
