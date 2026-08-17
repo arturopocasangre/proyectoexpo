@@ -469,7 +469,7 @@ def panel_cliente():
             SELECT * 
             FROM citas 
             WHERE estado='disponible' and cliente_id is null
-              AND TIMESTAMP(fecha, hora) > NOW() 
+            AND CONVERT_TZ(TIMESTAMP(fecha, hora), 'UTC', 'America/El_Salvador') > NOW()
             ORDER BY fecha, hora
         """)
         cupos = cursor.fetchall()
