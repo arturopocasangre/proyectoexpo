@@ -489,7 +489,14 @@ def panel_cliente():
 
     for cita in citas:
         fecha_hora = datetime.strptime(f"{cita['fecha']} {cita['hora']}", "%Y-%m-%d %H:%M:%S")
-        ahora = datetime.now()
+        # Obtener la hora actual desde MySQL
+        conn = get_db_connection()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT NOW() AS ahora;")
+            resultado = cursor.fetchone()
+            ahora = resultado["ahora"]  # viene como datetime naive en zona local
+        conn.close()
+    
         # habilitar desde 10 minutos antes hasta 30 minutos después
         inicio = fecha_hora - timedelta(minutes=10)
         fin = fecha_hora + timedelta(minutes=30)
@@ -503,6 +510,7 @@ def panel_cliente():
         print("   Fin habilitación:", fin)
         print("   ¿Habilitada?:", cita["habilitar"])
         print("-" * 50)
+
 
     # Creamos un diccionario agrupado por fecha
     cupos_agrupados = defaultdict(list)
