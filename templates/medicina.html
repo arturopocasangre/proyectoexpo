@@ -1,0 +1,4097 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <!-- ============================================================
+         CONFIGURACIÓN BÁSICA DEL DOCUMENTO
+         ============================================================
+
+         Esta línea le dice al navegador que estamos utilizando
+         HTML5.
+    -->
+    <meta charset="UTF-8">
+
+
+    <!-- ============================================================
+         CONFIGURACIÓN RESPONSIVE
+         ============================================================
+
+         Esto permite que nuestra página se adapte a celulares,
+         tablets y computadoras.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- ============================================================
+         TÍTULO DE LA PÁGINA
+         ============================================================
+
+         Este texto aparecerá en la pestaña del navegador.
+    -->
+    <title>Medicina | Happy Paws Vet</title>
+
+
+    <!-- ============================================================
+         CONEXIÓN CON TU CSS GENERAL
+         ============================================================
+
+         NO estamos creando otro archivo CSS.
+
+         Estamos utilizando el mismo style.css que ya tienes
+         en tu proyecto de Flask.
+
+         Todo el diseño específico de esta página estará más abajo,
+         dentro del <style>.
+    -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+
+
+    <style>
+
+        /* ==========================================================
+           ==========================================================
+              DISEÑO ESPECÍFICO DE LA PÁGINA DE MEDICINA
+           ==========================================================
+           ==========================================================
+
+           Todo este CSS está aquí para que NO tengas que modificar
+           tu archivo style.css.
+
+           Si algún día quieres cambiar solamente esta página,
+           puedes hacerlo aquí.
+        */
+
+
+        /* ==========================================================
+           FONDO GENERAL
+           ==========================================================
+
+           Creamos el fondo degradado parecido al de Alimentos,
+           Accesorios e Higiene.
+        */
+
+        .medicina-page {
+
+            /* La página ocupará como mínimo toda la pantalla */
+            min-height: 100vh;
+
+            /* Dejamos espacio para el navbar */
+            padding-top: 95px;
+
+            /* Fondo con varias capas para darle profundidad */
+            background:
+
+                radial-gradient(
+                    circle at 8% 18%,
+                    rgba(255,255,255,.58),
+                    transparent 28%
+                ),
+
+                radial-gradient(
+                    circle at 92% 78%,
+                    rgba(255,255,255,.42),
+                    transparent 30%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #f7dce9 0%,
+                    #e5c8e6 45%,
+                    #d8c1e8 100%
+                );
+        }
+
+
+
+        /* ==========================================================
+           ENCABEZADO DE MEDICINA
+           ========================================================== */
+
+        .medicina-header {
+
+            /* Centra todo el contenido */
+            text-align: center;
+
+            /* Espaciado superior e inferior */
+            padding: 65px 25px 35px;
+        }
+
+
+        /* Huellita que aparece arriba del título */
+
+        .medicina-header .huella {
+
+            /* Tamaño del emoji */
+            font-size: 42px;
+
+            /* Separación inferior */
+            margin-bottom: 8px;
+
+            /* Aplicamos una pequeña animación */
+            animation:
+                huellaMedicina
+                3s
+                ease-in-out
+                infinite;
+        }
+
+
+        /* Título principal */
+
+        .medicina-header h1 {
+
+            /* Tamaño del título */
+            font-size: 48px;
+
+            /* Color oscuro */
+            color: #2f2430;
+
+            /* Separación */
+            margin-bottom: 12px;
+
+            /* Texto grueso */
+            font-weight: 800;
+        }
+
+
+        /* Texto debajo del título */
+
+        .medicina-header p {
+
+            /* Limitamos el ancho para que no quede una línea enorme */
+            max-width: 720px;
+
+            /* Centramos el texto */
+            margin: auto;
+
+            /* Color */
+            color: #5b4f5b;
+
+            /* Tamaño */
+            font-size: 17px;
+
+            /* Espacio entre líneas */
+            line-height: 1.7;
+        }
+
+
+
+        /* ==========================================================
+           BUSCADOR
+           ========================================================== */
+
+        .buscador-medicina {
+
+            /* Ancho máximo */
+            max-width: 600px;
+
+            /* Centramos */
+            margin: 15px auto 45px;
+
+            /* Espacio lateral */
+            padding: 0 20px;
+        }
+
+
+        /* Caja donde el usuario escribe */
+
+        .buscador-medicina input {
+
+            /* Ocupa todo el ancho disponible */
+            width: 100%;
+
+            /* Espaciado interno */
+            padding: 17px 24px;
+
+            /* Borde */
+            border: 2px solid rgba(47,127,103,.12);
+
+            /* Bordes redondeados */
+            border-radius: 50px;
+
+            /* Quitamos el borde azul predeterminado */
+            outline: none;
+
+            /* Fondo */
+            background: rgba(255,255,255,.75);
+
+            /* Efecto de vidrio */
+            backdrop-filter: blur(10px);
+
+            /* Tamaño del texto */
+            font-size: 16px;
+
+            /* Color */
+            color: #333;
+
+            /* Sombra */
+            box-shadow:
+                0 12px 30px rgba(0,0,0,.06);
+
+            /* Animación */
+            transition: .3s ease;
+        }
+
+
+        /* Cuando hacemos clic en el buscador */
+
+        .buscador-medicina input:focus {
+
+            /* Cambiamos el color del borde */
+            border-color: #2f7f67;
+
+            /* Fondo blanco */
+            background: #fff;
+
+            /* Lo levantamos ligeramente */
+            transform: translateY(-2px);
+
+            /* Sombra */
+            box-shadow:
+                0 15px 35px rgba(47,127,103,.12);
+        }
+
+
+
+        /* ==========================================================
+           GRID DE PRODUCTOS
+           ========================================================== */
+
+        .grid-medicina {
+
+            /* Ancho máximo */
+            width: min(1250px, 92%);
+
+            /* Centramos el grid */
+            margin: 0 auto;
+
+            /* Espacio inferior */
+            padding-bottom: 90px;
+
+            /* Activamos CSS Grid */
+            display: grid;
+
+            /* Cuatro productos por fila en computadora */
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            /* Separación entre tarjetas */
+            gap: 28px;
+        }
+
+
+
+        /* ==========================================================
+           TARJETA DE CADA MEDICAMENTO
+           ========================================================== */
+
+        .medicina-card {
+
+            /* Necesario para posicionar elementos internos */
+            position: relative;
+
+            /* Organizamos los elementos verticalmente */
+            display: flex;
+
+            flex-direction: column;
+
+            /* Altura mínima */
+            min-height: 475px;
+
+            /* Espacio interno */
+            padding: 25px 22px 23px;
+
+            /* Fondo semitransparente */
+            background:
+                rgba(255,255,255,.68);
+
+            /* Efecto vidrio */
+            backdrop-filter: blur(15px);
+
+            -webkit-backdrop-filter:
+                blur(15px);
+
+            /* Borde */
+            border:
+                1px solid
+                rgba(255,255,255,.65);
+
+            /* Bordes redondeados */
+            border-radius: 30px;
+
+            /* Sombra */
+            box-shadow:
+
+                0 18px 45px
+                rgba(64,38,63,.10),
+
+                inset 0 1px 0
+                rgba(255,255,255,.8);
+
+            /* Ocultamos lo que salga de la tarjeta */
+            overflow: hidden;
+
+            /* Animación */
+            transition:
+                transform .35s ease,
+                box-shadow .35s ease;
+        }
+
+
+        /* Decoración circular de las tarjetas */
+
+        .medicina-card::before {
+
+            /* Elemento decorativo */
+            content: "";
+
+            /* Tamaño */
+            width: 130px;
+            height: 130px;
+
+            /* Lo convertimos en círculo */
+            border-radius: 50%;
+
+            /* Color */
+            background:
+                rgba(47,127,103,.07);
+
+            /* Posición */
+            position: absolute;
+
+            top: -60px;
+            right: -50px;
+        }
+
+
+        /* Efecto cuando pasamos el mouse */
+
+        .medicina-card:hover {
+
+            /* Levanta la tarjeta */
+            transform: translateY(-9px);
+
+            /* Aumentamos la sombra */
+            box-shadow:
+
+                0 25px 55px
+                rgba(64,38,63,.16),
+
+                inset 0 1px 0
+                rgba(255,255,255,.9);
+        }
+
+
+
+        /* ==========================================================
+           CONTENEDOR DE LA IMAGEN
+           ========================================================== */
+
+        .imagen-medicina {
+
+            /* Ancho */
+            width: 100%;
+
+            /* Altura fija para que todas las tarjetas sean iguales */
+            height: 225px;
+
+            /* Centramos la imagen */
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            /* Fondo transparente */
+            background: transparent;
+
+            /* Separación */
+            margin-bottom: 10px;
+
+            /* Posición */
+            position: relative;
+
+            /* Por encima de la decoración */
+            z-index: 2;
+        }
+
+
+        /* Imagen propiamente dicha */
+
+        .imagen-medicina img {
+
+            /* Ancho */
+            width: 100%;
+
+            /* Alto */
+            height: 100%;
+
+            /* Evita imágenes demasiado grandes */
+            max-width: 220px;
+
+            /* Mantiene proporciones */
+            object-fit: contain;
+
+            /* Hace que sea un elemento de bloque */
+            display: block;
+
+            /*
+                IMPORTANTE:
+
+                Muchas de tus imágenes tienen fondo blanco.
+
+                "multiply" ayuda a que ese fondo blanco se integre
+                visualmente con nuestra tarjeta.
+            */
+            mix-blend-mode: multiply;
+
+            /* Animación */
+            transition:
+                transform .4s ease,
+                filter .4s ease;
+        }
+
+
+        /* Cuando pasamos el mouse sobre la tarjeta */
+
+        .medicina-card:hover
+        .imagen-medicina img {
+
+            /* Agrandamos un poquito */
+            transform: scale(1.07);
+
+            /* Agregamos sombra */
+            filter:
+                drop-shadow(
+                    0 10px 12px rgba(0,0,0,.10)
+                );
+        }
+
+
+
+        /* ==========================================================
+           INFORMACIÓN DEL PRODUCTO
+           ========================================================== */
+
+        .medicina-info {
+
+            /* Posición */
+            position: relative;
+
+            /* Por encima de otros elementos */
+            z-index: 2;
+
+            /* Flex */
+            display: flex;
+
+            flex-direction: column;
+
+            /* Permite que el botón quede abajo */
+            flex: 1;
+        }
+
+
+        /* Nombre del producto */
+
+        .medicina-info h3 {
+
+            /* Color */
+            color: #2f2430;
+
+            /* Tamaño */
+            font-size: 20px;
+
+            /* Negrita */
+            font-weight: 800;
+
+            /* Separación */
+            margin-bottom: 8px;
+        }
+
+
+        /* Descripción */
+
+        .medicina-info p {
+
+            /* Color */
+            color: #665b65;
+
+            /* Tamaño */
+            font-size: 14px;
+
+            /* Altura de línea */
+            line-height: 1.55;
+
+            /* Separación */
+            margin-bottom: 12px;
+        }
+
+
+        /* Precio */
+
+        .precio-medicina {
+
+            /* Tamaño */
+            font-size: 25px;
+
+            /* Negrita */
+            font-weight: 800;
+
+            /* Verde de Happy Paws */
+            color: #2f7f67;
+
+            /*
+                "auto" hace que el precio se empuje hacia abajo
+                y ayuda a que las tarjetas tengan una estructura
+                uniforme.
+            */
+            margin-top: auto;
+
+            /* Separación */
+            margin-bottom: 16px;
+        }
+
+
+
+        /* ==========================================================
+           BOTÓN AGREGAR AL CARRITO
+           ========================================================== */
+
+        .btn-agregar-medicina {
+
+            /* Ocupa todo el ancho */
+            width: 100%;
+
+            /* Altura mediante padding */
+            padding: 14px 18px;
+
+            /* Quitamos borde */
+            border: none;
+
+            /* Redondeado */
+            border-radius: 50px;
+
+            /* Degradado verde */
+            background:
+                linear-gradient(
+                    135deg,
+                    #2f7f67,
+                    #49a287
+                );
+
+            /* Texto blanco */
+            color: white;
+
+            /* Tamaño */
+            font-size: 15px;
+
+            /* Negrita */
+            font-weight: 700;
+
+            /* Cursor */
+            cursor: pointer;
+
+            /* Sombra */
+            box-shadow:
+                0 10px 22px
+                rgba(47,127,103,.20);
+
+            /* Animación */
+            transition: .3s ease;
+        }
+
+
+        /* Efecto hover */
+
+        .btn-agregar-medicina:hover {
+
+            /* Se levanta */
+            transform: translateY(-3px);
+
+            /* Sombra más grande */
+            box-shadow:
+                0 14px 28px
+                rgba(47,127,103,.28);
+        }
+
+
+        /* Estado del botón después de agregar */
+
+        .btn-agregar-medicina.agregado {
+
+            /* Verde un poco más oscuro */
+            background:
+                linear-gradient(
+                    135deg,
+                    #246b58,
+                    #2f7f67
+                );
+
+            /* Animación */
+            animation:
+                botonMedicinaAgregado
+                .45s
+                ease;
+        }
+
+
+
+        /* ==========================================================
+           ETIQUETAS
+           ========================================================== */
+
+        .etiqueta-medicina {
+
+            /* Posición absoluta */
+            position: absolute;
+
+            /* Ubicación */
+            top: 18px;
+            left: 18px;
+
+            /* Por encima de la imagen */
+            z-index: 5;
+
+            /* Espaciado */
+            padding: 7px 12px;
+
+            /* Redondeado */
+            border-radius: 30px;
+
+            /* Fondo */
+            background:
+                rgba(47,127,103,.92);
+
+            /* Texto */
+            color: white;
+
+            /* Tamaño */
+            font-size: 11px;
+
+            /* Negrita */
+            font-weight: 700;
+
+            /* Sombra */
+            box-shadow:
+                0 6px 15px
+                rgba(47,127,103,.18);
+        }
+
+
+
+        /* ==========================================================
+           AVISO IMPORTANTE PARA MEDICAMENTOS
+           ========================================================== */
+
+        .aviso-medicina {
+
+            /* Ancho */
+            width: min(1050px, 90%);
+
+            /* Centrado */
+            margin: 0 auto 40px;
+
+            /* Espacio interno */
+            padding: 18px 24px;
+
+            /* Fondo */
+            background:
+                rgba(255,255,255,.55);
+
+            /* Borde */
+            border:
+                1px solid
+                rgba(255,255,255,.7);
+
+            /* Redondeado */
+            border-radius: 20px;
+
+            /* Texto */
+            color: #5b4f5b;
+
+            /* Tamaño */
+            font-size: 13px;
+
+            /* Altura de línea */
+            line-height: 1.6;
+
+            /* Sombra */
+            box-shadow:
+                0 10px 25px
+                rgba(0,0,0,.05);
+        }
+
+
+        .aviso-medicina strong {
+
+            /* Verde */
+            color: #2f7f67;
+        }
+
+
+
+        /* ==========================================================
+           CARRITO
+           ========================================================== */
+
+        .carrito-panel {
+
+            /* Ancho */
+            width: 370px;
+
+            /* Evita que se salga del celular */
+            max-width:
+                calc(100vw - 30px);
+
+            /* Altura máxima */
+            max-height: 75vh;
+
+            /* Si hay muchos productos, aparece scroll */
+            overflow-y: auto;
+
+            /* Espacio interno */
+            padding: 25px;
+
+            /* Fondo */
+            background:
+                rgba(255,255,255,.97);
+
+            /* Borde */
+            border:
+                1px solid
+                rgba(255,255,255,.8);
+
+            /* Bordes */
+            border-radius: 25px;
+
+            /* Sombra */
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.20);
+
+            /* Efecto vidrio */
+            backdrop-filter: blur(15px);
+
+            /* Muy por encima */
+            z-index: 10000;
+        }
+
+
+        /* Título del carrito */
+
+        .carrito-panel h3 {
+
+            color: #2f2430;
+
+            font-size: 24px;
+
+            margin-bottom: 20px;
+
+            text-align: center;
+        }
+
+
+        /* Cada producto dentro del carrito */
+
+        .item-carrito {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 13px 0;
+
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+
+        /* Imagen dentro del carrito */
+
+        .item-carrito img {
+
+            width: 65px;
+
+            height: 65px;
+
+            object-fit: contain;
+
+            border-radius: 15px;
+
+            background: #fafafa;
+
+            mix-blend-mode: multiply;
+        }
+
+
+        /* Área de texto del carrito */
+
+        .item-carrito > div {
+
+            flex: 1;
+        }
+
+
+        /* Nombre del producto */
+
+        .item-carrito strong {
+
+            display: block;
+
+            color: #333;
+
+            font-size: 14px;
+
+            margin-bottom: 5px;
+        }
+
+
+        /* Precio del producto */
+
+        .item-carrito p {
+
+            margin: 0 0 8px;
+
+            color: #2f7f67;
+
+            font-weight: 700;
+        }
+
+
+        /* Controles de cantidad */
+
+        .cantidad-carrito {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* Botones + y - */
+
+        .cantidad-carrito button {
+
+            width: 27px;
+
+            height: 27px;
+
+            padding: 0;
+
+            border-radius: 50%;
+
+            background: #e9c2d6;
+
+            color: #2f2430;
+
+            box-shadow: none;
+
+            font-size: 17px;
+
+            line-height: 27px;
+        }
+
+
+        /* Hover de + y - */
+
+        .cantidad-carrito button:hover {
+
+            background: #d9a9c6;
+
+            transform: none;
+        }
+
+
+        /* Número de cantidad */
+
+        .cantidad-carrito span {
+
+            min-width: 20px;
+
+            text-align: center;
+
+            font-weight: 700;
+        }
+
+
+        /* Botón eliminar */
+
+        .btn-eliminar {
+
+            padding: 4px 0 !important;
+
+            background:
+                transparent !important;
+
+            color:
+                #b84f6f !important;
+
+            box-shadow:
+                none !important;
+
+            font-size:
+                12px !important;
+
+            font-weight:
+                600 !important;
+        }
+
+
+        /* Hover eliminar */
+
+        .btn-eliminar:hover {
+
+            transform: none !important;
+
+            text-decoration: underline;
+        }
+
+
+        /* Total */
+
+        .carrito-total {
+
+            margin-top: 20px;
+
+            padding: 18px 5px;
+
+            border-top:
+                2px solid #eee;
+
+            text-align: right;
+
+            color: #2f2430;
+
+            font-size: 21px;
+        }
+
+
+        /* Botones inferiores del carrito */
+
+        .acciones-carrito {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 15px;
+        }
+
+
+        /* Cada botón ocupa la mitad */
+
+        .acciones-carrito button {
+
+            flex: 1;
+
+            padding: 12px 10px;
+
+            border-radius: 30px;
+
+            font-size: 13px;
+        }
+
+
+        /* Botón vaciar */
+
+        .btn-vaciar {
+
+            background:
+                #ead4df !important;
+
+            color:
+                #6a4456 !important;
+
+            box-shadow:
+                none !important;
+        }
+
+
+        /* Botón comprar */
+
+        .btn-comprar {
+
+            background:
+                #2f7f67 !important;
+        }
+
+
+
+        /* ==========================================================
+           NOTIFICACIÓN DE PRODUCTO AGREGADO
+           ========================================================== */
+
+        .notificacion-carrito {
+
+            /* Fijo en la pantalla */
+            position: fixed;
+
+            /* Ubicación */
+            top: 105px;
+
+            right: 30px;
+
+            /* Encima de todo */
+            z-index: 20000;
+
+            /* Espacio */
+            padding: 13px 20px;
+
+            /* Redondeado */
+            border-radius: 50px;
+
+            /* Verde */
+            background:
+                #2f7f67;
+
+            /* Texto */
+            color: white;
+
+            /* Tamaño */
+            font-size: 14px;
+
+            /* Negrita */
+            font-weight: 700;
+
+            /* Sombra */
+            box-shadow:
+                0 12px 30px
+                rgba(0,0,0,.18);
+
+            /* Animaciones */
+            animation:
+                aparecerMedicina
+                .35s
+                ease,
+
+                desaparecerMedicina
+                .35s
+                ease
+                1.7s
+                forwards;
+        }
+
+
+
+        /* ==========================================================
+           ANIMACIONES
+           ========================================================== */
+
+        @keyframes huellaMedicina {
+
+            0%, 100% {
+
+                transform:
+                    translateY(0);
+            }
+
+            50% {
+
+                transform:
+                    translateY(-7px);
+            }
+        }
+
+
+        @keyframes botonMedicinaAgregado {
+
+            0% {
+
+                transform:
+                    scale(1);
+            }
+
+            45% {
+
+                transform:
+                    scale(.94);
+            }
+
+            100% {
+
+                transform:
+                    scale(1);
+            }
+        }
+
+
+        @keyframes aparecerMedicina {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-15px)
+                    scale(.95);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        @keyframes desaparecerMedicina {
+
+            to {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-10px);
+            }
+        }
+
+
+
+        /* ==========================================================
+           RESPONSIVE - TABLET
+           ========================================================== */
+
+        @media (max-width: 1100px) {
+
+            .grid-medicina {
+
+                /* Tres productos por fila */
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+        }
+
+
+
+        /* ==========================================================
+           RESPONSIVE - TABLET PEQUEÑA
+           ========================================================== */
+
+        @media (max-width: 800px) {
+
+            .grid-medicina {
+
+                /* Dos productos por fila */
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                /* Menor separación */
+                gap: 20px;
+            }
+
+
+            .medicina-header h1 {
+
+                /* Reducimos título */
+                font-size: 38px;
+            }
+        }
+
+
+
+        /* ==========================================================
+           RESPONSIVE - CELULAR
+           ========================================================== */
+
+        @media (max-width: 550px) {
+
+            .medicina-page {
+
+                padding-top: 85px;
+            }
+
+
+            .medicina-header {
+
+                padding:
+                    45px 20px 25px;
+            }
+
+
+            .medicina-header h1 {
+
+                font-size: 32px;
+            }
+
+
+            .medicina-header p {
+
+                font-size: 15px;
+            }
+
+
+            .grid-medicina {
+
+                width: 92%;
+
+                /* Un producto por fila */
+                grid-template-columns: 1fr;
+            }
+
+
+            .medicina-card {
+
+                min-height: 450px;
+            }
+
+
+            .imagen-medicina {
+
+                height: 220px;
+            }
+
+
+            .carrito-panel {
+
+                top: 80px;
+
+                right: 10px;
+
+                width:
+                    calc(100vw - 20px);
+            }
+
+
+            .notificacion-carrito {
+
+                top: 80px;
+
+                right: 15px;
+
+                left: 15px;
+
+                text-align: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+
+<!-- ================================================================
+     NAVBAR
+     ================================================================
+
+     Esta parte conserva el mismo menú que ya tienes en las otras
+     páginas.
+
+     Así el usuario puede ir a:
+       - Inicio
+       - Servicios
+       - Tienda
+       - Nosotros
+       - Contacto
+
+     Y además mantenemos el carrito.
+================================================================ -->
+
+
+<header>
+
+<nav class="navbar">
+
+
+    <!-- ============================================================
+         LOGO
+         ============================================================ -->
+
+    <div class="logo">
+
+        <a href="/">
+
+            <!-- Logo de Happy Paws -->
+            <img
+                src="{{ url_for('static', filename='img/logo.png') }}"
+                alt="Happy Paws Vet"
+            >
+
+            <!-- Nombre de la veterinaria -->
+            <span>
+                Happy Paws Vet
+            </span>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ============================================================
+         ACCIONES DEL NAVBAR
+         ============================================================ -->
+
+    <div class="navbar-actions">
+
+
+        <!-- ========================================================
+             ICONO DEL CARRITO
+             ========================================================
+
+             Al hacer clic ejecutamos abrirCarrito().
+        -->
+
+        <div
+            class="carrito-icono"
+            onclick="abrirCarrito()"
+            title="Abrir carrito"
+        >
+
+            🛒
+
+
+            <!-- ====================================================
+                 CONTADOR
+
+                 Aquí JavaScript colocará:
+
+                 0
+                 1
+                 2
+                 3...
+
+                 dependiendo de los productos agregados.
+            ==================================================== -->
+
+            <span id="contador-carrito">
+                0
+            </span>
+
+        </div>
+
+
+
+        <!-- ========================================================
+             BOTÓN HAMBURGUESA
+             ======================================================== -->
+
+        <div
+            class="hamburguesa"
+            onclick="toggleMenu()"
+        >
+
+            ☰
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ============================================================
+         MENÚ LATERAL
+         ============================================================ -->
+
+    <ul
+        class="menu"
+        id="menu"
+    >
+
+
+        <!-- ========================================================
+             ENCABEZADO DEL MENÚ
+             ======================================================== -->
+
+        <div class="menu-header">
+
+            <img
+                src="{{ url_for('static', filename='img/logo.png') }}"
+                alt="Logo Happy Paws Vet"
+            >
+
+
+            <div class="menu-header-texto">
+
+                <h3>
+                    Happy Paws Vet
+                </h3>
+
+                <p>
+                    Tu veterinaria en casa
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================================
+             OPCIONES
+             ======================================================== -->
+
+        <li>
+            <a href="/">
+                Inicio
+            </a>
+        </li>
+
+
+        <li>
+            <a href="/servicios">
+                Servicios
+            </a>
+        </li>
+
+
+        <li>
+            <a href="/tienda">
+                Tienda
+            </a>
+        </li>
+
+
+        <li>
+            <a href="/nosotros">
+                Nosotros
+            </a>
+        </li>
+
+
+        <li>
+            <a href="/contacto">
+                Contacto
+            </a>
+        </li>
+
+
+
+        <!-- ========================================================
+             CONTROL DE SESIÓN
+
+             Flask revisa si existe usuario_id.
+
+             Si existe:
+                 mostramos las opciones correspondientes.
+
+             Si no existe:
+                 mostramos "Acceso".
+        ======================================================== -->
+
+        {% if session.get('usuario_id') %}
+
+
+            <!-- ====================================================
+                 SI ES ADMIN
+            ==================================================== -->
+
+            {% if session.get('rol') == 'admin' %}
+
+                <li>
+
+                    <a
+                        href="{{ url_for('panel_admin') }}"
+                    >
+                        Panel Admin
+                    </a>
+
+                </li>
+
+
+            <!-- ====================================================
+                 SI ES VETERINARIO
+            ==================================================== -->
+
+            {% elif session.get('rol') == 'veterinario' %}
+
+                <li>
+
+                    <a
+                        href="{{ url_for('panel_veterinario') }}"
+                    >
+                        Panel de Citas
+                    </a>
+
+                </li>
+
+
+            <!-- ====================================================
+                 SI ES CLIENTE
+            ==================================================== -->
+
+            {% else %}
+
+                <li>
+
+                    <a
+                        class="btn-cuenta"
+                        href="{{ url_for('panel_cliente') }}"
+                    >
+                        Mi Cuenta
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+
+
+            <!-- ====================================================
+                 CERRAR SESIÓN
+            ==================================================== -->
+
+            <li>
+
+                <a
+                    href="{{ url_for('logout') }}"
+                >
+                    Cerrar sesión
+                </a>
+
+            </li>
+
+
+        {% else %}
+
+
+            <!-- ====================================================
+                 SI NO HA INICIADO SESIÓN
+            ==================================================== -->
+
+            <li>
+
+                <a
+                    class="btn-cuenta"
+                    href="{{ url_for('login') }}"
+                >
+                    Acceso
+                </a>
+
+            </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+</header>
+
+
+
+<!-- ================================================================
+     CONTENIDO PRINCIPAL
+================================================================ -->
+
+<main class="medicina-page">
+
+
+
+    <!-- ============================================================
+         ENCABEZADO
+         ============================================================ -->
+
+    <section class="medicina-header">
+
+
+        <!-- Huellita decorativa -->
+        <div class="huella">
+            🐾
+        </div>
+
+
+        <!-- Título -->
+        <h1>
+            Medicina veterinaria
+        </h1>
+
+
+        <!-- Descripción general -->
+        <p>
+            Productos veterinarios seleccionados para complementar
+            el cuidado y bienestar de tu mascota.
+        </p>
+
+    </section>
+
+
+
+    <!-- ============================================================
+         AVISO
+
+         Como estamos hablando de medicamentos, es mejor que la
+         tienda deje claro que comprar un producto no sustituye
+         la indicación de un veterinario.
+         ============================================================ -->
+
+    <div class="aviso-medicina">
+
+        <strong>
+            🩺 Importante:
+        </strong>
+
+        Algunos productos veterinarios requieren orientación
+        profesional. Consulta con tu veterinario antes de utilizar
+        cualquier medicamento o tratamiento en tu mascota.
+
+    </div>
+
+
+
+    <!-- ============================================================
+         BUSCADOR
+         ============================================================ -->
+
+    <div class="buscador-medicina">
+
+        <!--
+
+            Cada vez que el usuario escribe algo,
+            se ejecuta:
+
+                buscarProductos()
+
+            Esto permite buscar:
+
+                "pulgas"
+                "desparasitante"
+                "Frontline"
+                "vitaminas"
+
+        -->
+
+        <input
+            type="text"
+            id="buscador"
+            placeholder="🔎 Buscar producto veterinario..."
+            oninput="buscarProductos()"
+        >
+
+    </div>
+
+
+
+    <!-- ============================================================
+         GRID DE PRODUCTOS
+         ============================================================ -->
+
+    <section
+        class="grid-medicina"
+        id="grid-medicina"
+    >
+
+
+
+        <!-- ========================================================
+             PRODUCTO 1
+             medicina1.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="desparasitante para perros"
+        >
+
+
+            <!-- Etiqueta visual -->
+
+            <span class="etiqueta-medicina">
+                Desparasitación
+            </span>
+
+
+            <!-- Imagen -->
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina1.webp'
+                    ) }}"
+                    alt="Desparasitante para perros"
+                >
+
+            </div>
+
+
+            <!-- Información -->
+
+            <div class="medicina-info">
+
+                <h3>
+                    Desparasitante para Perros
+                </h3>
+
+                <p>
+                    Producto veterinario en presentación para el control
+                    de parásitos internos.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $12.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Desparasitante para Perros',
+                        12.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina1.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 2
+             medicina2.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="desparasitante veterinario jeringa"
+        >
+
+            <span class="etiqueta-medicina">
+                Veterinario
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina2.webp'
+                    ) }}"
+                    alt="Desparasitante veterinario"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Desparasitante Veterinario
+                </h3>
+
+                <p>
+                    Presentación veterinaria en jeringa para tratamiento
+                    antiparasitario.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $14.50
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Desparasitante Veterinario',
+                        14.50,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina2.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 3
+             medicina3.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="desparasitante canino"
+        >
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina3.webp'
+                    ) }}"
+                    alt="Desparasitante canino"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Desparasitante Canino
+                </h3>
+
+                <p>
+                    Producto veterinario presentado para el control
+                    de parásitos internos en perros.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $11.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Desparasitante Canino',
+                        11.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina3.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 4
+             medicina4.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="desparasitante para perros tratamiento"
+        >
+
+            <span class="etiqueta-medicina">
+                Popular
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina4.webp'
+                    ) }}"
+                    alt="Desparasitante para perros"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Desparasitante para Perros
+                </h3>
+
+                <p>
+                    Producto veterinario para complementar el control
+                    de parásitos internos.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $13.50
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Desparasitante para Perros',
+                        13.50,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina4.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 5
+             medicina5.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="solución veterinaria gotas"
+        >
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina5.webp'
+                    ) }}"
+                    alt="Solución veterinaria en gotas"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Solución Veterinaria en Gotas
+                </h3>
+
+                <p>
+                    Presentación líquida para uso veterinario según
+                    indicación profesional.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $10.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Solución Veterinaria en Gotas',
+                        10.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina5.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 6
+             medicina6.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="kit veterinario antiparasitario"
+        >
+
+            <span class="etiqueta-medicina">
+                Kit
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina6.webp'
+                    ) }}"
+                    alt="Kit veterinario"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Kit Veterinario
+                </h3>
+
+                <p>
+                    Presentación de productos veterinarios para
+                    tratamiento y cuidado de mascotas.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $18.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Kit Veterinario',
+                        18.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina6.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 7
+             medicina7.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="frontline antipulgas perro"
+        >
+
+            <span class="etiqueta-medicina">
+                Antipulgas
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina7.webp'
+                    ) }}"
+                    alt="Frontline para perros"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Frontline para Perros
+                </h3>
+
+                <p>
+                    Producto veterinario de la línea Frontline para
+                    el control externo de parásitos.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $19.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Frontline para Perros',
+                        19.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina7.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 8
+             medicina8.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="advantage antipulgas"
+        >
+
+            <span class="etiqueta-medicina">
+                Antipulgas
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina8.webp'
+                    ) }}"
+                    alt="Advantage antipulgas"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Advantage Antipulgas
+                </h3>
+
+                <p>
+                    Producto veterinario de la línea Advantage para
+                    el control de pulgas.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $17.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Advantage Antipulgas',
+                        17.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina8.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 9
+             medicina9.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="frontline plus perros gatos"
+        >
+
+            <span class="etiqueta-medicina">
+                Popular
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina9.webp'
+                    ) }}"
+                    alt="Frontline Plus"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Frontline Plus
+                </h3>
+
+                <p>
+                    Producto veterinario de la línea Frontline Plus
+                    para control de parásitos externos.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $21.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Frontline Plus',
+                        21.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina9.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 10
+             medicina10.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="suplemento multivitamínico 15 en 1"
+        >
+
+            <span class="etiqueta-medicina">
+                Suplemento
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina10.webp'
+                    ) }}"
+                    alt="Suplemento multivitamínico"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Suplemento Multivitamínico 15 en 1
+                </h3>
+
+                <p>
+                    Suplemento para complementar la alimentación
+                    y el cuidado diario de tu mascota.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $16.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Suplemento Multivitamínico 15 en 1',
+                        16.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina10.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 11
+             medicina11.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="antiparasitario veterinario"
+        >
+
+            <span class="etiqueta-medicina">
+                Veterinario
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina11.webp'
+                    ) }}"
+                    alt="Antiparasitario veterinario"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Antiparasitario Veterinario
+                </h3>
+
+                <p>
+                    Producto veterinario presentado para el cuidado
+                    antiparasitario de mascotas.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $15.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Antiparasitario Veterinario',
+                        15.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina11.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 12
+             medicina12.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="solución veterinaria de cuidado"
+        >
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina12.webp'
+                    ) }}"
+                    alt="Solución veterinaria"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Solución Veterinaria de Cuidado
+                </h3>
+
+                <p>
+                    Presentación líquida para complementar el cuidado
+                    veterinario de la mascota.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $9.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Solución Veterinaria de Cuidado',
+                        9.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina12.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 13
+             medicina13.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="gotas veterinarias"
+        >
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina13.webp'
+                    ) }}"
+                    alt="Gotas veterinarias"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Gotas Veterinarias
+                </h3>
+
+                <p>
+                    Solución en gotas para uso veterinario según
+                    la indicación correspondiente.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $10.50
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Gotas Veterinarias',
+                        10.50,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina13.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 14
+             medicina14.webp
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="producto veterinario cuidado ocular"
+        >
+
+            <span class="etiqueta-medicina">
+                Cuidado
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/medicina14.webp'
+                    ) }}"
+                    alt="Producto veterinario de cuidado ocular"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Cuidado Ocular Veterinario
+                </h3>
+
+                <p>
+                    Producto veterinario para el cuidado de la zona
+                    ocular de la mascota.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $12.50
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Cuidado Ocular Veterinario',
+                        12.50,
+                        '{{ url_for(
+                            'static',
+                            filename='img/medicina14.webp'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 15
+             artitrabs.PNG
+
+             Esta imagen es PNG y NO hay problema en utilizarla.
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="artitrabs tabletas veterinarias"
+        >
+
+            <span class="etiqueta-medicina">
+                Tabletas
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/artitrabs.png'
+                    ) }}"
+                    alt="artitrabs"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    artitrabs
+                </h3>
+
+                <p>
+                    Presentación en tabletas de uso veterinario.
+                    Utilizar según indicación profesional.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $14.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'artitrabs',
+                        14.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/artitrabs.png'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 16
+             PRIMOCARD.PNG
+
+             OJO:
+             Conservamos el nombre visible del producto y NO
+             inventamos una indicación médica.
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="primocard"
+        >
+
+            <span class="etiqueta-medicina">
+                Tabletas
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/primocard.png'
+                    ) }}"
+                    alt="primocard"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Primocard
+                </h3>
+
+                <p>
+                    Producto veterinario en presentación de tabletas.
+                    Consultar al veterinario antes de utilizar.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $18.50
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Primocard',
+                        18.50,
+                        '{{ url_for(
+                            'static',
+                            filename='img/primocard.png'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ========================================================
+             PRODUCTO 17
+             PASTILLAS.PNG
+
+             Esta imagen no permite identificar con seguridad
+             el principio activo, por eso utilizamos un nombre
+             genérico.
+             ======================================================== -->
+
+        <article
+            class="medicina-card"
+            data-nombre="tabletas veterinarias"
+        >
+
+            <span class="etiqueta-medicina">
+                Tabletas
+            </span>
+
+
+            <div class="imagen-medicina">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/pastillas.png'
+                    ) }}"
+                    alt="Tabletas veterinarias"
+                >
+
+            </div>
+
+
+            <div class="medicina-info">
+
+                <h3>
+                    Tabletas Veterinarias
+                </h3>
+
+                <p>
+                    Presentación de tabletas para uso veterinario.
+                    La administración debe realizarse según indicación profesional.
+                </p>
+
+
+                <div class="precio-medicina">
+                    $13.99
+                </div>
+
+
+                <button
+                    class="btn-agregar-medicina"
+                    onclick="agregarProducto(
+                        'Tabletas Veterinarias',
+                        13.99,
+                        '{{ url_for(
+                            'static',
+                            filename='img/pastillas.png'
+                        ) }}',
+                        this
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+            </div>
+
+        </article>
+
+
+    </section>
+
+</main>
+
+
+
+<!-- ================================================================
+     CARRITO
+================================================================
+
+     Este carrito es el mismo concepto que utilizamos en Alimentos,
+     Accesorios e Higiene.
+
+     Además usamos localStorage para que el carrito pueda conservar
+     los productos aunque el usuario cambie de página.
+================================================================ -->
+
+
+<div
+    class="carrito-panel"
+    id="carrito-panel"
+>
+
+
+    <!-- Título del carrito -->
+
+    <h3>
+        🛒 Mi carrito
+    </h3>
+
+
+    <!-- ============================================================
+         AQUÍ JAVASCRIPT INSERTARÁ LOS PRODUCTOS
+         ============================================================ -->
+
+    <div id="lista-carrito">
+
+        <p>
+            Tu carrito está vacío.
+        </p>
+
+    </div>
+
+
+    <!-- ============================================================
+         BOTONES DEL CARRITO
+         ============================================================ -->
+
+    <div class="acciones-carrito">
+
+
+        <!-- Botón para eliminar todos los productos -->
+
+        <button
+            onclick="vaciarCarrito()"
+            class="btn-vaciar"
+        >
+
+            Vaciar
+
+        </button>
+
+
+        <!-- Botón comprar -->
+
+        <button
+            onclick="comprar()"
+            class="btn-comprar"
+        >
+
+            Comprar
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================================================================
+     OVERLAY DEL MENÚ
+================================================================ -->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="toggleMenu()"
+>
+</div>
+
+
+
+<script>
+
+
+/* ================================================================
+   ================================================================
+      CARRITO
+   ================================================================
+   ================================================================ */
+
+
+/*
+    Aquí recuperamos el carrito almacenado anteriormente.
+
+    localStorage permite guardar información en el navegador.
+
+    Por eso:
+
+    Si el cliente está en Alimentos
+    y agrega comida,
+
+    luego entra en Accesorios,
+
+    el carrito puede seguir teniendo la comida.
+
+    Lo mismo sucede al entrar en Higiene y Medicina.
+*/
+
+
+let carrito =
+
+    JSON.parse(
+
+        localStorage.getItem(
+            "happyPawsCarrito"
+        )
+
+    ) || [];
+
+
+
+/* ================================================================
+   FUNCIÓN DEL MENÚ
+   ================================================================
+
+   Esta función abre y cierra el menú lateral.
+================================================================ */
+
+function toggleMenu() {
+
+
+    /*
+        Buscamos el elemento HTML que tiene
+        id="menu".
+    */
+
+    const menu =
+        document.getElementById(
+            "menu"
+        );
+
+
+    /*
+        Buscamos el fondo oscuro/transparente
+        que está detrás del menú.
+    */
+
+    const overlay =
+        document.getElementById(
+            "overlay"
+        );
+
+
+    /*
+        classList.toggle()
+
+        significa:
+
+        si tiene la clase "active":
+            la elimina.
+
+        si NO tiene la clase "active":
+            la agrega.
+    */
+
+    menu.classList.toggle(
+        "active"
+    );
+
+
+    /*
+        Hacemos exactamente lo mismo
+        con el overlay.
+    */
+
+    overlay.classList.toggle(
+        "active"
+    );
+
+}
+
+
+
+/* ================================================================
+   ABRIR CARRITO
+================================================================
+
+   Esta función muestra u oculta el panel del carrito.
+================================================================ */
+
+function abrirCarrito() {
+
+
+    /*
+        Buscamos el panel mediante su ID.
+    */
+
+    const panel =
+        document.getElementById(
+            "carrito-panel"
+        );
+
+
+    /*
+        Activamos/desactivamos la clase
+        "active".
+    */
+
+    panel.classList.toggle(
+        "active"
+    );
+
+}
+
+
+
+/* ================================================================
+   AGREGAR PRODUCTO
+================================================================
+
+   Esta es una de las funciones más importantes.
+
+   Recibe cuatro cosas:
+
+       nombre
+       precio
+       imagen
+       boton
+
+   Ejemplo:
+
+       agregarProducto(
+           "Frontline Plus",
+           21.99,
+           "imagen",
+           this
+       );
+================================================================ */
+
+function agregarProducto(
+    nombre,
+    precio,
+    imagen,
+    boton
+) {
+
+
+    /*
+        Primero buscamos si el producto
+        ya está dentro del carrito.
+
+        find() busca un producto que tenga
+        exactamente el mismo nombre.
+    */
+
+    const productoExistente =
+
+        carrito.find(
+
+            producto =>
+
+                producto.nombre ===
+                nombre
+
+        );
+
+
+    /*
+        Si el producto ya existe...
+    */
+
+    if (productoExistente) {
+
+
+        /*
+            En lugar de crear otro producto,
+            aumentamos la cantidad.
+
+            Ejemplo:
+
+            Frontline x1
+
+            se convierte en:
+
+            Frontline x2
+        */
+
+        productoExistente.cantidad++;
+
+
+    } else {
+
+
+        /*
+            Si el producto NO existe,
+            creamos uno nuevo.
+        */
+
+        carrito.push({
+
+            /*
+                Guardamos nombre.
+            */
+
+            nombre: nombre,
+
+
+            /*
+                Guardamos precio.
+            */
+
+            precio: Number(precio),
+
+
+            /*
+                Guardamos la ruta de la imagen.
+            */
+
+            imagen: imagen,
+
+
+            /*
+                La primera vez empieza con cantidad 1.
+            */
+
+            cantidad: 1
+
+        });
+
+    }
+
+
+    /*
+        Después de modificar el carrito,
+        lo guardamos en localStorage.
+    */
+
+    guardarCarrito();
+
+
+    /*
+        Actualizamos visualmente
+        el carrito.
+    */
+
+    actualizarCarrito();
+
+
+    /*
+        Mostramos una pequeña notificación.
+    */
+
+    mostrarNotificacion(
+
+        "✓ " +
+        nombre +
+        " agregado al carrito"
+
+    );
+
+
+    /*
+        Guardamos temporalmente el texto
+        original del botón.
+    */
+
+    const textoOriginal =
+        boton.innerHTML;
+
+
+    /*
+        Agregamos la clase de animación.
+    */
+
+    boton.classList.add(
+        "agregado"
+    );
+
+
+    /*
+        Cambiamos temporalmente
+        el texto del botón.
+    */
+
+    boton.innerHTML =
+        "✓ ¡Agregado!";
+
+
+    /*
+        Después de 900 milisegundos
+        regresamos el botón a su estado original.
+    */
+
+    setTimeout(
+
+        () => {
+
+            boton.classList.remove(
+                "agregado"
+            );
+
+            boton.innerHTML =
+                textoOriginal;
+
+        },
+
+        900
+
+    );
+
+}
+
+
+
+/* ================================================================
+   GUARDAR CARRITO
+================================================================
+
+   Guarda todo el carrito en el navegador.
+================================================================ */
+
+function guardarCarrito() {
+
+
+    localStorage.setItem(
+
+        "happyPawsCarrito",
+
+        JSON.stringify(
+            carrito
+        )
+
+    );
+
+}
+
+
+
+/* ================================================================
+   ACTUALIZAR CARRITO
+================================================================
+
+   Esta función se encarga de:
+
+       - actualizar contador
+       - mostrar productos
+       - calcular cantidades
+       - calcular total
+================================================================ */
+
+function actualizarCarrito() {
+
+
+    /*
+        Buscamos el número que aparece
+        junto al carrito.
+    */
+
+    const contador =
+        document.getElementById(
+            "contador-carrito"
+        );
+
+
+    /*
+        Buscamos el contenedor
+        donde aparecerán los productos.
+    */
+
+    const lista =
+        document.getElementById(
+            "lista-carrito"
+        );
+
+
+    /*
+        Aquí acumularemos la cantidad
+        total de unidades.
+    */
+
+    let cantidadTotal = 0;
+
+
+    /*
+        Aquí acumularemos el dinero.
+    */
+
+    let total = 0;
+
+
+    /*
+        Recorremos todos los productos.
+    */
+
+    carrito.forEach(
+
+        producto => {
+
+
+            /*
+                Sumamos la cantidad.
+            */
+
+            cantidadTotal +=
+                Number(
+                    producto.cantidad
+                );
+
+
+            /*
+                Calculamos:
+
+                precio x cantidad
+            */
+
+            total +=
+
+                Number(
+                    producto.precio
+                )
+
+                *
+
+                Number(
+                    producto.cantidad
+                );
+
+        }
+
+    );
+
+
+    /*
+        Mostramos la cantidad en el icono.
+    */
+
+    contador.textContent =
+        cantidadTotal;
+
+
+
+    /* ============================================================
+       SI EL CARRITO ESTÁ VACÍO
+       ============================================================ */
+
+    if (
+        carrito.length === 0
+    ) {
+
+
+        /*
+            Mostramos mensaje.
+        */
+
+        lista.innerHTML = `
+
+            <p style="
+                text-align:center;
+                color:#777;
+                padding:20px 0;
+            ">
+
+                Tu carrito está vacío 🐾
+
+            </p>
+
+        `;
+
+
+        /*
+            Guardamos el estado.
+        */
+
+        guardarCarrito();
+
+
+        /*
+            Terminamos la función.
+        */
+
+        return;
+
+    }
+
+
+
+    /*
+        Si hay productos,
+        limpiamos el contenido anterior.
+    */
+
+    lista.innerHTML = "";
+
+
+
+    /* ============================================================
+       MOSTRAR CADA PRODUCTO
+       ============================================================ */
+
+    carrito.forEach(
+
+        (producto, indice) => {
+
+
+            /*
+                Agregamos HTML dinámicamente.
+            */
+
+            lista.innerHTML += `
+
+                <div
+                    class="item-carrito"
+                >
+
+
+                    <!-- Imagen -->
+
+                    <img
+                        src="${producto.imagen}"
+                        alt="${producto.nombre}"
+                    >
+
+
+                    <!-- Información -->
+
+                    <div>
+
+
+                        <!-- Nombre -->
+
+                        <strong>
+
+                            ${producto.nombre}
+
+                        </strong>
+
+
+                        <!-- Precio -->
+
+                        <p>
+
+                            $${Number(
+                                producto.precio
+                            ).toFixed(2)}
+
+                        </p>
+
+
+                        <!-- Cantidad -->
+
+                        <div
+                            class="cantidad-carrito"
+                        >
+
+
+                            <!-- MENOS -->
+
+                            <button
+                                onclick="
+                                    disminuirCantidad(
+                                        ${indice}
+                                    )
+                                "
+                            >
+
+                                −
+
+                            </button>
+
+
+                            <!-- CANTIDAD -->
+
+                            <span>
+
+                                ${producto.cantidad}
+
+                            </span>
+
+
+                            <!-- MÁS -->
+
+                            <button
+                                onclick="
+                                    aumentarCantidad(
+                                        ${indice}
+                                    )
+                                "
+                            >
+
+                                +
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- ELIMINAR -->
+
+                        <button
+                            class="btn-eliminar"
+                            onclick="
+                                eliminarProducto(
+                                    ${indice}
+                                )
+                            "
+                        >
+
+                            Eliminar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+    );
+
+
+
+    /* ============================================================
+       MOSTRAR TOTAL
+       ============================================================ */
+
+    lista.innerHTML += `
+
+        <div
+            class="carrito-total"
+        >
+
+            Total:
+
+            <strong>
+
+                $${total.toFixed(2)}
+
+            </strong>
+
+        </div>
+
+    `;
+
+
+
+    /*
+        Finalmente volvemos a guardar.
+    */
+
+    guardarCarrito();
+
+}
+
+
+
+/* ================================================================
+   AUMENTAR CANTIDAD
+================================================================ */
+
+function aumentarCantidad(
+    indice
+) {
+
+
+    /*
+        Sumamos una unidad.
+    */
+
+    carrito[indice].cantidad++;
+
+
+    /*
+        Actualizamos todo.
+    */
+
+    actualizarCarrito();
+
+}
+
+
+
+/* ================================================================
+   DISMINUIR CANTIDAD
+================================================================ */
+
+function disminuirCantidad(
+    indice
+) {
+
+
+    /*
+        Si hay más de una unidad,
+        simplemente restamos una.
+    */
+
+    if (
+
+        carrito[indice].cantidad > 1
+
+    ) {
+
+        carrito[indice].cantidad--;
+
+
+    } else {
+
+
+        /*
+            Si solo queda una,
+            eliminamos el producto.
+        */
+
+        carrito.splice(
+            indice,
+            1
+        );
+
+    }
+
+
+    /*
+        Actualizamos.
+    */
+
+    actualizarCarrito();
+
+}
+
+
+
+/* ================================================================
+   ELIMINAR PRODUCTO
+================================================================ */
+
+function eliminarProducto(
+    indice
+) {
+
+
+    /*
+        splice elimina un elemento
+        de la posición indicada.
+    */
+
+    carrito.splice(
+        indice,
+        1
+    );
+
+
+    /*
+        Actualizamos el carrito.
+    */
+
+    actualizarCarrito();
+
+}
+
+
+
+/* ================================================================
+   VACIAR CARRITO
+================================================================ */
+
+function vaciarCarrito() {
+
+
+    /*
+        Si ya está vacío,
+        no hacemos nada.
+    */
+
+    if (
+        carrito.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+        Creamos un carrito vacío.
+    */
+
+    carrito = [];
+
+
+    /*
+        Actualizamos la pantalla.
+    */
+
+    actualizarCarrito();
+
+}
+
+
+
+/* ================================================================
+   NOTIFICACIÓN
+================================================================
+
+   Esta es la pequeña notificación verde que aparece
+   cuando agregamos un producto.
+================================================================ */
+
+function mostrarNotificacion(
+    mensaje
+) {
+
+
+    /*
+        Buscamos si ya existe
+        una notificación anterior.
+    */
+
+    const anterior =
+        document.querySelector(
+            ".notificacion-carrito"
+        );
+
+
+    /*
+        Si existe, la eliminamos.
+    */
+
+    if (anterior) {
+
+        anterior.remove();
+
+    }
+
+
+    /*
+        Creamos un nuevo elemento DIV.
+    */
+
+    const notificacion =
+        document.createElement(
+            "div"
+        );
+
+
+    /*
+        Le asignamos la clase CSS.
+    */
+
+    notificacion.className =
+        "notificacion-carrito";
+
+
+    /*
+        Ponemos el mensaje.
+    */
+
+    notificacion.textContent =
+        mensaje;
+
+
+    /*
+        Lo agregamos al BODY.
+    */
+
+    document.body.appendChild(
+        notificacion
+    );
+
+
+    /*
+        Después de 2.2 segundos
+        desaparece.
+    */
+
+    setTimeout(
+
+        () => {
+
+            if (notificacion) {
+
+                notificacion.remove();
+
+            }
+
+        },
+
+        2200
+
+    );
+
+}
+
+
+
+/* ================================================================
+   BUSCADOR
+================================================================
+
+   Esta función permite buscar productos en tiempo real.
+================================================================ */
+
+function buscarProductos() {
+
+
+    /*
+        Obtenemos lo que escribió el usuario.
+    */
+
+    const texto =
+
+        document
+            .getElementById(
+                "buscador"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    /*
+        Obtenemos todas las tarjetas.
+    */
+
+    const productos =
+
+        document.querySelectorAll(
+            ".medicina-card"
+        );
+
+
+    /*
+        Revisamos cada tarjeta.
+    */
+
+    productos.forEach(
+
+        producto => {
+
+
+            /*
+                Obtenemos el texto que guardamos
+                en data-nombre.
+            */
+
+            const nombre =
+
+                producto
+                    .dataset
+                    .nombre
+                    .toLowerCase();
+
+
+            /*
+                Si el nombre contiene
+                lo que escribió el usuario...
+            */
+
+            if (
+                nombre.includes(texto)
+            ) {
+
+
+                /*
+                    Mostramos la tarjeta.
+                */
+
+                producto.style.display =
+                    "flex";
+
+
+            } else {
+
+
+                /*
+                    Si no coincide,
+                    ocultamos la tarjeta.
+                */
+
+                producto.style.display =
+                    "none";
+
+            }
+
+        }
+
+    );
+
+}
+
+
+
+/* ================================================================
+   BOTÓN COMPRAR
+================================================================
+
+   Por ahora este botón solamente muestra un aviso.
+
+   Más adelante, cuando hagamos el panel de administrador,
+   podemos conectar aquí:
+
+       - datos del cliente
+       - dirección
+       - método de pago
+       - pedido
+       - número de orden
+       - estado del pedido
+       - inventario
+
+   Por eso NO estamos complicando esta parte todavía.
+================================================================ */
+
+function comprar() {
+
+
+    /*
+        Si no hay productos,
+        avisamos al usuario.
+    */
+
+    if (
+        carrito.length === 0
+    ) {
+
+        alert(
+            "Tu carrito está vacío."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Por ahora mostramos este mensaje.
+
+        Más adelante sustituiremos esto por
+        el verdadero proceso de compra.
+    */
+
+    alert(
+
+        "Tu carrito está listo para comprar. " +
+
+        "El siguiente paso será conectar " +
+
+        "el proceso de pago y pedido."
+
+    );
+
+}
+
+
+
+/* ================================================================
+   NAVBAR AL HACER SCROLL
+================================================================
+
+   Cuando el usuario baja por la página,
+   agregamos la clase "scrolled" al navbar.
+
+   Esto utiliza el CSS que ya tienes.
+================================================================ */
+
+window.addEventListener(
+
+    "scroll",
+
+    function() {
+
+
+        /*
+            Buscamos el navbar.
+        */
+
+        const navbar =
+            document.querySelector(
+                ".navbar"
+            );
+
+
+        /*
+            Si hemos bajado más de 20 píxeles...
+        */
+
+        if (
+
+            window.scrollY > 20
+
+        ) {
+
+
+            /*
+                Agregamos "scrolled".
+            */
+
+            navbar.classList.add(
+                "scrolled"
+            );
+
+
+        } else {
+
+
+            /*
+                Si volvimos arriba,
+                quitamos "scrolled".
+            */
+
+            navbar.classList.remove(
+                "scrolled"
+            );
+
+        }
+
+    }
+
+);
+
+
+
+/* ================================================================
+   INICIALIZAR CARRITO
+================================================================
+
+   Cuando se carga la página,
+   ejecutamos actualizarCarrito()
+
+   Así, si el cliente ya tenía productos
+   guardados desde otra categoría,
+   aparecerán inmediatamente.
+================================================================ */
+
+actualizarCarrito();
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Alimentos | Happy Paws Vet</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =====================================================
+           TIENDA - ALIMENTOS
+           Todo el diseño está aquí para NO modificar style.css
+        ===================================================== */
+
+        .alimentos-page {
+            min-height: 100vh;
+            padding-top: 95px;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255,255,255,.55), transparent 28%),
+                radial-gradient(circle at 90% 80%, rgba(255,255,255,.40), transparent 30%),
+                linear-gradient(135deg, #f7dce9 0%, #e5c8e6 45%, #d8c1e8 100%);
+        }
+
+
+        /* =========================
+           ENCABEZADO
+        ========================= */
+
+        .alimentos-header {
+            text-align: center;
+            padding: 65px 25px 35px;
+        }
+
+        .alimentos-header .huella {
+            font-size: 42px;
+            margin-bottom: 8px;
+            animation: huellaFlotante 3s ease-in-out infinite;
+        }
+
+        .alimentos-header h1 {
+            font-size: 48px;
+            color: #2f2430;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .alimentos-header p {
+            max-width: 700px;
+            margin: auto;
+            color: #5b4f5b;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           BUSCADOR
+        ========================= */
+
+        .buscador-productos {
+            max-width: 600px;
+            margin: 15px auto 45px;
+            padding: 0 20px;
+        }
+
+        .buscador-productos input {
+            width: 100%;
+            padding: 17px 24px;
+            border: 2px solid rgba(47,127,103,.12);
+            border-radius: 50px;
+            outline: none;
+            background: rgba(255,255,255,.75);
+            backdrop-filter: blur(10px);
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 12px 30px rgba(0,0,0,.06);
+            transition: .3s ease;
+        }
+
+        .buscador-productos input:focus {
+            border-color: #2f7f67;
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(47,127,103,.12);
+        }
+
+
+        /* =========================
+           GRID
+        ========================= */
+
+        .grid-alimentos {
+            width: min(1250px, 92%);
+            margin: 0 auto;
+            padding-bottom: 90px;
+
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 28px;
+        }
+
+
+        /* =========================
+           TARJETA
+        ========================= */
+
+        .alimento-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+
+            min-height: 475px;
+
+            padding: 25px 22px 23px;
+
+            background: rgba(255,255,255,.68);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+
+            border: 1px solid rgba(255,255,255,.65);
+            border-radius: 30px;
+
+            box-shadow:
+                0 18px 45px rgba(64,38,63,.10),
+                inset 0 1px 0 rgba(255,255,255,.8);
+
+            overflow: hidden;
+
+            transition:
+                transform .35s ease,
+                box-shadow .35s ease;
+        }
+
+        .alimento-card::before {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: rgba(47,127,103,.07);
+            top: -60px;
+            right: -50px;
+        }
+
+        .alimento-card:hover {
+            transform: translateY(-9px);
+            box-shadow:
+                0 25px 55px rgba(64,38,63,.16),
+                inset 0 1px 0 rgba(255,255,255,.9);
+        }
+
+
+        /* =========================
+           IMAGEN
+        ========================= */
+
+        .imagen-alimento {
+            width: 100%;
+            height: 225px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: transparent;
+
+            margin-bottom: 10px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .imagen-alimento img {
+            width: 100%;
+            height: 100%;
+            max-width: 220px;
+
+            object-fit: contain;
+
+            display: block;
+
+            /*
+             * Ayuda a integrar imágenes con fondo blanco
+             * sobre el fondo de la tarjeta.
+             */
+            mix-blend-mode: multiply;
+
+            transition:
+                transform .4s ease,
+                filter .4s ease;
+        }
+
+        .alimento-card:hover .imagen-alimento img {
+            transform: scale(1.07);
+            filter: drop-shadow(0 10px 12px rgba(0,0,0,.10));
+        }
+
+
+        /* =========================
+           INFORMACIÓN
+        ========================= */
+
+        .alimento-info {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .alimento-info h3 {
+            color: #2f2430;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .alimento-info p {
+            color: #665b65;
+            font-size: 14px;
+            line-height: 1.55;
+            margin-bottom: 12px;
+        }
+
+        .precio-alimento {
+            font-size: 25px;
+            font-weight: 800;
+            color: #2f7f67;
+            margin-top: auto;
+            margin-bottom: 16px;
+        }
+
+
+        /* =========================
+           BOTÓN
+        ========================= */
+
+        .btn-agregar {
+            width: 100%;
+            padding: 14px 18px;
+
+            border: none;
+            border-radius: 50px;
+
+            background: linear-gradient(
+                135deg,
+                #2f7f67,
+                #49a287
+            );
+
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 22px rgba(47,127,103,.20);
+
+            transition: .3s ease;
+        }
+
+        .btn-agregar:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 14px 28px rgba(47,127,103,.28);
+        }
+
+        .btn-agregar.agregado {
+            background: linear-gradient(
+                135deg,
+                #246b58,
+                #2f7f67
+            );
+
+            animation: botonAgregado .45s ease;
+        }
+
+
+        /* =========================
+           ETIQUETA
+        ========================= */
+
+        .etiqueta-producto {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            z-index: 5;
+
+            padding: 7px 12px;
+
+            border-radius: 30px;
+
+            background: rgba(47,127,103,.92);
+            color: white;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            box-shadow: 0 6px 15px rgba(47,127,103,.18);
+        }
+
+
+        /* =========================
+           CARRITO
+        ========================= */
+
+        .carrito-panel {
+            width: 370px;
+            max-width: calc(100vw - 30px);
+
+            max-height: 75vh;
+            overflow-y: auto;
+
+            padding: 25px;
+
+            background: rgba(255,255,255,.97);
+
+            border: 1px solid rgba(255,255,255,.8);
+            border-radius: 25px;
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.20);
+
+            backdrop-filter: blur(15px);
+
+            z-index: 10000;
+        }
+
+        .carrito-panel h3 {
+            color: #2f2430;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .item-carrito {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .item-carrito img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            border-radius: 15px;
+            background: #fafafa;
+            mix-blend-mode: multiply;
+        }
+
+        .item-carrito > div {
+            flex: 1;
+        }
+
+        .item-carrito strong {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .item-carrito p {
+            margin: 0 0 8px;
+            color: #2f7f67;
+            font-weight: 700;
+        }
+
+        .cantidad-carrito {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .cantidad-carrito button {
+            width: 27px;
+            height: 27px;
+
+            padding: 0;
+
+            border-radius: 50%;
+
+            background: #e9c2d6;
+            color: #2f2430;
+
+            box-shadow: none;
+
+            font-size: 17px;
+            line-height: 27px;
+        }
+
+        .cantidad-carrito button:hover {
+            background: #d9a9c6;
+            transform: none;
+        }
+
+        .cantidad-carrito span {
+            min-width: 20px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .btn-eliminar {
+            padding: 4px 0 !important;
+
+            background: transparent !important;
+            color: #b84f6f !important;
+
+            box-shadow: none !important;
+
+            font-size: 12px !important;
+            font-weight: 600 !important;
+        }
+
+        .btn-eliminar:hover {
+            transform: none !important;
+            text-decoration: underline;
+        }
+
+        .carrito-total {
+            margin-top: 20px;
+            padding: 18px 5px;
+
+            border-top: 2px solid #eee;
+
+            text-align: right;
+
+            color: #2f2430;
+            font-size: 21px;
+        }
+
+        .acciones-carrito {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .acciones-carrito button {
+            flex: 1;
+            padding: 12px 10px;
+            border-radius: 30px;
+            font-size: 13px;
+        }
+
+        .btn-vaciar {
+            background: #ead4df !important;
+            color: #6a4456 !important;
+            box-shadow: none !important;
+        }
+
+        .btn-comprar {
+            background: #2f7f67 !important;
+        }
+
+
+        /* =========================
+           NOTIFICACIÓN
+        ========================= */
+
+        .notificacion-carrito {
+            position: fixed;
+
+            top: 105px;
+            right: 30px;
+
+            z-index: 20000;
+
+            padding: 13px 20px;
+
+            border-radius: 50px;
+
+            background: #2f7f67;
+            color: white;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            box-shadow: 0 12px 30px rgba(0,0,0,.18);
+
+            animation:
+                aparecerNotificacion .35s ease,
+                desaparecerNotificacion .35s ease 1.7s forwards;
+        }
+
+
+        /* =========================
+           ANIMACIONES
+        ========================= */
+
+        @keyframes huellaFlotante {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+
+        }
+
+        @keyframes botonAgregado {
+
+            0% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(.94);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+
+        }
+
+        @keyframes aparecerNotificacion {
+
+            from {
+                opacity: 0;
+                transform: translateY(-15px) scale(.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+        }
+
+        @keyframes desaparecerNotificacion {
+
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .grid-alimentos {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .grid-alimentos {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .alimentos-header h1 {
+                font-size: 38px;
+            }
+
+        }
+
+        @media (max-width: 550px) {
+
+            .alimentos-page {
+                padding-top: 85px;
+            }
+
+            .alimentos-header {
+                padding: 45px 20px 25px;
+            }
+
+            .alimentos-header h1 {
+                font-size: 32px;
+            }
+
+            .alimentos-header p {
+                font-size: 15px;
+            }
+
+            .grid-alimentos {
+                width: 92%;
+                grid-template-columns: 1fr;
+            }
+
+            .alimento-card {
+                min-height: 450px;
+            }
+
+            .imagen-alimento {
+                height: 220px;
+            }
+
+            .carrito-panel {
+                top: 80px;
+                right: 10px;
+                width: calc(100vw - 20px);
+            }
+
+            .notificacion-carrito {
+                top: 80px;
+                right: 15px;
+                left: 15px;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header>
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <a href="/">
+
+            <img
+                src="{{ url_for('static', filename='img/logo.png') }}"
+                alt="Happy Paws Vet"
+            >
+
+            <span>Happy Paws Vet</span>
+
+        </a>
+
+    </div>
+
+
+    <div class="navbar-actions">
+
+        <div
+            class="carrito-icono"
+            onclick="abrirCarrito()"
+            title="Abrir carrito"
+        >
+
+            🛒
+
+            <span id="contador-carrito">0</span>
+
+        </div>
+
+
+        <div
+            class="hamburguesa"
+            onclick="toggleMenu()"
+        >
+
+            ☰
+
+        </div>
+
+    </div>
+
+
+    <ul class="menu" id="menu">
+
+        <div class="menu-header">
+
+            <img
+                src="{{ url_for('static', filename='img/logo.png') }}"
+                alt="Logo Happy Paws Vet"
+            >
+
+            <div class="menu-header-texto">
+
+                <h3>Happy Paws Vet</h3>
+
+                <p>Tu veterinaria en casa</p>
+
+            </div>
+
+        </div>
+
+
+        <li>
+            <a href="/">Inicio</a>
+        </li>
+
+        <li>
+            <a href="/servicios">Servicios</a>
+        </li>
+
+        <li>
+            <a href="/tienda">Tienda</a>
+        </li>
+
+        <li>
+            <a href="/nosotros">Nosotros</a>
+        </li>
+
+        <li>
+            <a href="/contacto">Contacto</a>
+        </li>
+
+
+        {% if session.get('usuario_id') %}
+
+            {% if session.get('rol') == 'admin' %}
+
+                <li>
+                    <a href="{{ url_for('panel_admin') }}">
+                        Panel Admin
+                    </a>
+                </li>
+
+            {% elif session.get('rol') == 'veterinario' %}
+
+                <li>
+                    <a href="{{ url_for('panel_veterinario') }}">
+                        Panel de Citas
+                    </a>
+                </li>
+
+            {% else %}
+
+                <li>
+                    <a
+                        class="btn-cuenta"
+                        href="{{ url_for('panel_cliente') }}"
+                    >
+                        Mi Cuenta
+                    </a>
+                </li>
+
+            {% endif %}
+
+
+            <li>
+                <a href="{{ url_for('logout') }}">
+                    Cerrar sesión
+                </a>
+            </li>
+
+        {% else %}
+
+            <li>
+                <a
+                    class="btn-cuenta"
+                    href="{{ url_for('login') }}"
+                >
+                    Acceso
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+</header>
+
+
+
+<!-- =====================================================
+     CONTENIDO
+===================================================== -->
+
+<main class="alimentos-page">
+
+
+    <section class="alimentos-header">
+
+        <div class="huella">
+            🐾
+        </div>
+
+        <h1>
+            Alimentos para tu mascota
+        </h1>
+
+        <p>
+            Encuentra opciones deliciosas y nutritivas para
+            consentir a tu mejor amigo.
+        </p>
+
+    </section>
+
+
+
+    <!-- BUSCADOR -->
+
+    <div class="buscador-productos">
+
+        <input
+            type="text"
+            id="buscador"
+            placeholder="🔎 Buscar alimento..."
+            oninput="buscarProductos()"
+        >
+
+    </div>
+
+
+
+    <!-- PRODUCTOS -->
+
+    <section class="grid-alimentos"
+             id="grid-alimentos">
+
+
+        <!-- =================================================
+             PRODUCTO 1
+        ================================================== -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento Premium para perro"
+        >
+
+            <span class="etiqueta-producto">
+                Favorito
+            </span>
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento1.webp') }}"
+                    alt="Alimento para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Premium para Perro
+                </h3>
+
+                <p>
+                    Nutrición completa y equilibrada para perros.
+                </p>
+
+                <div class="precio-alimento">
+                    $18.99
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Premium para Perro',
+                        18.99,
+                        '{{ url_for('static', filename='img/alimento1.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 2 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento Premium para perro"
+        >
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento2.webp') }}"
+                    alt="Alimento para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Premium para Perro
+                </h3>
+
+                <p>
+                    Fórmula nutritiva para mantenerlo activo y saludable.
+                </p>
+
+                <div class="precio-alimento">
+                    $21.50
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Premium para Perro 2',
+                        21.50,
+                        '{{ url_for('static', filename='img/alimento2.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 3 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento húmedo para perro"
+        >
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento3.webp') }}"
+                    alt="Alimento húmedo para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Húmedo para Perro
+                </h3>
+
+                <p>
+                    Una opción deliciosa para complementar su alimentación.
+                </p>
+
+                <div class="precio-alimento">
+                    $3.75
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Húmedo para Perro',
+                        3.75,
+                        '{{ url_for('static', filename='img/alimento3.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 4 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento para perro"
+        >
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento4.webp') }}"
+                    alt="Alimento para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Completo para Perro
+                </h3>
+
+                <p>
+                    Alimentación balanceada para su bienestar diario.
+                </p>
+
+                <div class="precio-alimento">
+                    $19.95
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Completo para Perro',
+                        19.95,
+                        '{{ url_for('static', filename='img/alimento4.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 5 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento para perro"
+        >
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento5.webp') }}"
+                    alt="Alimento para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Especial para Perro
+                </h3>
+
+                <p>
+                    Una alternativa práctica para su alimentación diaria.
+                </p>
+
+                <div class="precio-alimento">
+                    $16.50
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Especial para Perro',
+                        16.50,
+                        '{{ url_for('static', filename='img/alimento5.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 6 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento para mascota"
+        >
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento6.webp') }}"
+                    alt="Alimento para mascota"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Nutritivo para Mascota
+                </h3>
+
+                <p>
+                    Sabor y nutrición para acompañar cada día.
+                </p>
+
+                <div class="precio-alimento">
+                    $17.99
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Nutritivo para Mascota',
+                        17.99,
+                        '{{ url_for('static', filename='img/alimento6.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 7 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento para mascota"
+        >
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento7.webp') }}"
+                    alt="Alimento para mascota"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Completo
+                </h3>
+
+                <p>
+                    Fórmula pensada para una alimentación equilibrada.
+                </p>
+
+                <div class="precio-alimento">
+                    $20.25
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Completo',
+                        20.25,
+                        '{{ url_for('static', filename='img/alimento7.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 8 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento para mascota"
+        >
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento8.webp') }}"
+                    alt="Alimento para mascota"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Balanceado
+                </h3>
+
+                <p>
+                    Nutrición diaria para mantener a tu mascota fuerte.
+                </p>
+
+                <div class="precio-alimento">
+                    $18.50
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Balanceado',
+                        18.50,
+                        '{{ url_for('static', filename='img/alimento8.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PRODUCTO 9 -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Alimento para mascota"
+        >
+
+            <span class="etiqueta-producto">
+                Nuevo
+            </span>
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/alimento9.webp') }}"
+                    alt="Alimento para mascota"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Alimento Premium
+                </h3>
+
+                <p>
+                    Una opción nutritiva para complementar su dieta.
+                </p>
+
+                <div class="precio-alimento">
+                    $22.00
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Alimento Premium',
+                        22.00,
+                        '{{ url_for('static', filename='img/alimento9.webp') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             COMIDA RUFFO
+        ================================================== -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Ruffo alimento para perro"
+        >
+
+            <span class="etiqueta-producto">
+                Popular
+            </span>
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/comidarufo.png') }}"
+                    alt="Ruffo alimento para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Ruffo
+                </h3>
+
+                <p>
+                    Alimento para perro ideal para su alimentación diaria.
+                </p>
+
+                <div class="precio-alimento">
+                    $12.99
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Ruffo',
+                        12.99,
+                        '{{ url_for('static', filename='img/comidarufo.png') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             PEDIGREE
+        ================================================== -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Pedigree alimento para perro"
+        >
+
+            <span class="etiqueta-producto">
+                Favorito
+            </span>
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/pedigree.png') }}"
+                    alt="Pedigree alimento para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Pedigree
+                </h3>
+
+                <p>
+                    Alimento balanceado para el cuidado diario de tu perro.
+                </p>
+
+                <div class="precio-alimento">
+                    $15.99
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Pedigree',
+                        15.99,
+                        '{{ url_for('static', filename='img/pedigree.png') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             PURINA ALPO
+        ================================================== -->
+
+        <article
+            class="alimento-card"
+            data-nombre="Purina Alpo alimento para perro"
+        >
+
+            <span class="etiqueta-producto">
+                Popular
+            </span>
+
+            <div class="imagen-alimento">
+
+                <img
+                    src="{{ url_for('static', filename='img/purinaalpo.png') }}"
+                    alt="Purina Alpo alimento para perro"
+                >
+
+            </div>
+
+            <div class="alimento-info">
+
+                <h3>
+                    Purina Alpo
+                </h3>
+
+                <p>
+                    Alimento completo para acompañar una dieta equilibrada.
+                </p>
+
+                <div class="precio-alimento">
+                    $14.99
+                </div>
+
+                <button
+                    class="btn-agregar"
+                    onclick="agregarProducto(
+                        'Purina Alpo',
+                        14.99,
+                        '{{ url_for('static', filename='img/purinaalpo.png') }}',
+                        this
+                    )"
+                >
+                    🛒 Agregar al carrito
+                </button>
+
+            </div>
+
+        </article>
+
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     CARRITO
+===================================================== -->
+
+<div
+    class="carrito-panel"
+    id="carrito-panel"
+>
+
+    <h3>
+        🛒 Mi carrito
+    </h3>
+
+    <div id="lista-carrito">
+
+        <p>
+            Tu carrito está vacío.
+        </p>
+
+    </div>
+
+    <div class="acciones-carrito">
+
+        <button
+            onclick="vaciarCarrito()"
+            class="btn-vaciar"
+        >
+            Vaciar
+        </button>
+
+        <button
+            onclick="comprar()"
+            class="btn-comprar"
+        >
+            Comprar
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     OVERLAY DEL MENÚ
+===================================================== -->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="toggleMenu()"
+></div>
+
+
+
+<script>
+
+/* =====================================================
+   CARRITO GLOBAL
+===================================================== */
+
+let carrito =
+    JSON.parse(
+        localStorage.getItem("happyPawsCarrito")
+    ) || [];
+
+
+
+/* =====================================================
+   MENÚ
+===================================================== */
+
+function toggleMenu() {
+
+    const menu =
+        document.getElementById("menu");
+
+    const overlay =
+        document.getElementById("overlay");
+
+    menu.classList.toggle("active");
+
+    overlay.classList.toggle("active");
+
+}
+
+
+
+/* =====================================================
+   ABRIR CARRITO
+===================================================== */
+
+function abrirCarrito() {
+
+    const panel =
+        document.getElementById("carrito-panel");
+
+    panel.classList.toggle("active");
+
+}
+
+
+
+/* =====================================================
+   AGREGAR PRODUCTO
+===================================================== */
+
+function agregarProducto(
+    nombre,
+    precio,
+    imagen,
+    boton
+) {
+
+    const productoExistente =
+        carrito.find(
+            producto =>
+                producto.nombre === nombre
+        );
+
+
+    if (productoExistente) {
+
+        productoExistente.cantidad++;
+
+    } else {
+
+        carrito.push({
+
+            nombre: nombre,
+
+            precio: Number(precio),
+
+            imagen: imagen,
+
+            cantidad: 1
+
+        });
+
+    }
+
+
+    guardarCarrito();
+
+    actualizarCarrito();
+
+    mostrarNotificacion(
+        "✓ " + nombre + " agregado al carrito"
+    );
+
+
+    /* Animación del botón */
+
+    const textoOriginal =
+        boton.innerHTML;
+
+    boton.classList.add("agregado");
+
+    boton.innerHTML =
+        "✓ ¡Agregado!";
+
+
+    setTimeout(() => {
+
+        boton.classList.remove("agregado");
+
+        boton.innerHTML =
+            textoOriginal;
+
+    }, 900);
+
+}
+
+
+
+/* =====================================================
+   GUARDAR
+===================================================== */
+
+function guardarCarrito() {
+
+    localStorage.setItem(
+        "happyPawsCarrito",
+        JSON.stringify(carrito)
+    );
+
+}
+
+
+
+/* =====================================================
+   ACTUALIZAR CARRITO
+===================================================== */
+
+function actualizarCarrito() {
+
+    const contador =
+        document.getElementById(
+            "contador-carrito"
+        );
+
+    const lista =
+        document.getElementById(
+            "lista-carrito"
+        );
+
+
+    let cantidadTotal = 0;
+
+    let total = 0;
+
+
+    carrito.forEach(producto => {
+
+        cantidadTotal +=
+            Number(producto.cantidad);
+
+        total +=
+            Number(producto.precio) *
+            Number(producto.cantidad);
+
+    });
+
+
+    contador.textContent =
+        cantidadTotal;
+
+
+    if (carrito.length === 0) {
+
+        lista.innerHTML = `
+            <p style="
+                text-align:center;
+                color:#777;
+                padding:20px 0;
+            ">
+                Tu carrito está vacío 🐾
+            </p>
+        `;
+
+        guardarCarrito();
+
+        return;
+
+    }
+
+
+    lista.innerHTML = "";
+
+
+    carrito.forEach(
+        (producto, indice) => {
+
+            lista.innerHTML += `
+
+                <div class="item-carrito">
+
+                    <img
+                        src="${producto.imagen}"
+                        alt="${producto.nombre}"
+                    >
+
+                    <div>
+
+                        <strong>
+                            ${producto.nombre}
+                        </strong>
+
+                        <p>
+                            $${Number(producto.precio).toFixed(2)}
+                        </p>
+
+
+                        <div class="cantidad-carrito">
+
+                            <button
+                                onclick="disminuirCantidad(${indice})"
+                            >
+                                −
+                            </button>
+
+                            <span>
+                                ${producto.cantidad}
+                            </span>
+
+                            <button
+                                onclick="aumentarCantidad(${indice})"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        <button
+                            class="btn-eliminar"
+                            onclick="eliminarProducto(${indice})"
+                        >
+                            Eliminar
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    lista.innerHTML += `
+
+        <div class="carrito-total">
+
+            Total:
+            <strong>
+                $${total.toFixed(2)}
+            </strong>
+
+        </div>
+
+    `;
+
+
+    guardarCarrito();
+
+}
+
+
+
+/* =====================================================
+   AUMENTAR
+===================================================== */
+
+function aumentarCantidad(indice) {
+
+    carrito[indice].cantidad++;
+
+    actualizarCarrito();
+
+}
+
+
+
+/* =====================================================
+   DISMINUIR
+===================================================== */
+
+function disminuirCantidad(indice) {
+
+    if (
+        carrito[indice].cantidad > 1
+    ) {
+
+        carrito[indice].cantidad--;
+
+    } else {
+
+        carrito.splice(indice, 1);
+
+    }
+
+
+    actualizarCarrito();
+
+}
+
+
+
+/* =====================================================
+   ELIMINAR
+===================================================== */
+
+function eliminarProducto(indice) {
+
+    carrito.splice(indice, 1);
+
+    actualizarCarrito();
+
+}
+
+
+
+/* =====================================================
+   VACIAR
+===================================================== */
+
+function vaciarCarrito() {
+
+    if (carrito.length === 0) {
+        return;
+    }
+
+
+    carrito = [];
+
+    actualizarCarrito();
+
+}
+
+
+
+/* =====================================================
+   NOTIFICACIÓN
+===================================================== */
+
+function mostrarNotificacion(mensaje) {
+
+    const anterior =
+        document.querySelector(
+            ".notificacion-carrito"
+        );
+
+
+    if (anterior) {
+        anterior.remove();
+    }
+
+
+    const notificacion =
+        document.createElement("div");
+
+
+    notificacion.className =
+        "notificacion-carrito";
+
+
+    notificacion.textContent =
+        mensaje;
+
+
+    document.body.appendChild(
+        notificacion
+    );
+
+
+    setTimeout(() => {
+
+        if (notificacion) {
+            notificacion.remove();
+        }
+
+    }, 2200);
+
+}
+
+
+
+/* =====================================================
+   BUSCADOR
+===================================================== */
+
+function buscarProductos() {
+
+    const texto =
+        document
+            .getElementById("buscador")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const productos =
+        document.querySelectorAll(
+            ".alimento-card"
+        );
+
+
+    productos.forEach(producto => {
+
+        const nombre =
+            producto
+                .dataset
+                .nombre
+                .toLowerCase();
+
+
+        if (
+            nombre.includes(texto)
+        ) {
+
+            producto.style.display =
+                "flex";
+
+        } else {
+
+            producto.style.display =
+                "none";
+
+        }
+
+    });
+
+}
+
+
+
+/* =====================================================
+   COMPRAR
+===================================================== */
+
+function comprar() {
+
+    if (carrito.length === 0) {
+
+        alert(
+            "Tu carrito está vacío."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Más adelante aquí conectaremos
+       el carrito con Stripe.
+
+       Por ahora evitamos realizar
+       un pago incompleto.
+    */
+
+    alert(
+        "Tu carrito está listo para comprar. El siguiente paso será conectar el pago."
+    );
+
+}
+
+
+
+/* =====================================================
+   NAVBAR AL HACER SCROLL
+===================================================== */
+
+window.addEventListener(
+    "scroll",
+    function() {
+
+        const navbar =
+            document.querySelector(
+                ".navbar"
+            );
+
+
+        if (
+            window.scrollY > 20
+        ) {
+
+            navbar.classList.add(
+                "scrolled"
+            );
+
+        } else {
+
+            navbar.classList.remove(
+                "scrolled"
+            );
+
+        }
+
+    }
+);
+
+
+
+/* =====================================================
+   INICIAR CARRITO
+===================================================== */
+
+actualizarCarrito();
+
+</script>
+
+
+</body>
+</html>

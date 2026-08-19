@@ -1,84 +1,393 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Editar Usuario</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- =====================================================
+         TÍTULO DE LA PÁGINA
+
+         Si existe un usuario:
+         → Editar Usuario
+
+         Si NO existe:
+         → Crear Usuario
+    ====================================================== -->
+
+    <title>
+        {% if usuario %}
+            Editar Usuario
+        {% else %}
+            Crear Usuario
+        {% endif %}
+    </title>
+
+
+    <!-- =====================================================
+         BOOTSTRAP
+         ===================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
 </head>
+
+
 <body class="bg-light">
 
+
 <div class="container mt-5">
+
     <div class="card shadow-sm">
+
+
+        <!-- =================================================
+             ENCABEZADO DEL FORMULARIO
+        ================================================== -->
+
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Editar Usuario</h4>
+
+            <h4 class="mb-0">
+
+                {% if usuario %}
+                    Editar Usuario
+                {% else %}
+                    Crear Usuario
+                {% endif %}
+
+            </h4>
+
         </div>
+
+
         <div class="card-body">
+
+
+            <!-- =================================================
+                 FORMULARIO
+            ================================================== -->
+
             <form method="POST">
-                <!-- Email -->
+
+
+                <!-- =================================================
+                     CORREO ELECTRÓNICO
+                ================================================== -->
+
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo electrónico</label>
-                    <input type="email" class="form-control" id="email" name="email" 
-                           value="{{ usuario.email }}" required>
+
+                    <label
+                        for="email"
+                        class="form-label"
+                    >
+                        Correo electrónico
+                    </label>
+
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+
+                        {% if usuario %}
+                            value="{{ usuario.email }}"
+                        {% endif %}
+
+                        required
+                    >
+
                 </div>
 
-                <!-- Password -->
+
+
+                <!-- =================================================
+                     CONTRASEÑA
+                ================================================== -->
+
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña (dejar vacío si no desea cambiarla)</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Nueva contraseña">
+
+                    <label
+                        for="password"
+                        class="form-label"
+                    >
+
+                        {% if usuario %}
+                            Contraseña (dejar vacío si no desea cambiarla)
+                        {% else %}
+                            Contraseña
+                        {% endif %}
+
+                    </label>
+
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+
+                        {% if usuario %}
+                            placeholder="Nueva contraseña"
+                        {% else %}
+                            placeholder="Contraseña"
+                            required
+                        {% endif %}
+
+                    >
+
                 </div>
 
-                <!-- Rol -->
+
+
+                <!-- =================================================
+                     ROL
+                ================================================== -->
+
                 <div class="mb-3">
-                    <label for="rol" class="form-label">Rol</label>
-                    <select class="form-select" id="rol" name="rol" required>
-                        <option value="admin" {% if usuario.rol == 'admin' %}selected{% endif %}>Administrador</option>
-                        <option value="cliente" {% if usuario.rol == 'cliente' %}selected{% endif %}>Cliente</option>
-                        <option value="veterinario" {% if usuario.rol == 'veterinario' %}selected{% endif %}>Veterinario</option>
+
+                    <label
+                        for="rol"
+                        class="form-label"
+                    >
+                        Rol
+                    </label>
+
+
+                    <select
+                        class="form-select"
+                        id="rol"
+                        name="rol"
+                        required
+                    >
+
+                        <option
+                            value="admin"
+                            {% if usuario and usuario.rol == 'admin' %}
+                                selected
+                            {% endif %}
+                        >
+                            Administrador
+                        </option>
+
+
+                        <option
+                            value="cliente"
+                            {% if usuario and usuario.rol == 'cliente' %}
+                                selected
+                            {% endif %}
+                        >
+                            Cliente
+                        </option>
+
+
+                        <option
+                            value="veterinario"
+                            {% if usuario and usuario.rol == 'veterinario' %}
+                                selected
+                            {% endif %}
+                        >
+                            Veterinario
+                        </option>
+
                     </select>
+
                 </div>
 
-                <!-- Activo -->
+
+
+                <!-- =================================================
+                     ESTADO
+                ================================================== -->
+
                 <div class="mb-3">
-                    <label for="activo" class="form-label">Estado</label>
-                    <select class="form-select" id="activo" name="activo" required>
-                    <!-- 	<option value="">-- Estado --</option> -->
-                        <option value="0" {% if not usuario.activo %}selected{% endif %}>Inactivo</option>
-                        <option value="1" {% if usuario.activo %}selected{% endif %}>Activo</option>
+
+                    <label
+                        for="activo"
+                        class="form-label"
+                    >
+                        Estado
+                    </label>
+
+
+                    <select
+                        class="form-select"
+                        id="activo"
+                        name="activo"
+                        required
+                    >
+
+                        <option
+                            value="0"
+                            {% if usuario and not usuario.activo %}
+                                selected
+                            {% endif %}
+                        >
+                            Inactivo
+                        </option>
+
+
+                        <option
+                            value="1"
+                            {% if not usuario or usuario.activo %}
+                                selected
+                            {% endif %}
+                        >
+                            Activo
+                        </option>
+
                     </select>
+
                 </div>
 
-                <!-- Nombre -->
+
+
+                <!-- =================================================
+                     NOMBRE COMPLETO
+                ================================================== -->
+
                 <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre completo</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" 
-                           value="{{ usuario.nombre }}">
+
+                    <label
+                        for="nombre"
+                        class="form-label"
+                    >
+                        Nombre completo
+                    </label>
+
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        name="nombre"
+
+                        {% if usuario %}
+                            value="{{ usuario.nombre or '' }}"
+                        {% endif %}
+
+                    >
+
                 </div>
 
-                <!-- Teléfono -->
+
+
+                <!-- =================================================
+                     TELÉFONO
+                ================================================== -->
+
                 <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="text" class="form-control" id="telefono" name="telefono" 
-                           value="{{ usuario.telefono }}">
+
+                    <label
+                        for="telefono"
+                        class="form-label"
+                    >
+                        Teléfono
+                    </label>
+
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="telefono"
+                        name="telefono"
+
+                        {% if usuario %}
+                            value="{{ usuario.telefono or '' }}"
+                        {% endif %}
+
+                    >
+
                 </div>
 
-                <!-- Dirección -->
+
+
+                <!-- =================================================
+                     DIRECCIÓN
+                ================================================== -->
+
                 <div class="mb-3">
-                    <label for="direccion" class="form-label">Dirección</label>
-                    <textarea class="form-control" id="direccion" name="direccion" rows="2">{{ usuario.direccion }}</textarea>
+
+                    <label
+                        for="direccion"
+                        class="form-label"
+                    >
+                        Dirección
+                    </label>
+
+
+                    <textarea
+                        class="form-control"
+                        id="direccion"
+                        name="direccion"
+                        rows="2"
+                    >{% if usuario %}{{ usuario.direccion or '' }}{% endif %}</textarea>
+
                 </div>
 
-                <!-- Botones -->
+
+
+                <!-- =================================================
+                     BOTONES
+                ================================================== -->
+
                 <div class="d-flex justify-content-between">
-                    <a href="{{ url_for('panel_admin') }}" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-success">Guardar cambios</button>
+
+
+                    <!-- ---------------------------------------------
+                         BOTÓN CANCELAR
+                    ---------------------------------------------- -->
+
+                    <a
+                        href="{{ url_for('panel_admin') }}"
+                        class="btn btn-secondary"
+                    >
+                        Cancelar
+                    </a>
+
+
+                    <!-- ---------------------------------------------
+                         BOTÓN GUARDAR
+                    ---------------------------------------------- -->
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+
+                        {% if usuario %}
+                            Guardar cambios
+                        {% else %}
+                            Crear usuario
+                        {% endif %}
+
+                    </button>
+
                 </div>
+
+
             </form>
+
         </div>
+
     </div>
+
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- =============================================================
+     BOOTSTRAP JS
+============================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
 </body>
+
 </html>

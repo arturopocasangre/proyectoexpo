@@ -30,6 +30,7 @@
 </style>    
 </head>
 <body>
+   
 <div class="container registro-container">
         <div class="card shadow-sm mx-auto" style="max-width: 500px;">
         <div class="card-body">
@@ -59,6 +60,21 @@
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" name="password" required>
                 </div>
+                 {% with mensajes = get_flashed_messages(with_categories=true) %}
+
+    {% if mensajes %}
+
+        {% for categoria, mensaje in mensajes %}
+
+            <div class="mensaje-error">
+                {{ mensaje }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
                 <button type="submit" class="btn btn-success w-100">Registrarse</button>
                                 
 				<div class="text-center mt-3">

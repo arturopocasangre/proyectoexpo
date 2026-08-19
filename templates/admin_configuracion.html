@@ -1,92 +1,1376 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
+    <!-- =========================================================
+         CONFIGURACIÓN BÁSICA DEL DOCUMENTO
+         ========================================================= -->
+
+    <!-- Permite utilizar correctamente caracteres como:
+         á, é, í, ó, ú y ñ -->
     <meta charset="UTF-8">
-    <title>Configuración de cupos</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Hace que la página se adapte a celulares y tablets -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título que aparecerá en la pestaña del navegador -->
+    <title>Configuración de cupos | Happy Paws Vet</title>
+
+
+    <!-- =========================================================
+         BOOTSTRAP
+         ========================================================= -->
+
+    <!-- Bootstrap nos ayuda con la estructura de la tabla,
+         botones, formularios, etc. -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         ICONOS
+         ========================================================= -->
+
+    <!-- Font Awesome se utiliza para los pequeños iconos -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    >
+
+
+    <!-- =========================================================
+         CSS PROPIO DE ESTA PÁGINA
+         ========================================================= -->
+
+    <style>
+
+        /*
+        =========================================================
+        CONFIGURACIÓN GENERAL
+        =========================================================
+        */
+
+        body {
+
+            /*
+            Fondo general de la página.
+            */
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f7dce9,
+                    #e5c9e7,
+                    #d8c5e8
+                );
+
+            /*
+            Evita pequeños movimientos horizontales.
+            */
+
+            overflow-x: hidden;
+
+        }
+
+
+        /*
+        =========================================================
+        CONTENEDOR PRINCIPAL
+        =========================================================
+        */
+
+        .admin-contenedor {
+
+            /*
+            Ancho máximo del contenido.
+            */
+
+            max-width: 1200px;
+
+            /*
+            Centra el contenido.
+            */
+
+            margin: 0 auto;
+
+            /*
+            Espacio interno.
+            */
+
+            padding: 40px 20px;
+
+        }
+
+
+        /*
+        =========================================================
+        ENCABEZADO
+        =========================================================
+        */
+
+        .admin-titulo {
+
+            /*
+            Color principal del texto.
+            */
+
+            color: #302631;
+
+            /*
+            Grosor del título.
+            */
+
+            font-weight: 800;
+
+            /*
+            Espacio inferior.
+            */
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .admin-subtitulo {
+
+            color: #665b65;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        /*
+        =========================================================
+        TARJETA PRINCIPAL
+        =========================================================
+        */
+
+        .admin-card {
+
+            /*
+            Fondo blanco ligeramente transparente.
+            */
+
+            background:
+                rgba(255,255,255,.72);
+
+            /*
+            Bordes redondeados.
+            */
+
+            border-radius: 25px;
+
+            /*
+            Borde muy suave.
+            */
+
+            border:
+                1px solid
+                rgba(255,255,255,.8);
+
+            /*
+            Sombra.
+            */
+
+            box-shadow:
+                0 15px 40px
+                rgba(60,40,60,.10);
+
+            /*
+            Espacio interno.
+            */
+
+            padding: 30px;
+
+            /*
+            Espacio entre las diferentes tarjetas.
+            */
+
+            margin-bottom: 30px;
+
+        }
+
+
+        /*
+        =========================================================
+        TÍTULO DE SECCIÓN
+        =========================================================
+        */
+
+        .seccion-titulo {
+
+            color: #302631;
+
+            font-weight: 700;
+
+            margin-bottom: 22px;
+
+        }
+
+
+        /*
+        =========================================================
+        BOTÓN AGREGAR
+        =========================================================
+        */
+
+        .btn-agregar {
+
+            background: #2f856c;
+
+            border: none;
+
+            border-radius: 12px;
+
+            font-weight: 700;
+
+            padding: 11px 20px;
+
+            transition: .25s ease;
+
+        }
+
+
+        /*
+        Efecto cuando pasamos el mouse.
+        */
+
+        .btn-agregar:hover {
+
+            background: #256f5a;
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        /*
+        =========================================================
+        TABLA
+        =========================================================
+        */
+
+        .tabla-contenedor {
+
+            overflow-x: auto;
+
+            border-radius: 18px;
+
+        }
+
+
+        .table {
+
+            margin-bottom: 0;
+
+        }
+
+
+        .table thead th {
+
+            background: #2f856c;
+
+            color: white;
+
+            border: none;
+
+            font-weight: 700;
+
+        }
+
+
+        .table tbody tr {
+
+            transition: .2s ease;
+
+        }
+
+
+        .table tbody tr:hover {
+
+            background:
+                rgba(47,133,108,.07);
+
+        }
+
+
+        /*
+        =========================================================
+        BOTÓN ELIMINAR
+        =========================================================
+        */
+
+        .btn-eliminar {
+
+            border-radius: 10px;
+
+            font-weight: 600;
+
+        }
+
+
+        /*
+        =========================================================
+        BOTÓN VOLVER
+        =========================================================
+        */
+
+        .btn-volver {
+
+            border-radius: 12px;
+
+            font-weight: 600;
+
+            padding: 10px 18px;
+
+        }
+
+
+        /*
+        =========================================================
+        NOTIFICACIÓN EMERGENTE
+        =========================================================
+
+        Esta es la ventana que aparecerá en el centro
+        de la pantalla.
+
+        No es un alert() del navegador.
+
+        Es una ventana diseñada por nosotros.
+        =========================================================
+        */
+
+        .notificacion-overlay {
+
+            /*
+            Ocupa absolutamente toda la pantalla.
+            */
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            /*
+            Fondo oscuro transparente detrás
+            de la notificación.
+            */
+
+            background:
+                rgba(30,25,30,.45);
+
+            /*
+            Hace que aparezca por encima de todo.
+            */
+
+            z-index: 9999;
+
+            /*
+            Centra la ventana horizontal y verticalmente.
+            */
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            /*
+            Animación inicial.
+            */
+
+            animation:
+                aparecerFondo
+                .3s
+                ease;
+
+            /*
+            Un poco de desenfoque detrás.
+            */
+
+            backdrop-filter:
+                blur(4px);
+
+        }
+
+
+        /*
+        =========================================================
+        CAJA DE LA NOTIFICACIÓN
+        =========================================================
+        */
+
+        .notificacion {
+
+            /*
+            Fondo de la ventana.
+            */
+
+            background:
+                rgba(255,255,255,.96);
+
+            /*
+            Bordes redondeados.
+            */
+
+            border-radius: 25px;
+
+            /*
+            Ancho.
+            */
+
+            width:
+                min(450px, 90%);
+
+            /*
+            Espacio interno.
+            */
+
+            padding: 35px;
+
+            /*
+            Centrado del texto.
+            */
+
+            text-align: center;
+
+            /*
+            Sombra.
+            */
+
+            box-shadow:
+                0 25px 70px
+                rgba(0,0,0,.25);
+
+            /*
+            Animación de entrada.
+            */
+
+            animation:
+                aparecerNotificacion
+                .35s
+                ease;
+
+        }
+
+
+        /*
+        =========================================================
+        ICONO DE ÉXITO
+        =========================================================
+        */
+
+        .notificacion-icono {
+
+            /*
+            Tamaño del círculo.
+            */
+
+            width: 65px;
+
+            height: 65px;
+
+            /*
+            Lo hacemos circular.
+            */
+
+            border-radius: 50%;
+
+            /*
+            Color verde de Happy Paws.
+            */
+
+            background:
+                rgba(47,133,108,.12);
+
+            color:
+                #2f856c;
+
+            /*
+            Centramos el icono.
+            */
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            /*
+            Tamaño del check.
+            */
+
+            font-size: 28px;
+
+            /*
+            Centramos el círculo.
+            */
+
+            margin:
+                0 auto 18px;
+
+        }
+
+
+        /*
+        =========================================================
+        TÍTULO DE NOTIFICACIÓN
+        =========================================================
+        */
+
+        .notificacion h3 {
+
+            color: #302631;
+
+            font-size: 24px;
+
+            font-weight: 800;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        /*
+        =========================================================
+        MENSAJE
+        =========================================================
+        */
+
+        .notificacion p {
+
+            color: #665b65;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        /*
+        =========================================================
+        BOTÓN OK
+        =========================================================
+        */
+
+        .btn-ok {
+
+            /*
+            Verde principal.
+            */
+
+            background:
+                #2f856c;
+
+            color:
+                white;
+
+            border:
+                none;
+
+            border-radius:
+                12px;
+
+            padding:
+                11px 40px;
+
+            font-weight:
+                700;
+
+            cursor:
+                pointer;
+
+            transition:
+                .25s ease;
+
+        }
+
+
+        /*
+        Efecto del botón OK.
+        */
+
+        .btn-ok:hover {
+
+            background:
+                #256f5a;
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        /*
+        =========================================================
+        ANIMACIÓN DEL FONDO
+        =========================================================
+        */
+
+        @keyframes aparecerFondo {
+
+            from {
+
+                opacity: 0;
+
+            }
+
+            to {
+
+                opacity: 1;
+
+            }
+
+        }
+
+
+        /*
+        =========================================================
+        ANIMACIÓN DE LA VENTANA
+        =========================================================
+        */
+
+        @keyframes aparecerNotificacion {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    scale(.85)
+                    translateY(15px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    scale(1)
+                    translateY(0);
+
+            }
+
+        }
+
+
+        /*
+        =========================================================
+        CELULARES
+        =========================================================
+        */
+
+        @media (max-width: 600px) {
+
+            .admin-contenedor {
+
+                padding:
+                    25px 15px;
+
+            }
+
+            .admin-card {
+
+                padding:
+                    20px;
+
+            }
+
+            .notificacion {
+
+                padding:
+                    28px 22px;
+
+            }
+
+        }
+
+    </style>
+
 </head>
-<body class="bg-light">
 
-<div class="container py-4">
-    <h2 class="mb-4">Configuración de cupos 🐾</h2>
 
-    <!-- Formulario agregar -->
-    <form action="{{ url_for('admin_configuracion_agregar') }}" method="post" class="row g-3 mb-4">
-        <div class="col-md-2">
-            <label class="form-label">Día semana</label>
-            <select name="dia_semana" class="form-select" required>
-                <option value="0">Lunes</option>
-                <option value="1">Martes</option>
-                <option value="2">Miércoles</option>
-                <option value="3">Jueves</option>
-                <option value="4">Viernes</option>
-                <option value="5">Sábado</option>
-                <option value="6">Domingo</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Hora inicio</label>
-            <input type="time" name="hora_inicio" class="form-control" required>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Hora fin</label>
-            <input type="time" name="hora_fin" class="form-control" required>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Intervalo (min)</label>
-            <input type="number" name="intervalo" class="form-control" value="60" required>
-        </div>
-		<div class="col-md-2">
-		    <label for="precio" class="form-label">Precio ($)</label>
-		    <input type="number" step="0.01" id="precio" name="precio" class="form-control" required>
-		</div>
-        <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-success w-100">Agregar</button>
-        </div>
-			<div class="text-left mt-3">
-			    <a href="{{ url_for('panel_admin') }}" class="btn btn-sm btn-primary">⬅ Volver</a>
-			</div>
-    </form>
+<body>
 
-    <!-- Tabla configuraciones -->
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Día</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-                <th>Intervalo</th>
-                <th>Precio</th>
-            </tr>
-        </thead>
-		<tbody>
-		    {% set dias = {
-		        0: 'Lunes',
-		        1: 'Martes',
-		        2: 'Miércoles',
-		        3: 'Jueves',
-		        4: 'Viernes',
-		        5: 'Sábado',
-		        6: 'Domingo'
-		    } %}
-		    {% for conf in configuraciones %}
-		    <tr>
-		        <td>{{ dias[conf.dia_semana] }}</td>
-		        <td>{{ conf.hora_inicio }}</td>
-		        <td>{{ conf.hora_fin }}</td>
-		        <td>{{ conf.intervalo }} min</td>
-		        <td>${{ conf.precio }} USD</td>
-		        <td>
-		            <form action="{{ url_for('admin_configuracion_eliminar', id=conf.id) }}" method="post">
-		                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-		            </form>
-		        </td>
-		    </tr>
-		    {% endfor %}
-		</tbody>
-    </table>
+
+<!-- =========================================================
+     CONTENEDOR PRINCIPAL
+     ========================================================= -->
+
+<div class="admin-contenedor">
+
+
+    <!-- =========================================================
+         ENCABEZADO
+         ========================================================= -->
+
+    <h2 class="admin-titulo">
+
+        Configuración de cupos
+
+    </h2>
+
+
+    <p class="admin-subtitulo">
+
+        Administra los días, horarios, intervalos y precios
+        disponibles para las citas veterinarias.
+
+    </p>
+
+
+
+    <!-- =========================================================
+         TARJETA PARA AGREGAR CUPOS
+         ========================================================= -->
+
+    <div class="admin-card">
+
+
+        <h4 class="seccion-titulo">
+
+            Agregar nuevo cupo
+
+        </h4>
+
+
+        <!--
+        =========================================================
+        FORMULARIO
+
+        Este formulario sigue utilizando exactamente
+        tu ruta actual:
+
+        admin_configuracion_agregar
+
+        Por lo tanto NO estamos cambiando la lógica
+        que ya tienes funcionando.
+        =========================================================
+        -->
+
+        <form
+            action="{{ url_for('admin_configuracion_agregar') }}"
+            method="post"
+            class="row g-3"
+        >
+
+
+            <!-- =================================================
+                 DÍA DE LA SEMANA
+                 ================================================= -->
+
+            <div class="col-md-2">
+
+                <label
+                    class="form-label"
+                    for="dia_semana"
+                >
+
+                    Día semana
+
+                </label>
+
+
+                <select
+                    name="dia_semana"
+                    id="dia_semana"
+                    class="form-select"
+                    required
+                >
+
+                    <option value="0">
+                        Lunes
+                    </option>
+
+                    <option value="1">
+                        Martes
+                    </option>
+
+                    <option value="2">
+                        Miércoles
+                    </option>
+
+                    <option value="3">
+                        Jueves
+                    </option>
+
+                    <option value="4">
+                        Viernes
+                    </option>
+
+                    <option value="5">
+                        Sábado
+                    </option>
+
+                    <option value="6">
+                        Domingo
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 HORA DE INICIO
+                 ================================================= -->
+
+            <div class="col-md-2">
+
+                <label
+                    class="form-label"
+                    for="hora_inicio"
+                >
+
+                    Hora inicio
+
+                </label>
+
+
+                <input
+                    type="time"
+                    name="hora_inicio"
+                    id="hora_inicio"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =================================================
+                 HORA DE FIN
+                 ================================================= -->
+
+            <div class="col-md-2">
+
+                <label
+                    class="form-label"
+                    for="hora_fin"
+                >
+
+                    Hora fin
+
+                </label>
+
+
+                <input
+                    type="time"
+                    name="hora_fin"
+                    id="hora_fin"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =================================================
+                 INTERVALO
+                 ================================================= -->
+
+            <div class="col-md-2">
+
+                <label
+                    class="form-label"
+                    for="intervalo"
+                >
+
+                    Intervalo (min)
+
+                </label>
+
+
+                <input
+                    type="number"
+                    name="intervalo"
+                    id="intervalo"
+                    class="form-control"
+                    value="60"
+                    min="1"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PRECIO
+                 ================================================= -->
+
+            <div class="col-md-2">
+
+                <label
+                    class="form-label"
+                    for="precio"
+                >
+
+                    Precio ($)
+
+                </label>
+
+
+                <input
+                    type="number"
+                    step="0.01"
+                    name="precio"
+                    id="precio"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =================================================
+                 BOTÓN AGREGAR
+                 ================================================= -->
+
+            <div class="col-md-2 d-flex align-items-end">
+
+                <button
+                    type="submit"
+                    class="btn btn-agregar text-white w-100"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Agregar
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+
+    <!-- =========================================================
+         TARJETA DE CONFIGURACIONES EXISTENTES
+         ========================================================= -->
+
+    <div class="admin-card">
+
+
+        <h4 class="seccion-titulo">
+
+            Cupos configurados
+
+        </h4>
+
+
+        <!-- =====================================================
+             TABLA
+             ===================================================== -->
+
+        <div class="tabla-contenedor">
+
+
+            <table class="table table-striped align-middle">
+
+
+                <!-- =================================================
+                     ENCABEZADOS
+                     ================================================= -->
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Día
+                        </th>
+
+                        <th>
+                            Inicio
+                        </th>
+
+                        <th>
+                            Fin
+                        </th>
+
+                        <th>
+                            Intervalo
+                        </th>
+
+                        <th>
+                            Precio
+                        </th>
+
+                        <th>
+                            Acción
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <!-- =================================================
+                     CUERPO DE LA TABLA
+                     ================================================= -->
+
+                <tbody>
+
+
+                    <!--
+                    =================================================
+                    DÍAS DE LA SEMANA
+
+                    Creamos un diccionario para convertir:
+
+                    0 → Lunes
+                    1 → Martes
+                    2 → Miércoles
+                    etc.
+                    =================================================
+                    -->
+
+                    {% set dias = {
+
+                        0: 'Lunes',
+
+                        1: 'Martes',
+
+                        2: 'Miércoles',
+
+                        3: 'Jueves',
+
+                        4: 'Viernes',
+
+                        5: 'Sábado',
+
+                        6: 'Domingo'
+
+                    } %}
+
+
+
+                    <!--
+                    =================================================
+                    RECORREMOS TODAS LAS CONFIGURACIONES
+                    =================================================
+                    -->
+
+                    {% for conf in configuraciones %}
+
+
+                    <tr>
+
+
+                        <!-- Día -->
+
+                        <td>
+
+                            {{ dias[conf.dia_semana] }}
+
+                        </td>
+
+
+                        <!-- Hora de inicio -->
+
+                        <td>
+
+                            {{ conf.hora_inicio }}
+
+                        </td>
+
+
+                        <!-- Hora de fin -->
+
+                        <td>
+
+                            {{ conf.hora_fin }}
+
+                        </td>
+
+
+                        <!-- Intervalo -->
+
+                        <td>
+
+                            {{ conf.intervalo }} min
+
+                        </td>
+
+
+                        <!-- Precio -->
+
+                        <td>
+
+                            ${{ conf.precio }} USD
+
+                        </td>
+
+
+                        <!-- =================================================
+                             ELIMINAR
+                             ================================================= -->
+
+                        <td>
+
+
+                            <form
+                                action="{{ url_for(
+                                    'admin_configuracion_eliminar',
+                                    id=conf.id
+                                ) }}"
+                                method="post"
+                            >
+
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger btn-sm btn-eliminar"
+                                >
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                    Eliminar
+
+                                </button>
+
+
+                            </form>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================================================
+         BOTÓN VOLVER
+         ========================================================= -->
+
+    <a
+        href="{{ url_for('panel_admin') }}"
+        class="btn btn-primary btn-volver"
+    >
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Volver al panel
+
+    </a>
+
+
 </div>
 
+
+
+<!-- =========================================================
+     NOTIFICACIÓN EMERGENTE
+     =========================================================
+
+     IMPORTANTE:
+
+     Esta parte solamente se mostrará cuando Flask
+     haya guardado un mensaje dentro de:
+
+     session["mensaje_admin"]
+
+     Si no existe ningún mensaje,
+     esta ventana NO aparecerá.
+
+     Por eso no molestará al entrar normalmente
+     a la página.
+     ========================================================= -->
+
+
+{% if session.get('mensaje_admin') %}
+
+
+<div
+    class="notificacion-overlay"
+    id="notificacion-overlay"
+>
+
+
+    <!-- =====================================================
+         CAJA BLANCA DE LA NOTIFICACIÓN
+         ===================================================== -->
+
+    <div class="notificacion">
+
+
+        <!-- =================================================
+             ICONO
+             ================================================= -->
+
+        <div class="notificacion-icono">
+
+            <i class="fa-solid fa-check"></i>
+
+        </div>
+
+
+        <!-- =================================================
+             TÍTULO
+             ================================================= -->
+
+        <h3>
+
+            Acción realizada correctamente
+
+        </h3>
+
+
+        <!-- =================================================
+             MENSAJE
+
+             Aquí aparecerá exactamente el texto
+             que enviemos desde app.py.
+
+             Ejemplo:
+
+             "El cupo se ha agregado correctamente."
+        ================================================= -->
+
+        <p>
+
+            {{ session.get('mensaje_admin') }}
+
+        </p>
+
+
+        <!-- =================================================
+             BOTÓN OK
+             ================================================= -->
+
+        <button
+            type="button"
+            class="btn-ok"
+            onclick="cerrarNotificacion()"
+        >
+
+            OK
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+
+<script>
+
+
+    /*
+    =========================================================
+    FUNCIÓN PARA CERRAR LA NOTIFICACIÓN
+    =========================================================
+
+    Esta función se ejecuta cuando el administrador
+    presiona el botón "OK".
+    =========================================================
+    */
+
+    function cerrarNotificacion() {
+
+
+        /*
+        Buscamos la ventana emergente
+        mediante su ID.
+        */
+
+        const notificacion =
+            document.getElementById(
+                "notificacion-overlay"
+            );
+
+
+        /*
+        Si la ventana existe,
+        la ocultamos.
+        */
+
+        if (notificacion) {
+
+            notificacion.style.display =
+                "none";
+
+        }
+
+
+        /*
+        =====================================================
+        IMPORTANTE
+
+        También hacemos una petición para eliminar
+        el mensaje de la sesión.
+
+        Así, si el usuario actualiza la página,
+        la notificación NO vuelve a aparecer.
+        =====================================================
+        */
+
+        fetch(
+            "{{ url_for('limpiar_mensaje_admin') }}",
+            {
+                method: "POST"
+            }
+        );
+
+
+    }
+
+
+</script>
+
+
 </body>
+
 </html>

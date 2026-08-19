@@ -1,0 +1,3590 @@
+<!DOCTYPE html>
+
+<!--
+    ================================================================
+    DOCUMENTO PRINCIPAL DE SOPORTE
+    ================================================================
+
+    Este archivo contiene TODA la página de soporte de Happy Paws Vet.
+
+    Aquí tendremos:
+
+    1. Preguntas frecuentes
+    2. Guía de videollamadas
+    3. Términos y condiciones
+    4. Política de privacidad
+
+    Todo estará dentro de UNA SOLA PÁGINA.
+
+    Cuando el usuario presione una opción del menú,
+    la página hará scroll hasta la sección correspondiente.
+
+    ================================================================
+-->
+
+<html lang="es">
+
+
+<head>
+
+    <!--
+        ============================================================
+        CONFIGURACIÓN BÁSICA DEL DOCUMENTO
+        ============================================================
+    -->
+
+    <!-- Permite utilizar correctamente caracteres como:
+         á, é, í, ó, ú, ñ, etc. -->
+    <meta charset="UTF-8">
+
+
+    <!--
+        Hace que la página se adapte correctamente a:
+
+        - Computadoras
+        - Tablets
+        - Celulares
+    -->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+
+    <!--
+        Este será el nombre que aparecerá
+        en la pestaña del navegador.
+    -->
+    <title>
+        Soporte | Happy Paws Vet
+    </title>
+
+
+    <!--
+        ============================================================
+        CSS GENERAL DEL PROYECTO
+        ============================================================
+
+        Conservamos tu archivo style.css.
+
+        NO estamos eliminando tu CSS general.
+
+        Debajo de este enlace agregaremos CSS exclusivo
+        para la página de soporte.
+    -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    <!--
+        ============================================================
+        CSS EXCLUSIVO DE ESTA PÁGINA
+        ============================================================
+
+        Todo este CSS pertenece únicamente a soporte.html.
+
+        Así NO necesitamos crear otro archivo CSS.
+
+        También mantenemos la misma estética que hemos utilizado
+        en las páginas de:
+
+        - Tienda
+        - Alimentos
+        - Accesorios
+        - Higiene
+        - Medicina
+    -->
+
+    <style>
+
+
+        /*
+        ============================================================
+        CONFIGURACIÓN GENERAL
+        ============================================================
+        */
+
+
+        /*
+            scroll-behavior: smooth
+
+            Hace que cuando presionemos:
+
+            Preguntas frecuentes
+            Guía de videollamadas
+            Términos
+            Privacidad
+
+            la página se desplace suavemente
+            en lugar de saltar inmediatamente.
+        */
+
+        html {
+
+            scroll-behavior: smooth;
+
+        }
+
+
+        /*
+            Quitamos cualquier margen que el navegador
+            pueda agregar automáticamente.
+        */
+
+        body {
+
+            margin: 0;
+
+            overflow-x: hidden;
+
+        }
+
+
+
+        /*
+        ============================================================
+        PÁGINA PRINCIPAL DE SOPORTE
+        ============================================================
+        */
+
+
+        /*
+            Este es el contenedor principal
+            de toda la página.
+        */
+
+        .soporte-page {
+
+            /*
+                Dejamos espacio superior para
+                que el contenido no quede pegado
+                al navbar.
+            */
+
+            padding-top: 90px;
+
+
+            /*
+                Creamos el fondo degradado
+                característico de Happy Paws.
+            */
+
+            background:
+
+                radial-gradient(
+                    circle at 8% 10%,
+                    rgba(255,255,255,.65),
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at 92% 80%,
+                    rgba(255,255,255,.45),
+                    transparent 28%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #f7dce9 0%,
+                    #e6c9e7 48%,
+                    #d8c3e8 100%
+                );
+
+
+            /*
+                Nos aseguramos de que el fondo
+                cubra como mínimo toda la pantalla.
+            */
+
+            min-height: 100vh;
+
+
+            /*
+                Espacio inferior para que la última
+                sección tenga aire.
+            */
+
+            padding-bottom: 100px;
+
+        }
+
+
+
+        /*
+        ============================================================
+        HERO DE SOPORTE
+        ============================================================
+        */
+
+
+        /*
+            Esta es la parte superior de la página.
+        */
+
+        .soporte-hero {
+
+            text-align: center;
+
+            padding:
+                70px 25px 55px;
+
+        }
+
+
+        /*
+            Título principal:
+            "Centro de Soporte"
+        */
+
+        .soporte-hero h1 {
+
+            font-size: 48px;
+
+            color: #2f2430;
+
+            font-weight: 800;
+
+            margin:
+                0 0 15px;
+
+        }
+
+
+        /*
+            Texto debajo del título.
+        */
+
+        .soporte-hero p {
+
+            max-width: 720px;
+
+            margin: 0 auto;
+
+            color: #625662;
+
+            font-size: 17px;
+
+            line-height: 1.7;
+
+        }
+
+
+
+        /*
+        ============================================================
+        MENÚ INTERNO DE SOPORTE
+        ============================================================
+        */
+
+
+        /*
+            Este es el menú que contiene:
+
+            Preguntas frecuentes
+            Guía de videollamadas
+            Términos y condiciones
+            Política de privacidad
+        */
+
+        .soporte-nav {
+
+            width:
+                min(1050px, 92%);
+
+            margin:
+                0 auto 60px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+        }
+
+
+        /*
+            Cada una de las cuatro opciones.
+        */
+
+        .soporte-nav a {
+
+            text-decoration: none;
+
+            background:
+                rgba(255,255,255,.58);
+
+            border:
+                1px solid
+                rgba(255,255,255,.75);
+
+            border-radius: 20px;
+
+            padding:
+                18px 15px;
+
+            text-align: center;
+
+            color: #403540;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 10px 25px
+                rgba(64,38,63,.07);
+
+
+            /*
+                Hace que el movimiento al pasar
+                el mouse sea suave.
+            */
+
+            transition:
+                transform .3s ease,
+                background .3s ease,
+                box-shadow .3s ease;
+
+        }
+
+
+        /*
+            Efecto al pasar el mouse.
+        */
+
+        .soporte-nav a:hover {
+
+            transform:
+                translateY(-5px);
+
+            background:
+                rgba(255,255,255,.85);
+
+            box-shadow:
+                0 15px 30px
+                rgba(64,38,63,.12);
+
+        }
+
+
+        /*
+            Esta clase se agrega mediante JavaScript
+            a la sección que el usuario está viendo.
+        */
+
+        .soporte-nav a.activo {
+
+            background:
+                #2f7f67;
+
+            color:
+                white;
+
+            box-shadow:
+                0 12px 28px
+                rgba(47,127,103,.22);
+
+        }
+
+
+
+        /*
+        ============================================================
+        CONTENEDOR DE LAS SECCIONES
+        ============================================================
+        */
+
+
+        .soporte-contenedor {
+
+            width:
+                min(1050px, 92%);
+
+            margin:
+                0 auto;
+
+        }
+
+
+
+        /*
+        ============================================================
+        CADA SECCIÓN
+        ============================================================
+        */
+
+
+        .soporte-seccion {
+
+            /*
+                MUY IMPORTANTE:
+
+                Esto evita que cuando hagamos scroll
+                el navbar tape el título de la sección.
+            */
+
+            scroll-margin-top:
+                110px;
+
+            margin-bottom:
+                80px;
+
+            animation:
+                aparecerSeccion
+                .7s
+                ease;
+
+        }
+
+
+
+        /*
+        ============================================================
+        TÍTULOS DE LAS SECCIONES
+        ============================================================
+        */
+
+
+        .seccion-titulo {
+
+            text-align: center;
+
+            margin-bottom:
+                30px;
+
+        }
+
+
+        .seccion-titulo h2 {
+
+            font-size: 34px;
+
+            color:
+                #2f2430;
+
+            margin:
+                0 0 10px;
+
+        }
+
+
+        .seccion-titulo p {
+
+            color:
+                #665b65;
+
+            font-size:
+                15px;
+
+            margin:
+                0;
+
+        }
+
+
+
+        /*
+        ============================================================
+        PREGUNTAS FRECUENTES
+        ============================================================
+        */
+
+
+        /*
+            Contenedor de todas las preguntas.
+        */
+
+        .faq-list {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                13px;
+
+        }
+
+
+        /*
+            Cada pregunta completa.
+        */
+
+        .faq-item {
+
+            background:
+                rgba(255,255,255,.65);
+
+            border:
+                1px solid
+                rgba(255,255,255,.75);
+
+            border-radius:
+                20px;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 10px 28px
+                rgba(64,38,63,.07);
+
+            transition:
+                box-shadow .3s ease;
+
+        }
+
+
+        /*
+            Cuando una pregunta está abierta.
+        */
+
+        .faq-item.abierto {
+
+            box-shadow:
+                0 15px 35px
+                rgba(64,38,63,.12);
+
+        }
+
+
+
+        /*
+        ============================================================
+        BOTÓN DE LA PREGUNTA
+        ============================================================
+        */
+
+
+        .faq-pregunta {
+
+            width:
+                100%;
+
+            border:
+                none;
+
+            background:
+                transparent;
+
+            color:
+                #332a33;
+
+            text-align:
+                left;
+
+            padding:
+                20px 23px;
+
+            font-size:
+                16px;
+
+            font-weight:
+                700;
+
+            cursor:
+                pointer;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+        }
+
+
+
+        /*
+        ============================================================
+        ICONO + DE LAS PREGUNTAS
+        ============================================================
+        */
+
+
+        .faq-icono {
+
+            width:
+                30px;
+
+            height:
+                30px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(47,127,103,.12);
+
+            color:
+                #2f7f67;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            font-size:
+                21px;
+
+            flex-shrink:
+                0;
+
+            transition:
+                transform .3s ease,
+                background .3s ease;
+
+        }
+
+
+        /*
+            Cuando la pregunta está abierta,
+            el signo + gira 45 grados.
+
+            Visualmente parece convertirse
+            en una X.
+        */
+
+        .faq-item.abierto .faq-icono {
+
+            transform:
+                rotate(45deg);
+
+            background:
+                rgba(47,127,103,.2);
+
+        }
+
+
+
+        /*
+        ============================================================
+        RESPUESTAS
+        ============================================================
+        */
+
+
+        /*
+            Inicialmente la respuesta está cerrada.
+
+            max-height: 0
+            significa que no ocupa espacio.
+        */
+
+        .faq-respuesta {
+
+            max-height:
+                0;
+
+            overflow:
+                hidden;
+
+            transition:
+                max-height .4s ease;
+
+        }
+
+
+        /*
+            Contenido interno de la respuesta.
+        */
+
+        .faq-respuesta-contenido {
+
+            padding:
+                0 23px 22px;
+
+            border-top:
+                1px solid
+                rgba(47,127,103,.08);
+
+            padding-top:
+                17px;
+
+            color:
+                #665b65;
+
+            line-height:
+                1.7;
+
+            font-size:
+                14px;
+
+        }
+
+
+
+        /*
+        ============================================================
+        GUÍA DE VIDEOLLAMADAS
+        ============================================================
+        */
+
+
+        /*
+            Organizamos los pasos en dos columnas.
+        */
+
+        .video-guia {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap:
+                22px;
+
+        }
+
+
+        /*
+            Tarjeta individual de cada paso.
+        */
+
+        .paso-video {
+
+            background:
+                rgba(255,255,255,.65);
+
+            border:
+                1px solid
+                rgba(255,255,255,.75);
+
+            border-radius:
+                25px;
+
+            padding:
+                27px;
+
+            box-shadow:
+                0 12px 30px
+                rgba(64,38,63,.07);
+
+            transition:
+                transform .3s ease;
+
+        }
+
+
+        /*
+            Efecto al pasar el mouse.
+        */
+
+        .paso-video:hover {
+
+            transform:
+                translateY(-5px);
+
+        }
+
+
+
+        /*
+        ============================================================
+        NÚMERO DEL PASO
+        ============================================================
+        */
+
+
+        .numero-paso {
+
+            width:
+                42px;
+
+            height:
+                42px;
+
+            border-radius:
+                50%;
+
+            background:
+                #2f7f67;
+
+            color:
+                white;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            font-weight:
+                800;
+
+            margin-bottom:
+                18px;
+
+        }
+
+
+
+        /*
+        ============================================================
+        TÍTULO DEL PASO
+        ============================================================
+        */
+
+
+        .paso-video h3 {
+
+            color:
+                #332a33;
+
+            font-size:
+                19px;
+
+            margin:
+                0 0 9px;
+
+        }
+
+
+        /*
+        ============================================================
+        TEXTO DEL PASO
+        ============================================================
+        */
+
+
+        .paso-video p {
+
+            color:
+                #665b65;
+
+            font-size:
+                14px;
+
+            line-height:
+                1.7;
+
+            margin:
+                0;
+
+        }
+
+
+
+        /*
+        ============================================================
+        AVISO DE VIDEOLLAMADA
+        ============================================================
+        */
+
+
+        .video-aviso {
+
+            margin-top:
+                25px;
+
+            background:
+                rgba(47,127,103,.09);
+
+            border:
+                1px solid
+                rgba(47,127,103,.15);
+
+            border-radius:
+                20px;
+
+            padding:
+                18px 22px;
+
+            color:
+                #53615c;
+
+            font-size:
+                14px;
+
+            line-height:
+                1.6;
+
+        }
+
+
+
+        /*
+        ============================================================
+        TÉRMINOS Y PRIVACIDAD
+        ============================================================
+        */
+
+
+        /*
+            Contenedor de los documentos.
+        */
+
+        .documento-soporte {
+
+            background:
+                rgba(255,255,255,.65);
+
+            border:
+                1px solid
+                rgba(255,255,255,.75);
+
+            border-radius:
+                25px;
+
+            padding:
+                32px;
+
+            box-shadow:
+                0 12px 30px
+                rgba(64,38,63,.07);
+
+            color:
+                #5f555f;
+
+            line-height:
+                1.75;
+
+            font-size:
+                14px;
+
+        }
+
+
+        /*
+            Títulos dentro de los documentos.
+        */
+
+        .documento-soporte h3 {
+
+            color:
+                #332a33;
+
+            font-size:
+                19px;
+
+            margin-top:
+                25px;
+
+        }
+
+
+        /*
+            El primer título no necesita
+            espacio superior.
+        */
+
+        .documento-soporte h3:first-child {
+
+            margin-top:
+                0;
+
+        }
+
+
+        /*
+            Párrafos de los documentos.
+        */
+
+        .documento-soporte p {
+
+            margin:
+                10px 0;
+
+        }
+
+
+
+        /*
+        ============================================================
+        BOTÓN "VOLVER AL INICIO"
+        ============================================================
+        */
+
+
+        .volver-arriba {
+
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            margin-top:
+                30px;
+
+        }
+
+
+        .volver-arriba a {
+
+            text-decoration:
+                none;
+
+            color:
+                #2f7f67;
+
+            font-weight:
+                700;
+
+            font-size:
+                14px;
+
+            transition:
+                .25s ease;
+
+        }
+
+
+        /*
+            Pequeño movimiento al pasar
+            el mouse por encima.
+        */
+
+        .volver-arriba a:hover {
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+
+        /*
+        ============================================================
+        ANIMACIÓN DE APARICIÓN
+        ============================================================
+        */
+
+
+        @keyframes aparecerSeccion {
+
+            from {
+
+                opacity:
+                    0;
+
+                transform:
+                    translateY(12px);
+
+            }
+
+
+            to {
+
+                opacity:
+                    1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+
+        /*
+        ============================================================
+        RESPONSIVE - TABLET
+        ============================================================
+        */
+
+
+        @media (max-width: 850px) {
+
+
+            /*
+                El menú pasa de 4 columnas
+                a 2 columnas.
+            */
+
+            .soporte-nav {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            /*
+                Los pasos de videollamada
+                pasan a una columna.
+            */
+
+            .video-guia {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            /*
+                Reducimos el título.
+            */
+
+            .soporte-hero h1 {
+
+                font-size:
+                    40px;
+
+            }
+
+        }
+
+
+
+        /*
+        ============================================================
+        RESPONSIVE - CELULAR
+        ============================================================
+        */
+
+
+        @media (max-width: 550px) {
+
+
+            /*
+                Reducimos el espacio superior.
+            */
+
+            .soporte-page {
+
+                padding-top:
+                    75px;
+
+            }
+
+
+            /*
+                Reducimos los espacios del encabezado.
+            */
+
+            .soporte-hero {
+
+                padding:
+                    50px 20px 35px;
+
+            }
+
+
+            /*
+                Título más pequeño.
+            */
+
+            .soporte-hero h1 {
+
+                font-size:
+                    32px;
+
+            }
+
+
+            /*
+                Texto más pequeño.
+            */
+
+            .soporte-hero p {
+
+                font-size:
+                    15px;
+
+            }
+
+
+            /*
+                El menú pasa a una sola columna.
+            */
+
+            .soporte-nav {
+
+                grid-template-columns:
+                    1fr;
+
+                width:
+                    88%;
+
+                margin-bottom:
+                    45px;
+
+            }
+
+
+            /*
+                Reducimos el tamaño del contenido.
+            */
+
+            .soporte-contenedor {
+
+                width:
+                    90%;
+
+            }
+
+
+            /*
+                Títulos de sección.
+            */
+
+            .seccion-titulo h2 {
+
+                font-size:
+                    28px;
+
+            }
+
+
+            /*
+                Preguntas más compactas.
+            */
+
+            .faq-pregunta {
+
+                padding:
+                    17px 18px;
+
+                font-size:
+                    14px;
+
+            }
+
+
+            /*
+                Respuestas más compactas.
+            */
+
+            .faq-respuesta-contenido {
+
+                padding:
+                    0 18px 18px;
+
+                padding-top:
+                    15px;
+
+            }
+
+
+            /*
+                Documentos más compactos.
+            */
+
+            .documento-soporte {
+
+                padding:
+                    23px;
+
+            }
+
+        }
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+<!--
+================================================================
+NAVBAR
+================================================================
+
+Aquí mantenemos el navbar de Happy Paws Vet.
+
+IMPORTANTE:
+
+El carrito fue eliminado completamente.
+
+Ya NO tenemos:
+
+- carrito-icono
+- contador-carrito
+- abrirCarrito()
+- localStorage
+- código relacionado con compras
+
+El navbar solamente tendrá:
+
+- Logo
+- Menú
+- Acceso / Mi cuenta
+================================================================
+-->
+
+
+<header>
+
+
+    <nav class="navbar">
+
+
+        <!--
+        ============================================================
+        LOGO
+        ============================================================
+        -->
+
+        <div class="logo">
+
+
+            <!--
+                Al presionar el logo,
+                regresamos a la página principal.
+            -->
+
+            <a href="/">
+
+
+                <!-- Logo de Happy Paws -->
+                <img
+                    src="{{ url_for('static', filename='img/logo.png') }}"
+                    alt="Happy Paws Vet"
+                >
+
+
+                <!-- Nombre de la veterinaria -->
+                <span>
+                    Happy Paws Vet
+                </span>
+
+
+            </a>
+
+        </div>
+
+
+
+        <!--
+        ============================================================
+        ACCIONES DEL NAVBAR
+        ============================================================
+
+        Aquí dejamos únicamente el botón hamburguesa.
+
+        El carrito fue eliminado.
+        ============================================================
+        -->
+
+        <div class="navbar-actions">
+
+
+            <!--
+                Botón para abrir el menú lateral.
+            -->
+
+            <div
+                class="hamburguesa"
+                onclick="toggleMenu()"
+            >
+
+                ☰
+
+            </div>
+
+
+        </div>
+
+
+
+        <!--
+        ============================================================
+        MENÚ LATERAL
+        ============================================================
+        -->
+
+        <ul
+            class="menu"
+            id="menu"
+        >
+
+
+            <!--
+            --------------------------------------------------------
+            ENCABEZADO DEL MENÚ
+            --------------------------------------------------------
+            -->
+
+            <div class="menu-header">
+
+
+                <!-- Logo -->
+                <img
+                    src="{{ url_for('static', filename='img/logo.png') }}"
+                    alt="Logo Happy Paws Vet"
+                >
+
+
+                <!-- Texto del menú -->
+                <div class="menu-header-texto">
+
+
+                    <h3>
+                        Happy Paws Vet
+                    </h3>
+
+
+                    <p>
+                        Tu veterinaria en casa
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!--
+            --------------------------------------------------------
+            ENLACES PRINCIPALES
+            --------------------------------------------------------
+            -->
+
+
+            <li>
+
+                <a href="/">
+                    Inicio
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="/servicios">
+                    Servicios
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="/tienda">
+                    Tienda
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="/nosotros">
+                    Nosotros
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="/contacto">
+                    Contacto
+                </a>
+
+            </li>
+
+
+
+            <!--
+            ========================================================
+            CONTROL DE SESIÓN
+            ========================================================
+
+            Aquí verificamos si el usuario inició sesión.
+
+            Si es administrador:
+                mostramos Panel Admin.
+
+            Si es veterinario:
+                mostramos Panel de Citas.
+
+            Si es cliente:
+                mostramos Mi Cuenta.
+
+            Si NO inició sesión:
+                mostramos Acceso.
+            ========================================================
+            -->
+
+
+            {% if session.get('usuario_id') %}
+
+
+                <!--
+                    ------------------------------------------------
+                    USUARIO ADMINISTRADOR
+                    ------------------------------------------------
+                -->
+
+                {% if session.get('rol') == 'admin' %}
+
+
+                    <li>
+
+                        <a
+                            href="{{ url_for('panel_admin') }}"
+                        >
+
+                            Panel Admin
+
+                        </a>
+
+                    </li>
+
+
+                <!--
+                    ------------------------------------------------
+                    USUARIO VETERINARIO
+                    ------------------------------------------------
+                -->
+
+                {% elif session.get('rol') == 'veterinario' %}
+
+
+                    <li>
+
+                        <a
+                            href="{{ url_for('panel_veterinario') }}"
+                        >
+
+                            Panel de Citas
+
+                        </a>
+
+                    </li>
+
+
+                <!--
+                    ------------------------------------------------
+                    USUARIO CLIENTE
+                    ------------------------------------------------
+                -->
+
+                {% else %}
+
+
+                    <li>
+
+                        <a
+                            class="btn-cuenta"
+                            href="{{ url_for('panel_cliente') }}"
+                        >
+
+                            Mi Cuenta
+
+                        </a>
+
+                    </li>
+
+
+                {% endif %}
+
+
+
+                <!--
+                    ------------------------------------------------
+                    CERRAR SESIÓN
+                    ------------------------------------------------
+                -->
+
+                <li>
+
+                    <a
+                        href="{{ url_for('logout') }}"
+                    >
+
+                        Cerrar sesión
+
+                    </a>
+
+                </li>
+
+
+            {% else %}
+
+
+                <!--
+                    ------------------------------------------------
+                    USUARIO NO AUTENTICADO
+                    ------------------------------------------------
+                -->
+
+                <li>
+
+                    <a
+                        class="btn-cuenta"
+                        href="{{ url_for('login') }}"
+                    >
+
+                        Acceso
+
+                    </a>
+
+                </li>
+
+
+            {% endif %}
+
+
+        </ul>
+
+
+    </nav>
+
+
+</header>
+
+
+
+<!--
+================================================================
+CONTENIDO PRINCIPAL
+================================================================
+-->
+
+<main
+    class="soporte-page"
+    id="inicio-soporte"
+>
+
+
+    <!--
+    ================================================================
+    HERO
+    ================================================================
+    -->
+
+
+    <section class="soporte-hero">
+
+
+        <!-- Título principal -->
+        <h1>
+
+            Centro de Soporte
+
+        </h1>
+
+
+        <!-- Descripción -->
+        <p>
+
+            Encuentra información útil sobre tu cuenta,
+            citas, videollamadas, compras y el funcionamiento
+            de Happy Paws Vet.
+
+        </p>
+
+
+    </section>
+
+
+
+    <!--
+    ================================================================
+    MENÚ INTERNO DE SOPORTE
+    ================================================================
+
+    Estos cuatro botones NO llevan a páginas diferentes.
+
+    Todos pertenecen a soporte.html.
+
+    Por ejemplo:
+
+        /soporte#preguntas
+
+    significa:
+
+        Abrir soporte.html
+        y desplazarse hasta el elemento con id="preguntas".
+    ================================================================
+    -->
+
+
+    <nav
+        class="soporte-nav"
+        aria-label="Secciones de soporte"
+    >
+
+
+        <!-- Preguntas frecuentes -->
+
+        <a
+            href="#preguntas"
+            data-seccion="preguntas"
+        >
+
+            Preguntas frecuentes
+
+        </a>
+
+
+        <!-- Guía de videollamadas -->
+
+        <a
+            href="#videollamadas"
+            data-seccion="videollamadas"
+        >
+
+            Guía de videollamadas
+
+        </a>
+
+
+        <!-- Términos -->
+
+        <a
+            href="#terminos"
+            data-seccion="terminos"
+        >
+
+            Términos y condiciones
+
+        </a>
+
+
+        <!-- Privacidad -->
+
+        <a
+            href="#privacidad"
+            data-seccion="privacidad"
+        >
+
+            Política de privacidad
+
+        </a>
+
+
+    </nav>
+
+
+
+    <!--
+    ================================================================
+    CONTENEDOR DE LAS CUATRO SECCIONES
+    ================================================================
+    -->
+
+
+    <div class="soporte-contenedor">
+
+
+
+        <!--
+        ============================================================
+        SECCIÓN 1
+        PREGUNTAS FRECUENTES
+        ============================================================
+        -->
+
+
+        <section
+            class="soporte-seccion"
+            id="preguntas"
+        >
+
+
+            <!-- Título de la sección -->
+
+            <div class="seccion-titulo">
+
+
+                <h2>
+
+                    Preguntas frecuentes
+
+                </h2>
+
+
+                <p>
+
+                    Respuestas a las dudas más comunes
+                    sobre Happy Paws Vet.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!--
+            ========================================================
+            LISTA DE PREGUNTAS
+            ========================================================
+            -->
+
+            <div class="faq-list">
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 1
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Necesito crear una cuenta
+                            para solicitar una cita?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+
+                    <!-- Respuesta -->
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Sí. Para solicitar una cita veterinaria
+                            es necesario crear una cuenta en
+                            Happy Paws Vet.
+
+                            <br>
+                            <br>
+
+                            Durante el registro deberás proporcionar
+                            tus datos básicos y la información
+                            de tu mascota.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 2
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Qué información necesito
+                            para registrarme?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Para crear tu cuenta deberás proporcionar
+                            tu nombre, correo electrónico, número
+                            telefónico, contraseña e información
+                            de tu mascota.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 3
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Qué hago si mi correo electrónico
+                            ya está registrado?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Si el correo electrónico ya pertenece
+                            a una cuenta, el sistema te indicará
+                            que debes utilizar otro correo.
+
+                            <br>
+                            <br>
+
+                            Si tienes algún inconveniente con tu
+                            cuenta, puedes comunicarte con
+                            Happy Paws Vet mediante el apartado
+                            de Contacto.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 4
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Qué hago si olvidé mi contraseña?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Actualmente, para recuperar el acceso
+                            a tu cuenta debes comunicarte directamente
+                            con Happy Paws Vet a través de los medios
+                            de contacto disponibles.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 5
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Cómo puedo solicitar una cita?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Primero debes iniciar sesión en tu cuenta
+                            y dirigirte al apartado
+                            <strong>Mis Citas</strong>.
+
+                            <br>
+                            <br>
+
+                            Allí podrás consultar tus citas confirmadas
+                            y anteriores, además de visualizar los
+                            cupos disponibles para solicitar una
+                            nueva cita.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 6
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Puedo agendar una cita
+                            para mi mascota?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Sí. Happy Paws Vet está dirigido a
+                            mascotas domésticas, como perros,
+                            gatos y otras mascotas de compañía.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 7
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Puedo cancelar o cambiar
+                            el horario de una cita?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Las citas no pueden cancelarse ni
+                            modificarse directamente desde la cuenta.
+
+                            <br>
+                            <br>
+
+                            Para solicitar un cambio de horario
+                            o una cancelación, debes comunicarte
+                            con Happy Paws Vet mediante el apartado
+                            de Contacto, redes sociales o número
+                            telefónico disponible.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 8
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Dónde puedo consultar mis citas?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Después de iniciar sesión, puedes ingresar
+                            a <strong>Mis Citas</strong>.
+
+                            <br>
+                            <br>
+
+                            Allí podrás consultar tus citas confirmadas,
+                            citas anteriores y citas pendientes,
+                            incluyendo la fecha y hora correspondientes.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 9
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Cómo funciona una consulta
+                            por videollamada?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Una vez realizado el pago y confirmada
+                            la cita, podrás consultar en tu cuenta
+                            la fecha y hora asignadas.
+
+                            <br>
+                            <br>
+
+                            Cuando llegue el día y la hora de tu cita,
+                            deberás ingresar nuevamente a Happy Paws Vet.
+
+                            <br>
+                            <br>
+
+                            En ese momento se habilitará automáticamente
+                            el enlace para ingresar a la videollamada
+                            desde nuestra plataforma.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 10
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Necesito descargar algún programa
+                            para realizar la videollamada?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            No. La videollamada se realiza mediante
+                            un enlace disponible dentro de Happy Paws Vet
+                            cuando tu cita se encuentre habilitada.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 11
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Cómo puedo comprar productos
+                            en la tienda?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Ingresa al apartado
+                            <strong>Tienda</strong>,
+                            selecciona los productos que deseas
+                            comprar y agrégalos al carrito.
+
+                            <br>
+                            <br>
+
+                            Después podrás revisar tu pedido
+                            y seleccionar la opción
+                            <strong>Comprar</strong>
+                            para continuar con el proceso de pago.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PREGUNTA 12
+                ----------------------------------------------------
+                -->
+
+
+                <article class="faq-item">
+
+
+                    <button
+                        class="faq-pregunta"
+                        type="button"
+                    >
+
+
+                        <span>
+
+                            ¿Cómo se realizan los pagos
+                            de la tienda?
+
+                        </span>
+
+
+                        <span class="faq-icono">
+
+                            +
+
+                        </span>
+
+
+                    </button>
+
+
+                    <div class="faq-respuesta">
+
+
+                        <div class="faq-respuesta-contenido">
+
+
+                            Los pagos se procesan mediante Stripe.
+
+                            <br>
+                            <br>
+
+                            La plataforma muestra los métodos de pago
+                            disponibles al momento de realizar la compra.
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+            </div>
+
+
+
+            <!--
+                Enlace para regresar al comienzo.
+            -->
+
+            <div class="volver-arriba">
+
+
+                <a href="#inicio-soporte">
+
+                    Volver al inicio
+
+                </a>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!--
+        ============================================================
+        SECCIÓN 2
+        GUÍA DE VIDEOLLAMADAS
+        ============================================================
+        -->
+
+
+        <section
+            class="soporte-seccion"
+            id="videollamadas"
+        >
+
+
+            <div class="seccion-titulo">
+
+
+                <h2>
+
+                    Guía de videollamadas
+
+                </h2>
+
+
+                <p>
+
+                    Sigue estos pasos para acceder
+                    a tu consulta virtual.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="video-guia">
+
+
+                <!--
+                ----------------------------------------------------
+                PASO 1
+                ----------------------------------------------------
+                -->
+
+
+                <article class="paso-video">
+
+
+                    <div class="numero-paso">
+
+                        1
+
+                    </div>
+
+
+                    <h3>
+
+                        Confirma tu cita
+
+                    </h3>
+
+
+                    <p>
+
+                        Realiza el proceso de solicitud y pago.
+                        Una vez confirmada la cita, podrás consultar
+                        la fecha y hora desde tu cuenta.
+
+                    </p>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PASO 2
+                ----------------------------------------------------
+                -->
+
+
+                <article class="paso-video">
+
+
+                    <div class="numero-paso">
+
+                        2
+
+                    </div>
+
+
+                    <h3>
+
+                        Ingresa a tu cuenta
+
+                    </h3>
+
+
+                    <p>
+
+                        El día de tu cita, vuelve a ingresar a
+                        Happy Paws Vet y dirígete al apartado
+                        <strong>Mis Citas</strong>.
+
+                    </p>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PASO 3
+                ----------------------------------------------------
+                -->
+
+
+                <article class="paso-video">
+
+
+                    <div class="numero-paso">
+
+                        3
+
+                    </div>
+
+
+                    <h3>
+
+                        Revisa tu cita
+
+                    </h3>
+
+
+                    <p>
+
+                        Busca la cita correspondiente y verifica
+                        que la fecha y hora sean las indicadas
+                        en tu confirmación.
+
+                    </p>
+
+
+                </article>
+
+
+
+                <!--
+                ----------------------------------------------------
+                PASO 4
+                ----------------------------------------------------
+                -->
+
+
+                <article class="paso-video">
+
+
+                    <div class="numero-paso">
+
+                        4
+
+                    </div>
+
+
+                    <h3>
+
+                        Ingresa a la videollamada
+
+                    </h3>
+
+
+                    <p>
+
+                        Cuando llegue la hora de tu cita,
+                        se habilitará automáticamente el enlace
+                        para ingresar a la videollamada desde
+                        nuestra plataforma.
+
+                    </p>
+
+
+                </article>
+
+
+            </div>
+
+
+
+            <!--
+                Aviso importante.
+            -->
+
+            <div class="video-aviso">
+
+                El enlace de videollamada estará disponible
+                únicamente cuando corresponda a una cita
+                confirmada y haya llegado el momento establecido
+                para la consulta.
+
+            </div>
+
+
+
+            <div class="volver-arriba">
+
+
+                <a href="#inicio-soporte">
+
+                    Volver al inicio
+
+                </a>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!--
+        ============================================================
+        SECCIÓN 3
+        TÉRMINOS Y CONDICIONES
+        ============================================================
+        -->
+
+
+        <section
+            class="soporte-seccion"
+            id="terminos"
+        >
+
+
+            <div class="seccion-titulo">
+
+
+                <h2>
+
+                    Términos y condiciones
+
+                </h2>
+
+
+                <p>
+
+                    Condiciones generales de uso
+                    de Happy Paws Vet.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="documento-soporte">
+
+
+                <h3>
+
+                    1. Uso de la plataforma
+
+                </h3>
+
+
+                <p>
+
+                    Happy Paws Vet proporciona una plataforma
+                    destinada a facilitar la gestión de servicios
+                    veterinarios, consultas virtuales y compra
+                    de productos para mascotas.
+
+                </p>
+
+
+
+                <h3>
+
+                    2. Cuenta de usuario
+
+                </h3>
+
+
+                <p>
+
+                    Para acceder a determinadas funciones de la
+                    plataforma, el usuario deberá crear una cuenta
+                    y proporcionar información correcta y actualizada.
+
+                </p>
+
+
+
+                <h3>
+
+                    3. Citas veterinarias
+
+                </h3>
+
+
+                <p>
+
+                    Las solicitudes de citas se realizan desde
+                    la cuenta del usuario. La disponibilidad está
+                    sujeta a los cupos establecidos por
+                    Happy Paws Vet.
+
+                </p>
+
+
+
+                <h3>
+
+                    4. Cancelaciones y modificaciones
+
+                </h3>
+
+
+                <p>
+
+                    Las cancelaciones o modificaciones de citas
+                    deberán solicitarse directamente a
+                    Happy Paws Vet mediante los canales de contacto
+                    disponibles.
+
+                </p>
+
+
+
+                <h3>
+
+                    5. Pagos
+
+                </h3>
+
+
+                <p>
+
+                    Los pagos correspondientes a los servicios
+                    y productos se procesan mediante las plataformas
+                    de pago habilitadas por Happy Paws Vet.
+
+                </p>
+
+
+
+                <h3>
+
+                    6. Tienda
+
+                </h3>
+
+
+                <p>
+
+                    Los productos seleccionados en la tienda
+                    pueden agregarse al carrito y posteriormente
+                    pasar al proceso de compra.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="volver-arriba">
+
+
+                <a href="#inicio-soporte">
+
+                    Volver al inicio
+
+                </a>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!--
+        ============================================================
+        SECCIÓN 4
+        POLÍTICA DE PRIVACIDAD
+        ============================================================
+        -->
+
+
+        <section
+            class="soporte-seccion"
+            id="privacidad"
+        >
+
+
+            <div class="seccion-titulo">
+
+
+                <h2>
+
+                    Política de privacidad
+
+                </h2>
+
+
+                <p>
+
+                    Información sobre el tratamiento de los datos
+                    proporcionados por los usuarios.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="documento-soporte">
+
+
+                <h3>
+
+                    1. Información que recopilamos
+
+                </h3>
+
+
+                <p>
+
+                    Para utilizar determinadas funciones de
+                    Happy Paws Vet, el usuario puede proporcionar
+                    información como nombre, correo electrónico,
+                    número telefónico, contraseña e información
+                    relacionada con sus mascotas.
+
+                </p>
+
+
+
+                <h3>
+
+                    2. Uso de la información
+
+                </h3>
+
+
+                <p>
+
+                    La información proporcionada puede utilizarse
+                    para gestionar cuentas de usuario, citas
+                    veterinarias, servicios y procesos relacionados
+                    con la plataforma.
+
+                </p>
+
+
+
+                <h3>
+
+                    3. Información de pagos
+
+                </h3>
+
+
+                <p>
+
+                    Los pagos se procesan mediante Stripe.
+                    La información de pago es gestionada por
+                    la plataforma de procesamiento correspondiente
+                    de acuerdo con sus propios mecanismos de seguridad.
+
+                </p>
+
+
+
+                <h3>
+
+                    4. Protección de la información
+
+                </h3>
+
+
+                <p>
+
+                    Happy Paws Vet procura mantener medidas
+                    destinadas a proteger la información de sus
+                    usuarios y evitar accesos no autorizados.
+
+                </p>
+
+
+
+                <h3>
+
+                    5. Contacto
+
+                </h3>
+
+
+                <p>
+
+                    Si tienes dudas relacionadas con el tratamiento
+                    de tus datos o necesitas asistencia con tu cuenta,
+                    puedes comunicarte con Happy Paws Vet mediante
+                    los canales de contacto disponibles.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="volver-arriba">
+
+
+                <a href="#inicio-soporte">
+
+                    Volver al inicio
+
+                </a>
+
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!--
+================================================================
+OVERLAY DEL MENÚ
+================================================================
+
+Este elemento es el fondo que aparece cuando abrimos
+el menú lateral.
+
+Al hacer clic sobre él, cerramos el menú.
+================================================================
+-->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="toggleMenu()"
+>
+</div>
+
+
+
+<!--
+================================================================
+JAVASCRIPT
+================================================================
+
+Aquí colocamos todas las funciones que hacen interactiva
+la página.
+
+IMPORTANTE:
+
+El JavaScript NO tiene nada relacionado con el carrito.
+
+Solamente tenemos:
+
+1. Menú hamburguesa.
+2. Acordeón de preguntas.
+3. Scroll y sección activa.
+4. Efecto del navbar al hacer scroll.
+================================================================
+-->
+
+
+<script>
+
+
+    /*
+    ================================================================
+    FUNCIÓN DEL MENÚ HAMBURGUESA
+    ================================================================
+    */
+
+
+    // Esta función se ejecuta cuando el usuario
+    // presiona el botón de las tres líneas.
+
+    function toggleMenu() {
+
+
+        // Buscamos el menú lateral mediante su ID.
+
+        const menu =
+            document.getElementById("menu");
+
+
+        // Buscamos el fondo oscuro/transparente
+        // que aparece detrás del menú.
+
+        const overlay =
+            document.getElementById("overlay");
+
+
+        // Agregamos o quitamos la clase "active".
+
+        menu.classList.toggle("active");
+
+
+        // Hacemos lo mismo con el overlay.
+
+        overlay.classList.toggle("active");
+
+
+    }
+
+
+
+    /*
+    ================================================================
+    ACORDEÓN DE PREGUNTAS FRECUENTES
+    ================================================================
+    */
+
+
+    // Buscamos TODOS los botones que tienen
+    // la clase faq-pregunta.
+
+    const preguntas =
+        document.querySelectorAll(".faq-pregunta");
+
+
+    // Recorremos cada pregunta.
+
+    preguntas.forEach(
+
+        pregunta => {
+
+
+            // Le decimos al navegador:
+            //
+            // "Cuando hagan clic en esta pregunta,
+            // ejecuta esta función."
+
+            pregunta.addEventListener(
+
+                "click",
+
+                function() {
+
+
+                    // Buscamos la tarjeta completa
+                    // a la que pertenece esta pregunta.
+
+                    const item =
+                        this.closest(".faq-item");
+
+
+                    // Buscamos la respuesta que está
+                    // dentro de esta misma tarjeta.
+
+                    const respuesta =
+                        item.querySelector(".faq-respuesta");
+
+
+                    // Revisamos si la pregunta
+                    // ya estaba abierta.
+
+                    const estabaAbierta =
+                        item.classList.contains("abierto");
+
+
+                    /*
+                    ------------------------------------------------
+                    CERRAMOS TODAS LAS PREGUNTAS
+                    ------------------------------------------------
+
+                    Esto hace que solamente una pregunta
+                    pueda estar abierta a la vez.
+                    ------------------------------------------------
+                    */
+
+
+                    document
+                        .querySelectorAll(".faq-item")
+                        .forEach(
+
+                            otroItem => {
+
+
+                                // Quitamos la clase abierto.
+
+                                otroItem.classList.remove(
+                                    "abierto"
+                                );
+
+
+                                // Buscamos su respuesta.
+
+                                const otraRespuesta =
+                                    otroItem.querySelector(
+                                        ".faq-respuesta"
+                                    );
+
+
+                                // Volvemos a colocar su altura
+                                // en cero.
+
+                                otraRespuesta.style.maxHeight =
+                                    null;
+
+
+                            }
+
+                        );
+
+
+                    /*
+                    ------------------------------------------------
+                    SI NO ESTABA ABIERTA, LA ABRIMOS
+                    ------------------------------------------------
+                    */
+
+
+                    if (!estabaAbierta) {
+
+
+                        // Agregamos la clase "abierto".
+
+                        item.classList.add("abierto");
+
+
+                        // scrollHeight nos indica exactamente
+                        // cuánto mide el contenido.
+
+                        respuesta.style.maxHeight =
+                            respuesta.scrollHeight + "px";
+
+
+                    }
+
+
+                }
+
+            );
+
+
+        }
+
+    );
+
+
+
+    /*
+    ================================================================
+    ENLACES DEL MENÚ INTERNO
+    ================================================================
+    */
+
+
+    // Buscamos los cuatro enlaces:
+
+    // Preguntas frecuentes
+    // Videollamadas
+    // Términos
+    // Privacidad
+
+    const enlacesSeccion =
+        document.querySelectorAll(".soporte-nav a");
+
+
+    // Recorremos los cuatro enlaces.
+
+    enlacesSeccion.forEach(
+
+        enlace => {
+
+
+            // Cuando hacemos clic en uno...
+
+            enlace.addEventListener(
+
+                "click",
+
+                function() {
+
+
+                    // Primero quitamos la clase "activo"
+                    // de todos los enlaces.
+
+                    enlacesSeccion.forEach(
+
+                        otroEnlace => {
+
+                            otroEnlace.classList.remove(
+                                "activo"
+                            );
+
+                        }
+
+                    );
+
+
+                    // Después activamos el enlace
+                    // que acabamos de seleccionar.
+
+                    this.classList.add("activo");
+
+
+                }
+
+            );
+
+
+        }
+
+    );
+
+
+
+    /*
+    ================================================================
+    DETECTAR LA SECCIÓN ACTUAL
+    ================================================================
+    */
+
+
+    // Buscamos las cuatro secciones principales.
+
+    const secciones =
+        document.querySelectorAll(".soporte-seccion");
+
+
+    // Cada vez que el usuario hace scroll...
+
+    window.addEventListener(
+
+        "scroll",
+
+        function() {
+
+
+            // Guardamos la posición actual del scroll.
+
+            // Sumamos 180 para considerar
+            // el tamaño aproximado del navbar.
+
+            let posicionActual =
+                window.scrollY + 180;
+
+
+            // Revisamos todas las secciones.
+
+            secciones.forEach(
+
+                seccion => {
+
+
+                    // Posición donde comienza la sección.
+
+                    const inicio =
+                        seccion.offsetTop;
+
+
+                    // Posición donde termina la sección.
+
+                    const fin =
+                        inicio + seccion.offsetHeight;
+
+
+                    // Comprobamos si el usuario
+                    // está actualmente dentro de ella.
+
+                    if (
+                        posicionActual >= inicio &&
+                        posicionActual < fin
+                    ) {
+
+
+                        // Obtenemos el ID de la sección.
+
+                        const id =
+                            seccion.id;
+
+
+                        // Quitamos la clase activo
+                        // de todos los botones.
+
+                        enlacesSeccion.forEach(
+
+                            enlace => {
+
+                                enlace.classList.remove(
+                                    "activo"
+                                );
+
+                            }
+
+                        );
+
+
+                        // Buscamos el botón que corresponde
+                        // a la sección actual.
+
+                        const enlaceActivo =
+                            document.querySelector(
+                                `.soporte-nav a[data-seccion="${id}"]`
+                            );
+
+
+                        // Si encontramos el botón,
+                        // lo marcamos como activo.
+
+                        if (enlaceActivo) {
+
+                            enlaceActivo.classList.add(
+                                "activo"
+                            );
+
+                        }
+
+
+                    }
+
+
+                }
+
+            );
+
+
+        }
+
+    );
+
+
+
+    /*
+    ================================================================
+    EFECTO DEL NAVBAR AL HACER SCROLL
+    ================================================================
+    */
+
+
+    // Escuchamos cada movimiento de scroll.
+
+    window.addEventListener(
+
+        "scroll",
+
+        function() {
+
+
+            // Buscamos el navbar.
+
+            const navbar =
+                document.querySelector(".navbar");
+
+
+            // Si el usuario bajó más de 20 píxeles...
+
+            if (window.scrollY > 20) {
+
+
+                // Agregamos la clase "scrolled".
+
+                navbar.classList.add("scrolled");
+
+
+            } else {
+
+
+                // Si regresó arriba,
+                // quitamos la clase.
+
+                navbar.classList.remove("scrolled");
+
+
+            }
+
+
+        }
+
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
