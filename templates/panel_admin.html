@@ -3,845 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel Admin - Happy Paws Vet</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- FontAwesome & Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- DataTables Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="bg-light">
 
-
     <!-- HEADER -->
     <header>
-
         <nav class="navbar">
+            <div class="logo">
+                <a href="/">
+                    <h2>Happy Paws Vet 🐾</h2>
+                </a>
+            </div>
 
-    <div class="logo">
-        <a href="/">
-            <h2>Happy Paws Vet 🐾</h2>
-        </a>
-    </div>
+            <div class="hamburguesa" onclick="toggleMenu()">
+                ☰
+            </div>
 
-    <div class="hamburguesa" onclick="toggleMenu()">
-        ☰
-    </div>
+            <ul class="menu" id="menu">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/servicios">Servicios</a></li>
+                <li><a href="/tienda">Tienda</a></li>
+                <li><a href="/nosotros">Nosotros</a></li>
+                <li><a href="/contacto">Contacto</a></li>
 
-<ul class="menu" id="menu">
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/servicios">Servicios</a></li>
-    <li><a href="/tienda">Tienda</a></li>
-    <li><a href="/nosotros">Nosotros</a></li>
-    <li><a href="/contacto">Contacto</a></li>
-
-    {% if session.get('usuario_id') %}
-        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-    {% else %}
-        <li><a href="{{ url_for('login') }}">Acceso</a></li>
-    {% endif %}
-</ul>
-
-</nav>
+                {% if session.get('usuario_id') %}
+                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Acceso</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </header>
 
-
 <div class="container mt-5">
-<a>
-    .
-</a>
+<a>.</a>
+
+<div class="container my-5">
     <h2 class="text-center mb-4">🐾 Panel de Administración</h2>
 
     <!-- Usuarios -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Usuarios</h4>
+                <h4 class="mb-0">Usuarios</h4>
                 <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-sm btn-primary">➕ Nuevo Usuario</a>
             </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for u in usuarios %}
-                    <tr>
-                        <td>{{ u.email }}</td>
-                        <td>{{ u.rol }}</td>
-                        <td>
-                            {% if u.activo ==1 %}
-                                    Activo
-                            {% else %}
-                                <span class="text-muted">Inactivo</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ url_for('editar_usuario', usuario_id=u.id) }}" class="btn btn-sm btn-warning">
-                                ✏️ Editar
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            
+            <div class="table-responsive">
+                <table id="tablaUsuarios" class="table table-striped table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in usuarios %}
+                        <tr>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.rol }}</td>
+                            <td>
+                                {% if u.activo == 1 %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('editar_usuario', usuario_id=u.id) }}" class="btn btn-sm btn-warning">
+                                    ✏️ Editar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Clientes -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <h4>Clientes</h4>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for c in clientes %}
-                    <tr>
-                        <td>{{ c.nombre }}</td>
-                        <td>{{ c.email }}</td>
-                        <td>{{ c.telefono }}</td>
-                        <td>
-                            <a href="{{ url_for('editar_usuario', usuario_id=c.id) }}" class="btn btn-sm btn-warning">
-                                ✏️ Editar
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Clientes</h4>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="tablaClientes" class="table table-striped table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in clientes %}
+                        <tr>
+                            <td>{{ c.nombre }}</td>
+                            <td>{{ c.email }}</td>
+                            <td>{{ c.telefono }}</td>
+                            <td>
+                                <a href="{{ url_for('editar_usuario', usuario_id=c.id) }}" class="btn btn-sm btn-warning">
+                                    ✏️ Editar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
+    <!-- Citas -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Citas</h4>
+                <div>
+                    <a href="{{ url_for('admin_configuracion') }}" class="btn btn-sm btn-outline-primary me-1">🛠 Configuración</a>
+                    <a href="{{ url_for('nueva_cita') }}" class="btn btn-sm btn-primary">➕ Crear Cupo</a>
+                </div>
+            </div>
 
-<!-- Citas -->
-<div class="card shadow-sm">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Citas</h4>
-            <a href="{{ url_for('admin_configuracion') }}" class="btn btn-sm btn-primary">🛠 Configuracion</a>
-            <a href="{{ url_for('nueva_cita') }}" class="btn btn-sm btn-primary">➕ Crear Cupo</a>
+            <!-- Filtro por fecha -->
+            <div class="mb-3">
+                <label for="filtroFecha" class="form-label font-weight-bold">Filtrar Citas por Fecha:</label>
+                <input type="date" id="filtroFecha" class="form-control" style="max-width:250px;">
+            </div>
+
+            <div class="table-responsive">
+                <table id="tablaCitas" class="table table-striped table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Email</th>
+                            <th>Estado</th>
+                            <th>Enlace</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cita in citas %}
+                        <tr>
+                            <td>{{ cita.fecha }}</td>
+                            <td>{{ cita.hora }}</td>
+                            <td>{{ cita.cliente_nombre or '---' }}</td>
+                            <td>{{ cita.cliente_email or '---' }}</td>
+                            <td>{{ cita.estado }}</td>
+                            <td>
+                                {% if cita.link_consulta %}
+                                    <a href="{{ cita.link_consulta }}" target="_blank" class="btn btn-sm btn-success">Entrar</a>
+                                {% else %}
+                                    {% if cita.estado == 'pagada' %}
+                                        <a href="{{ url_for('crear_enlace', cita_id=cita.id) }}" class="btn btn-sm btn-primary">Crear</a>
+                                    {% else %}
+                                        <span class="text-muted">Pendiente</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('editar_cita', cita_id=cita.id) }}" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                <form method="POST" action="{{ url_for('eliminar_cita', cita_id=cita.id) }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar cita?')">🗑️ Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <!-- Filtro por fecha -->
-        <div class="mb-3">
-            <label for="filtroFecha" class="form-label">Filtrar por fecha:</label>
-            <input type="date" id="filtroFecha" class="form-control" style="max-width:250px;">
-        </div>
-
-        <table id="tablaCitas" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th>Cliente</th>
-                    <th>Email</th>
-                    <th>Estado</th>
-                    <th>Enlace</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cita in citas %}
-                <tr>
-                    <td>{{ cita.fecha }}</td>
-                    <td>{{ cita.hora }}</td>
-                    <td>{{ cita.cliente_nombre or '---' }}</td>
-                    <td>{{ cita.cliente_email or '---' }}</td>
-                    <td>{{ cita.estado }}</td>
-					<td>
-					    {% if cita.link_consulta %}
-					        <a href="{{ cita.link_consulta }}" target="_blank" class="btn btn-sm btn-success">Entrar</a>
-					    {% else %}
-					        {% if cita.estado == 'pagada' %}
-					            <a href="{{ url_for('crear_enlace', cita_id=cita.id) }}" class="btn btn-sm btn-primary">Crear</a>
-					        {% else %}
-					            <span class="text-muted">Pendiente</span>
-					        {% endif %}
-					    {% endif %}
-					</td>
-
-                    <td>
-                        <a href="{{ url_for('editar_cita', cita_id=cita.id) }}" class="btn btn-sm btn-warning">✏️ Editar</a>
-                        <form method="POST" action="{{ url_for('eliminar_cita', cita_id=cita.id) }}" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar cita?')">🗑️ Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 
-<!-- jQuery + DataTables -->
+<!-- jQuery + Bootstrap + DataTables JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
 $(document).ready(function() {
-    var table = $('#tablaCitas').DataTable({
-        "order": [[0, "desc"]], // ordenar por fecha
-        "pageLength": 10,      // mostrar 10 citas por página
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-        }
+    // Configuración general del idioma español
+    var idiomaEspanol = {
+        "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+    };
+
+    // 1. DataTable Usuarios
+    $('#tablaUsuarios').DataTable({
+        "pageLength": 10,
+        "language": idiomaEspanol,
+        "responsive": true
     });
 
-    // Filtro por fecha
+    // 2. DataTable Clientes
+    $('#tablaClientes').DataTable({
+        "pageLength": 10,
+        "language": idiomaEspanol,
+        "responsive": true
+    });
+
+    // 3. DataTable Citas
+    var tableCitas = $('#tablaCitas').DataTable({
+        "order": [[0, "desc"]], // ordenar por fecha
+        "pageLength": 10,
+        "language": idiomaEspanol,
+        "responsive": true
+    });
+
+    // Filtro por fecha en Citas
     $('#filtroFecha').on('change', function() {
         var fecha = $(this).val();
         if (fecha) {
-            table.column(0).search(fecha).draw();
+            tableCitas.column(0).search(fecha).draw();
         } else {
-            table.column(0).search('').draw();
+            tableCitas.column(0).search('').draw();
         }
     });
 });
 </script>
 
-<!-- ============================================================
-     NOTIFICACIÓN EMERGENTE DEL PANEL ADMIN
-     ============================================================
-
-     Esta ventana solamente aparecerá cuando exista un mensaje
-     guardado en:
-
-         session["mensaje_admin"]
-
-     Por ejemplo:
-
-         "Los datos del usuario se han actualizado correctamente."
-
-     Si no existe ningún mensaje, esta ventana no aparecerá.
-     ============================================================ -->
-
-
+<!-- NOTIFICACIÓN EMERGENTE DEL PANEL ADMIN -->
 {% if session.get('mensaje_admin') %}
-
-<div
-    class="notificacion-overlay"
-    id="notificacion-overlay"
->
-
-    <!-- ========================================================
-         CAJA PRINCIPAL DE LA NOTIFICACIÓN
-         ======================================================== -->
-
+<div class="notificacion-overlay" id="notificacion-overlay">
     <div class="notificacion-admin">
-
-
-        <!-- ====================================================
-             ICONO DE CONFIRMACIÓN
-             ==================================================== -->
-
         <div class="notificacion-icono-admin">
-
             <i class="fa-solid fa-check"></i>
-
         </div>
-
-
-        <!-- ====================================================
-             TÍTULO
-             ==================================================== -->
-
-        <h3>
-
-            Acción realizada correctamente
-
-        </h3>
-
-
-        <!-- ====================================================
-             MENSAJE
-
-             Aquí aparecerá el mensaje que enviemos desde
-             app.py utilizando:
-
-             session["mensaje_admin"]
-             ==================================================== -->
-
-        <p>
-
-            {{ session.get('mensaje_admin') }}
-
-        </p>
-
-
-        <!-- ====================================================
-             BOTÓN OK
-             ==================================================== -->
-
-        <button
-            type="button"
-            class="btn-ok-admin"
-            onclick="cerrarNotificacionAdmin()"
-        >
-
+        <h3>Acción realizada correctamente</h3>
+        <p>{{ session.get('mensaje_admin') }}</p>
+        <button type="button" class="btn-ok-admin" onclick="cerrarNotificacionAdmin()">
             OK
-
         </button>
-
-
     </div>
-
 </div>
-
 {% endif %}
 
-
-
-<!-- ============================================================
-     CSS DE LA NOTIFICACIÓN
-     ============================================================
-
-     Lo dejamos aquí abajo para que no tengas que modificar
-     tu archivo style.css.
-
-     Todo lo relacionado con esta ventana está aquí.
-     ============================================================ -->
-
+<!-- CSS DE LA NOTIFICACIÓN -->
 <style>
-
-/* ============================================================
-   FONDO OSCURO QUE CUBRE TODA LA PANTALLA
-   ============================================================ */
-
 .notificacion-overlay {
-
-    /*
-    La posición fixed hace que la ventana permanezca
-    sobre toda la página.
-    */
-
     position: fixed;
-
     top: 0;
-
     left: 0;
-
     width: 100%;
-
     height: 100%;
-
-
-    /*
-    Fondo oscuro transparente.
-    */
-
-    background:
-        rgba(30, 25, 30, 0.45);
-
-
-    /*
-    La colocamos por encima de absolutamente todo.
-    */
-
+    background: rgba(30, 25, 30, 0.45);
     z-index: 99999;
-
-
-    /*
-    Centramos la ventana horizontal y verticalmente.
-    */
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-
-    /*
-    Desenfoque suave del contenido que queda detrás.
-    */
-
     backdrop-filter: blur(5px);
-
-
-    /*
-    Animación de entrada.
-    */
-
-    animation:
-        aparecerOverlayAdmin
-        0.3s
-        ease;
-
+    animation: aparecerOverlayAdmin 0.3s ease;
 }
-
-
-/* ============================================================
-   CAJA BLANCA DE LA NOTIFICACIÓN
-   ============================================================ */
 
 .notificacion-admin {
-
-    /*
-    Fondo blanco.
-    */
-
-    background:
-        rgba(255, 255, 255, 0.97);
-
-
-    /*
-    Bordes redondeados.
-    */
-
+    background: rgba(255, 255, 255, 0.97);
     border-radius: 25px;
-
-
-    /*
-    Ancho máximo.
-    */
-
     width: min(450px, 90%);
-
-
-    /*
-    Espacio interior.
-    */
-
     padding: 35px;
-
-
-    /*
-    Centrar el contenido.
-    */
-
     text-align: center;
-
-
-    /*
-    Sombra.
-    */
-
-    box-shadow:
-        0 25px 70px
-        rgba(0, 0, 0, 0.25);
-
-
-    /*
-    Animación de entrada.
-    */
-
-    animation:
-        aparecerNotificacionAdmin
-        0.35s
-        ease;
-
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+    animation: aparecerNotificacionAdmin 0.35s ease;
 }
-
-
-/* ============================================================
-   CÍRCULO VERDE DEL CHECK
-   ============================================================ */
 
 .notificacion-icono-admin {
-
-    /*
-    Tamaño del círculo.
-    */
-
     width: 65px;
-
     height: 65px;
-
-
-    /*
-    Lo hacemos completamente circular.
-    */
-
     border-radius: 50%;
-
-
-    /*
-    Fondo verde muy suave.
-    */
-
-    background:
-        rgba(47, 133, 108, 0.12);
-
-
-    /*
-    Color del check.
-    */
-
-    color:
-        #2f856c;
-
-
-    /*
-    Centramos el icono.
-    */
-
+    background: rgba(47, 133, 108, 0.12);
+    color: #2f856c;
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-
-    /*
-    Tamaño del check.
-    */
-
     font-size: 28px;
-
-
-    /*
-    Separación inferior.
-    */
-
-    margin:
-        0 auto 18px;
-
+    margin: 0 auto 18px;
 }
-
-
-/* ============================================================
-   TÍTULO DE LA NOTIFICACIÓN
-   ============================================================ */
 
 .notificacion-admin h3 {
-
-    /*
-    Color oscuro.
-    */
-
-    color:
-        #302631;
-
-
-    /*
-    Tamaño.
-    */
-
+    color: #302631;
     font-size: 24px;
-
-
-    /*
-    Grosor.
-    */
-
     font-weight: 800;
-
-
-    /*
-    Espacio inferior.
-    */
-
     margin-bottom: 10px;
-
 }
-
-
-/* ============================================================
-   TEXTO DE LA NOTIFICACIÓN
-   ============================================================ */
 
 .notificacion-admin p {
-
-    /*
-    Color gris.
-    */
-
-    color:
-        #665b65;
-
-
-    /*
-    Tamaño del texto.
-    */
-
+    color: #665b65;
     font-size: 15px;
-
-
-    /*
-    Altura de línea para que se vea limpio.
-    */
-
     line-height: 1.6;
-
-
-    /*
-    Espacio antes del botón.
-    */
-
     margin-bottom: 25px;
-
 }
-
-
-/* ============================================================
-   BOTÓN OK
-   ============================================================ */
 
 .btn-ok-admin {
-
-    /*
-    Verde principal de Happy Paws.
-    */
-
-    background:
-        #2f856c;
-
-
-    /*
-    Texto blanco.
-    */
-
-    color:
-        white;
-
-
-    /*
-    Quitamos el borde predeterminado.
-    */
-
-    border:
-        none;
-
-
-    /*
-    Bordes redondeados.
-    */
-
-    border-radius:
-        12px;
-
-
-    /*
-    Tamaño del botón.
-    */
-
-    padding:
-        11px 40px;
-
-
-    /*
-    Texto en negrita.
-    */
-
-    font-weight:
-        700;
-
-
-    /*
-    Cursor de botón.
-    */
-
-    cursor:
-        pointer;
-
-
-    /*
-    Animación suave.
-    */
-
-    transition:
-        0.25s ease;
-
+    background: #2f856c;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 40px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
 }
-
-
-/* ============================================================
-   EFECTO AL PASAR EL MOUSE SOBRE OK
-   ============================================================ */
 
 .btn-ok-admin:hover {
-
-    /*
-    Verde ligeramente más oscuro.
-    */
-
-    background:
-        #256f5a;
-
-
-    /*
-    El botón sube ligeramente.
-    */
-
-    transform:
-        translateY(-2px);
-
+    background: #256f5a;
+    transform: translateY(-2px);
 }
-
-
-/* ============================================================
-   ANIMACIÓN DEL FONDO
-   ============================================================ */
 
 @keyframes aparecerOverlayAdmin {
-
-    from {
-
-        opacity:
-            0;
-
-    }
-
-    to {
-
-        opacity:
-            1;
-
-    }
-
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
-
-
-/* ============================================================
-   ANIMACIÓN DE LA CAJA
-   ============================================================ */
 
 @keyframes aparecerNotificacionAdmin {
-
     from {
-
-        opacity:
-            0;
-
-        transform:
-            scale(0.85)
-            translateY(15px);
-
+        opacity: 0;
+        transform: scale(0.85) translateY(15px);
     }
-
     to {
-
-        opacity:
-            1;
-
-        transform:
-            scale(1)
-            translateY(0);
-
+        opacity: 1;
+        transform: scale(1) translateY(0);
     }
-
 }
-
-
-/* ============================================================
-   ADAPTACIÓN PARA CELULARES
-   ============================================================ */
 
 @media (max-width: 600px) {
-
     .notificacion-admin {
-
-        /*
-        Reducimos el espacio interior en pantallas pequeñas.
-        */
-
-        padding:
-            28px 22px;
-
+        padding: 28px 22px;
     }
-
-
     .notificacion-admin h3 {
-
-        /*
-        Título un poco más pequeño.
-        */
-
-        font-size:
-            21px;
-
+        font-size: 21px;
     }
-
 }
-
 </style>
 
-
-
-<!-- ============================================================
-     JAVASCRIPT DE LA NOTIFICACIÓN
-     ============================================================ -->
-
+<!-- JAVASCRIPT DE LA NOTIFICACIÓN -->
 <script>
-
-/*
-================================================================
-FUNCIÓN: cerrarNotificacionAdmin()
-
-Esta función se ejecuta cuando el administrador presiona:
-
-                    OK
-
-Primero ocultamos visualmente la ventana.
-Después eliminamos el mensaje de la sesión de Flask.
-================================================================
-*/
-
 function cerrarNotificacionAdmin() {
-
-
-    /*
-    --------------------------------------------------------------
-    1. BUSCAR LA VENTANA
-    --------------------------------------------------------------
-    */
-
-    const notificacion =
-        document.getElementById(
-            "notificacion-overlay"
-        );
-
-
-    /*
-    --------------------------------------------------------------
-    2. OCULTAR LA VENTANA
-    --------------------------------------------------------------
-
-    Si la ventana existe, la escondemos.
-    */
-
+    const notificacion = document.getElementById("notificacion-overlay");
     if (notificacion) {
-
-        notificacion.style.display =
-            "none";
-
+        notificacion.style.display = "none";
     }
-
-
-    /*
-    --------------------------------------------------------------
-    3. ELIMINAR EL MENSAJE DE LA SESIÓN
-    --------------------------------------------------------------
-
-    Hacemos una petición POST a Flask.
-
-    La ruta que creamos anteriormente es:
-
-        /limpiar-mensaje-admin
-
-    Esto evita que la ventana vuelva a aparecer
-    si el administrador actualiza la página.
-    */
-
-    fetch(
-        "{{ url_for('limpiar_mensaje_admin') }}",
-        {
-            method: "POST"
-        }
-    );
-
+    fetch("{{ url_for('limpiar_mensaje_admin') }}", {
+        method: "POST"
+    });
 }
-
 </script>
 </body>
 </html>

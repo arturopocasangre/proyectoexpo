@@ -7,6 +7,11 @@
         
     <title>Happy Paws Vet</title>
 
+  <!-- Manifest -->
+  <link rel="manifest" href="{{ url_for('manifest') }}">
+  <!-- Ícono -->
+  <link rel="icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+  
     <!-- conexión con CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,6 +199,16 @@ window.addEventListener("scroll",function(){
 });
 
 </script>
+
+ <!-- Registrar Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log("SW registrado:", reg))
+        .catch(err => console.error("Error registrando SW:", err));
+    }
+  </script>
+
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 </body>
 </html>

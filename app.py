@@ -1641,13 +1641,31 @@ def registro():
             # ----------------------------------------------------
             return redirect(url_for("registro"))
 
-
     # ============================================================
     # Si simplemente entramos a /registro mediante GET
     # ============================================================
 
     return render_template("registro.html")
 
+
+    # ============================================================
+    # Si simplemente entramos a /registro mediante GET
+    # ============================================================
+
+# ============================================================
+# aplicación Flask instalable en el celular como PWA
+# ============================================================
+@app.route('/manifest.json')
+def manifest():
+    return app.send_static_file('manifest.json')
+
+@app.route('/service-worker.js')
+def sw():
+    return app.send_static_file('service-worker.js')
+
+# ============================================================
+# ############
+# ============================================================
 # ------------------ MAIN ------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
