@@ -200,14 +200,38 @@ window.addEventListener("scroll",function(){
 
 </script>
 
- <!-- Registrar Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log("SW registrado:", reg))
-        .catch(err => console.error("Error registrando SW:", err));
+
+<script>
+  // Registrar Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log("SW registrado:", reg))
+      .catch(err => console.error("Error registrando SW:", err));
+  }
+
+  // Manejo del prompt de instalación
+  let deferredPrompt;
+  const installBtn = document.getElementById("installBtn");
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault(); // evita el prompt automático
+    deferredPrompt = e;
+    if (installBtn) {
+      installBtn.style.display = "block"; // muestra el botón
     }
-  </script>
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener("click", async () => {
+      installBtn.style.display = "none"; // oculta el botón
+      deferredPrompt.prompt(); // muestra el prompt oficial
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log("Resultado instalación:", outcome);
+      deferredPrompt = null;
+    });
+  }
+</script>
+
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 </body>
