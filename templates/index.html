@@ -17,9 +17,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+
+  <style>
+    /* Estilos del splash screen */
+    #splash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #007bff;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      z-index: 9999;
+    }
+    #splash img {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+    #installBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #installBtn:hover {
+      background: #0056b3;
+    }
+  </style>
+  
 </head>
 <body>
 
+  <!-- Splash screen -->
+  <div id="splash">
+    <img src="/static/icons/icon-192.png" alt="Logo">
+    <h2>Mi App Veterinaria</h2>
+    <p>Cargando...</p>
+  </div>
+ 
+ <!-- Contenido principal -->
+  <h1>Bienvenido a Mi App Veterinaria</h1>
+  <p>Instálame en tu celular para una experiencia completa.</p>
+  <button id="installBtn">Instalar App</button>
+  
     <!-- HEADER -->
     <header>
 
@@ -200,28 +248,29 @@ window.addEventListener("scroll",function(){
 
 </script>
 
+  <script>
+    // Ocultar splash cuando la app carga
+    window.addEventListener("load", () => {
+      document.getElementById("splash").style.display = "none";
+    });
 
-<script>
-  // Registrar Service Worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log("SW registrado:", reg))
-      .catch(err => console.error("Error registrando SW:", err));
-  }
-
-  // Manejo del prompt de instalación
-  let deferredPrompt;
-  const installBtn = document.getElementById("installBtn");
-
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault(); // evita el prompt automático
-    deferredPrompt = e;
-    if (installBtn) {
-      installBtn.style.display = "block"; // muestra el botón
+    // Registrar Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log("SW registrado:", reg))
+        .catch(err => console.error("Error registrando SW:", err));
     }
-  });
 
-  if (installBtn) {
+    // Manejo del prompt de instalación
+    let deferredPrompt;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault(); // evita el prompt automático
+      deferredPrompt = e;
+      installBtn.style.display = "block"; // muestra el botón
+    });
+
     installBtn.addEventListener("click", async () => {
       installBtn.style.display = "none"; // oculta el botón
       deferredPrompt.prompt(); // muestra el prompt oficial
@@ -229,9 +278,7 @@ window.addEventListener("scroll",function(){
       console.log("Resultado instalación:", outcome);
       deferredPrompt = null;
     });
-  }
-</script>
-
+  </script>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 </body>
