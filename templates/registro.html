@@ -6,36 +6,31 @@
     <title>Registro - Happy Paws Vet</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body{
+        body {
             background:#817668;
             min-height:100vh;
         }
+        .card {
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(172, 163, 163, 0.25);
+            border-radius:20px;
+            box-shadow:0 15px 35px rgba(0,0,0,.15);
+        }
+        .mensaje-error {
+            color: #b30000;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
     </style>
-<style>
-.card{
-
-    background: rgba(255,255,255,0.18);
-
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-
-    border: 1px solid rgba(172, 163, 163, 0.25);
-
-    border-radius:20px;
-
-    box-shadow:0 15px 35px rgba(0,0,0,.15);
-
-}
-
-</style>    
 </head>
 <body>
-   
 <div class="container registro-container">
-        <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
         <div class="card-body">
             <h4 class="text-center mb-4">Crear cuenta 🐾</h4>
-            <form method="POST">
+            <form method="POST" id="registroForm">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" name="nombre" required>
@@ -58,32 +53,90 @@
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" name="password" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">👁️</button>
+                    </div>
+                    <!-- Barra de progreso -->
+                    <div class="progress mt-2" style="height: 8px;">
+                        <div id="passwordStrength" class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <!-- Mensaje informativo -->
+                    <small id="passwordMessage" class="form-text"></small>
                 </div>
-                 {% with mensajes = get_flashed_messages(with_categories=true) %}
 
-    {% if mensajes %}
+                {% with mensajes = get_flashed_messages(with_categories=true) %}
+                    {% if mensajes %}
+                        {% for categoria, mensaje in mensajes %}
+                            <div class="mensaje-error">
+                                {{ mensaje }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
-        {% for categoria, mensaje in mensajes %}
+                <!-- reCAPTCHA -->
+                <div class="g-recaptcha mt-3" data-sitekey="TU_SITE_KEY"></div>
 
-            <div class="mensaje-error">
-                {{ mensaje }}
-            </div>
-
-        {% endfor %}
-
-    {% endif %}
-
-{% endwith %}
-                <button type="submit" class="btn btn-success w-100">Registrarse</button>
-                                
-				<div class="text-center mt-3">
-				    <small>¿Ya tienes una cuenta? <a href="{{ url_for('login') }}">Inicia Sesion</a></small>
-				</div>
-				
+                <button type="submit" class="btn btn-success w-100 mt-3">Registrarse</button>
+                <div class="text-center mt-3">
+                    <small>¿Ya tienes una cuenta? <a href="{{ url_for('login') }}">Inicia Sesión</a></small>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+const passwordInput = document.getElementById("password");
+const strengthBar = document.getElementById("passwordStrength");
+const message = document.getElementById("passwordMessage");
+const togglePassword = document.getElementById("togglePassword");
+const form = document.getElementById("registroForm");
+
+let currentStrength = 0;
+
+passwordInput.addEventListener("input", () => {
+    const val = passwordInput.value;
+    let strength = 0;
+
+    if (val.length >= 8) strength += 25;
+    if (/[A-Z]/.test(val)) strength += 25;
+    if (/[0-9]/.test(val)) strength += 25;
+    if (/[^A-Za-z0-9]/.test(val)) strength += 25;
+
+    currentStrength = strength;
+    strengthBar.style.width = strength + "%";
+
+    if (strength <= 25) {
+        strengthBar.className = "progress-bar bg-danger";
+        message.textContent = "Contraseña muy débil";
+    } else if (strength <= 50) {
+        strengthBar.className = "progress-bar bg-warning";
+        message.textContent = "Contraseña débil";
+    } else if (strength <= 75) {
+        strengthBar.className = "progress-bar bg-info";
+        message.textContent = "Contraseña aceptable";
+    } else {
+        strengthBar.className = "progress-bar bg-success";
+        message.textContent = "Contraseña fuerte";
+    }
+});
+
+// 👁️ Toggle mostrar/ocultar contraseña
+togglePassword.addEventListener("click", () => {
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+});
+
+// 🚫 Bloquear envío si no es fuerte
+form.addEventListener("submit", (e) => {
+    if (currentStrength < 100) {
+        e.preventDefault();
+        alert("La contraseña debe ser fuerte (mínimo 8 caracteres, mayúscula, número y símbolo).");
+    }
+});
+</script>
 </body>
 </html>
