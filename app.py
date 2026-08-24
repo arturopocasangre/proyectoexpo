@@ -1542,7 +1542,7 @@ def validar_password(password: str) -> bool:
 # Función para validar reCAPTCHA
 # ============================================================
 def validar_recaptcha(response_token):
-    secret_key = "6Lel85YtAAAAAPpokNwnlawXJmkeBrhai1DBjdQl"  # clave secreta de Google reCAPTCHA
+    secret_key = "6LeyAZctAAAAAD5-r91YBy-h-yqwEohczEur1uq1"  # clave secreta de Google reCAPTCHA
     payload = {
         "secret": secret_key,
         "response": response_token
@@ -1604,7 +1604,10 @@ def registro():
             cursor.close()
             conn.close()
 
-            if e.errno == 1062:
+            # Manejo robusto del código de error
+            codigo_error = getattr(e, "errno", None) or (e.args[0] if e.args else None)
+
+            if codigo_error == 1062:  # Duplicate entry en MySQL
                 flash("El correo electrónico ya está registrado. Por favor, intenta con otro.", "error")
                 return redirect(url_for("registro"))
 
@@ -1612,6 +1615,7 @@ def registro():
             return redirect(url_for("registro"))
 
     return render_template("registro.html")
+
 
 # ============================================================
 # aplicación Flask instalable en el celular como PWA
