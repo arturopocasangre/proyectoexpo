@@ -5,3 +5,4 @@ mysql-connector-python==9.0.0
 python-dotenv==1.0.1
 stripe==10.0.0
 cryptography==42.0.5
+requests==2.32.3

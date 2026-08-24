@@ -13,12 +13,16 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask import jsonify
-from pymysql.err import IntegrityError # ASEGÚRATE DE PONER ESTA LÍNEA AL INICIO DE TU ARCHIVO APP.PY
+from pymysql.err import IntegrityError
+import requests
+import re
+
 # -------------------
 # Inicializar Flask
 # -------------------
 app = Flask(__name__)
 app.secret_key = "clave_secreta_segura"
+
 
 # -------------------
 # Conexión directa a MySQL en Aiven
@@ -1519,17 +1523,40 @@ def eliminar_cita(cita_id):
 
 from werkzeug.security import generate_password_hash
 
+
+# ============================================================
+# Función para validar contraseña fuerte
+# ============================================================
+def validar_password(password: str) -> bool:
+    if len(password) < 8:
+        return False
+    if not re.search(r"[A-Z]", password):
+        return False
+    if not re.search(r"[0-9]", password):
+        return False
+    if not re.search(r"[^A-Za-z0-9]", password):
+        return False
+    return True
+
+# ============================================================
+# Función para validar reCAPTCHA
+# ============================================================
+def validar_recaptcha(response_token):
+    secret_key = "6Lel85YtAAAAAPpokNwnlawXJmkeBrhai1DBjdQl"  # clave secreta de Google reCAPTCHA
+    payload = {
+        "secret": secret_key,
+        "response": response_token
+    }
+    r = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
+    result = r.json()
+    return result.get("success", False)
+
+# ============================================================
+# Ruta de registro
+# ============================================================
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
-
-    # ============================================================
-    # Si el usuario envió el formulario
-    # ============================================================
     if request.method == "POST":
-
-        # --------------------------------------------------------
-        # Obtenemos los datos enviados desde registro.html
-        # --------------------------------------------------------
         email = request.form["email"]
         password = request.form["password"]
         nombre = request.form.get("nombre")
@@ -1537,26 +1564,22 @@ def registro():
         direccion = request.form.get("direccion")
         mascota = request.form.get("mascota")
 
+        # 🔒 Validación de contraseña fuerte
+        if not validar_password(password):
+            flash("La contraseña debe ser fuerte: mínimo 8 caracteres, incluir mayúscula, número y símbolo.", "error")
+            return redirect(url_for("registro"))
 
-        # --------------------------------------------------------
-        # Conectamos con la base de datos
-        # --------------------------------------------------------
+        # 🔒 Validación de reCAPTCHA
+        recaptcha_response = request.form.get("g-recaptcha-response")
+        if not validar_recaptcha(recaptcha_response):
+            flash("Por favor, confirma que no eres un robot.", "error")
+            return redirect(url_for("registro"))
+
         conn = get_db_connection()
         cursor = conn.cursor()
-
-
-        # --------------------------------------------------------
-        # Encriptamos la contraseña antes de guardarla
-        # --------------------------------------------------------
         hashed_pw = generate_password_hash(password)
 
-
         try:
-
-            # ====================================================
-            # INTENTAMOS CREAR EL USUARIO
-            # ====================================================
-
             cursor.execute("""
                 INSERT INTO usuarios
                 (email, password, rol, nombre, telefono, direccion, mascota)
@@ -1570,87 +1593,25 @@ def registro():
                 mascota
             ))
 
-
-            # ----------------------------------------------------
-            # Confirmamos los cambios
-            # ----------------------------------------------------
             conn.commit()
-
-
-            # ----------------------------------------------------
-            # Cerramos conexión
-            # ----------------------------------------------------
             cursor.close()
             conn.close()
 
-
-            # ----------------------------------------------------
-            # Si todo salió bien:
-            #
-            # enviamos al usuario al login.
-            # ----------------------------------------------------
+            flash("Usuario creado exitosamente 🎉", "success")
             return redirect(url_for("login"))
 
-
         except IntegrityError as e:
-
-            # ====================================================
-            # HUBO UN ERROR AL INSERTAR
-            # ====================================================
-
-            # Cerramos las conexiones
             cursor.close()
             conn.close()
 
-
-            # ----------------------------------------------------
-            # Error 1062 = dato duplicado
-            #
-            # En nuestro caso normalmente será porque el correo
-            # ya existe.
-            # ----------------------------------------------------
-            if e.args[0] == 1062:
-
-                # ------------------------------------------------
-                # En lugar de mostrar una página nueva con el
-                # mensaje, guardamos el mensaje temporalmente.
-                # ------------------------------------------------
-                flash(
-                    "El correo electrónico ya está registrado. Por favor, intenta con otro.",
-                    "error"
-                )
-
-
-                # ------------------------------------------------
-                # Regresamos al MISMO formulario de registro.
-                # ------------------------------------------------
+            if e.errno == 1062:
+                flash("El correo electrónico ya está registrado. Por favor, intenta con otro.", "error")
                 return redirect(url_for("registro"))
 
-
-            # ----------------------------------------------------
-            # Si fue otro error de base de datos
-            # ----------------------------------------------------
-            flash(
-                "Ocurrió un error al intentar registrar la cuenta.",
-                "error"
-            )
-
-
-            # ----------------------------------------------------
-            # También regresamos al registro.
-            # ----------------------------------------------------
+            flash("Ocurrió un error al intentar registrar la cuenta.", "error")
             return redirect(url_for("registro"))
 
-    # ============================================================
-    # Si simplemente entramos a /registro mediante GET
-    # ============================================================
-
     return render_template("registro.html")
-
-
-    # ============================================================
-    # Si simplemente entramos a /registro mediante GET
-    # ============================================================
 
 # ============================================================
 # aplicación Flask instalable en el celular como PWA
