@@ -16,6 +16,7 @@ from flask import jsonify
 from pymysql.err import IntegrityError
 import requests
 import re
+from services.generar_cupos import generar_cupos_wrapper
 
 # -------------------
 # Inicializar Flask
@@ -261,7 +262,7 @@ def pago_success(cita_id):
     if not cita:
         return "❌ Error: la cita no existe o no tiene cliente asociado."
 
-    enlace_jitsi = f"https://meet.jit.si/happy-paws-{cita_id}"
+    enlace_jitsi = f"https://meet.happypawsvet.shop/{cita_id}"
 
     # Guardar enlace y referencia de pago en la cita
     conn = get_db_connection()
@@ -292,7 +293,7 @@ def enviar_correo(destinatario, nombre, fecha, hora, enlace):
     Tu cita ha sido confirmada:
     📅 Fecha: {fecha}
     ⏰ Hora: {hora}
-    🔗 Enlace de consulta: {enlace}
+    🔗 Enlace de consulta: https://happypawsvet.shop/panel/cliente
 
     ¡Gracias por confiar en Happy Paws Vet!
     """
@@ -1434,26 +1435,26 @@ def nueva_cita():
     conn.close()
 
 
-    # ========================================================
-    # 11. MOSTRAR EL FORMULARIO
-    # ========================================================
-    #
-    # Como estamos creando una nueva cita,
-    # no existe todavía una cita específica.
-    #
-    # Por eso enviamos:
-    #
-    #       cita=None
-    #
-    # El formulario cita_form.html puede utilizar esto
-    # para saber que estamos creando.
-    # ========================================================
-
     return render_template(
         "cita_form.html",
         cita=None,
         clientes=clientes
     )
+
+# ============================================================
+# Función para generar cupo semanal
+# ============================================================
+@app.route("/generar_cupos")
+def generar_cupos_route():
+    try:
+        mensaje = generar_cupos_wrapper()
+        flash(f"✅ {mensaje}", "success")
+    except Exception as e:
+        flash(f"❌ Error al generar cupos: {e}", "danger")
+
+    return redirect(url_for("panel_admin"))
+
+
 @app.route("/admin/cita/editar/<int:cita_id>", methods=["GET","POST"])
 def editar_cita(cita_id):
     if session.get("rol") != "admin":
@@ -1495,7 +1496,7 @@ def crear_enlace(cita_id):
         return "Acceso denegado"
 
     # Aquí generas el enlace (ejemplo: Zoom, Jitsi, etc.)
-    nuevo_link = f"https://meet.jit.si/happy-paws-{cita_id}"
+    nuevo_link = f"https://meet.happypawsvet.shop/{cita_id}"
 
     conn = get_db_connection()
     with conn.cursor() as cursor:
