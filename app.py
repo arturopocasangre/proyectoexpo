@@ -1442,7 +1442,7 @@ def nueva_cita():
     )
 
 # ============================================================
-# Función para generar cupo semanal
+# Función para generar cupo semanal (manualmente)
 # ============================================================
 @app.route("/generar_cupos")
 def generar_cupos_route():
@@ -1454,7 +1454,19 @@ def generar_cupos_route():
 
     return redirect(url_for("panel_admin"))
 
+# ============================================================
+# Función para generar cupo semanal (automatico)
+# ============================================================
+@app.route("/api/generar_cupos")
+def generar_cupos_api():
+    try:
+        mensaje = generar_cupos_wrapper()
+        return f"✅ {mensaje}"
+    except Exception as e:
+        return f"❌ Error al generar cupos: {e}", 500
 
+# ============================================================
+# ============================================================
 @app.route("/admin/cita/editar/<int:cita_id>", methods=["GET","POST"])
 def editar_cita(cita_id):
     if session.get("rol") != "admin":
