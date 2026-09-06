@@ -102,24 +102,21 @@
                                         Entrar a consulta
                                     </button>
 
-                                    <!-- Modal para escritorio -->
-                                    <div class="modal fade" id="jitsiModal-{{ loop.index }}" tabindex="-1" aria-hidden="true"data-bs-backdrop="static" data-bs-keyboard="false">
-                                        <div class="modal-dialog modal-xl modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Consulta en línea</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body p-0">
-                                                    <div class="ratio ratio-16x9">
-                                                        <iframe id="iframe-{{ loop.index }}" src="" 
-                                                                allow="camera; microphone; fullscreen; display-capture"
-                                                                style="border:0;" allowfullscreen></iframe>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+									<!-- Modal para escritorio -->
+									<div class="modal fade" id="jitsiModal-{{ loop.index }}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+									    <div class="modal-dialog modal-xl modal-dialog-centered">
+									        <div class="modal-content">
+									            <div class="modal-header">
+									                <h5 class="modal-title">Consulta en línea</h5>
+									                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+									            </div>
+									            <div class="modal-body p-0">
+									                <!-- Contenedor dinámico para Jitsi -->
+									                <div class="ratio ratio-16x9" id="iframe-{{ loop.index }}"></div>
+									            </div>
+									        </div>
+									    </div>
+									</div>
                                 {% else %}
                                     <span class="text-muted">Pendiente</span>
                                 {% endif %}
@@ -265,27 +262,44 @@ function toggleMenu() {
 }
 </script>
 
+
+<!-- Script de Jitsi API -->
+<script src="https://meet.happypawsvet.shop/external_api.js"></script>
+
 <script>
 function openConsulta(link, index, citaId) {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    //const isMobile = true;
 
     if (isMobile) {
         // En móviles abrir tu propia vista con branding
         window.location.href = '/consulta/' + citaId;
     } else {
-        // En escritorio abrir modal con iframe incrustado
-        const iframe = document.getElementById("iframe-" + index);
+        // En escritorio abrir modal con Jitsi incrustado
         const modalEl = document.getElementById("jitsiModal-" + index);
-
-        iframe.src = link;
         const modal = new bootstrap.Modal(modalEl);
         modal.show();
 
-        // Al cerrar, limpiar el iframe para poder reabrir
-        modalEl.addEventListener('hidden.bs.modal', function () {
-            iframe.src = "";
-        }, { once: true });
+        const iframeContainer = document.getElementById("iframe-" + index);
+        iframeContainer.innerHTML = ""; // limpiar antes de incrustar
+
+        const domain = "meet.happypawsvet.shop";
+        const roomName = link.replace("https://meet.happypawsvet.shop/", "");
+
+        const options = {
+            roomName: roomName,
+            parentNode: iframeContainer,
+            width: "100%",
+            height: "100%",
+            configOverwrite: { prejoinPageEnabled: false }
+        };
+
+        const api = new JitsiMeetExternalAPI(domain, options);
+
+        // Cerrar modal automáticamente cuando finaliza la reunión
+        api.addEventListener("readyToClose", () => {
+            modal.hide();
+            iframeContainer.innerHTML = ""; // limpiar para reabrir
+        });
     }
 }
 </script>
