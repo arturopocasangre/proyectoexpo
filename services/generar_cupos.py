@@ -48,7 +48,7 @@ def generar_cupos(inicio, fin):
                     hora_inicio = convertir_a_time(conf["hora_inicio"])
                     hora_fin = convertir_a_time(conf["hora_fin"])
                     intervalo = conf["intervalo"]
-                    precio = conf["precio"]   # ✅ nuevo campo
+                    precio = conf["precio"]
 
                     hora_actual = datetime.combine(fecha, hora_inicio)
                     hora_limite = datetime.combine(fecha, hora_fin)
@@ -76,23 +76,19 @@ def generar_cupos(inicio, fin):
         conn.commit()
     conn.close()
 
-def generar_cupos_wrapper():
+def calcular_rango_semana():
     hoy = datetime.today().date()
-    # Calcular inicio de la próxima semana (lunes)
     dias_hasta_lunes = (7 - hoy.weekday()) % 7
     inicio = hoy + timedelta(days=dias_hasta_lunes)
-    fin = inicio + timedelta(days=6)  # hasta sábado
+    fin = inicio + timedelta(days=6)# hasta domingo
+    return inicio, fin
 
+def generar_cupos_wrapper():
+    inicio, fin = calcular_rango_semana()
     generar_cupos(inicio, fin)
     return f"Cupos generados para la semana {inicio} - {fin}"
 
-
 if __name__ == "__main__":
-    hoy = datetime.today().date()
-    # Calcular inicio de la próxima semana (lunes)
-    dias_hasta_lunes = (7 - hoy.weekday()) % 7
-    inicio = hoy + timedelta(days=dias_hasta_lunes)
-    fin = inicio + timedelta(days=6) # hasta sábado
-
+    inicio, fin = calcular_rango_semana()
     generar_cupos(inicio, fin)
     print(f"Cupos generados para la semana {inicio} - {fin}")
