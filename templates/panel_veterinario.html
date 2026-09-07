@@ -3,56 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Agenda del Veterinario - Happy Paws Vet</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="bg-light">
 
-
-    <!-- HEADER -->
-    <header>
-
-        <nav class="navbar">
-
-    <div class="logo">
-        <a href="/">
-            <h2>Happy Paws Vet 🐾</h2>
-        </a>
-    </div>
-
-    <div class="hamburguesa" onclick="toggleMenu()">
-        ☰
-    </div>
-
-<ul class="menu" id="menu">
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/servicios">Servicios</a></li>
-    <li><a href="/tienda">Tienda</a></li>
-    <li><a href="/nosotros">Nosotros</a></li>
-    <li><a href="/contacto">Contacto</a></li>
-
-    {% if session.get('usuario_id') %}
-        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-    {% else %}
-        <li><a href="{{ url_for('login') }}">Acceso</a></li>
-    {% endif %}
-</ul>
-
-</nav>
-    </header>
-
-
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/"><h2>Happy Paws Vet 🐾</h2></a>
+        </div>
+        <div class="hamburguesa" onclick="toggleMenu()">☰</div>
+        <ul class="menu" id="menu">
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/servicios">Servicios</a></li>
+            <li><a href="/tienda">Tienda</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+            {% if session.get('usuario_id') %}
+                <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}">Acceso</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 
 <div class="container mt-5">
     <div class="card shadow-sm">
         <div class="card-body">
-            <h3 class="mb-4 text-center">🐾 Agenda de citas</h3>
+            <h3 class="mb-4 text-center">🐾 Citas Agendadas</h3>
+
+            <!-- Búsqueda rápida -->
+            <input type="text" id="busqueda" class="form-control mb-3" placeholder="🔍 Buscar cita por cliente, email o fecha...">
 
             {% if citas %}
-                <table class="table table-striped">
-                    <thead>
+                <table id="tablaCitas" class="table table-striped table-hover">
+                    <thead class="table-dark">
                         <tr>
                             <th>Fecha</th>
                             <th>Hora</th>
@@ -60,11 +49,11 @@
                             <th>Email</th>
                             <th>Teléfono</th>
                             <th>Estado</th>
-                            <th>Enlace</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for cita in citas %}
+                        {% for cita in citas|sort(attribute='fecha') %}
                         <tr>
                             <td>{{ cita.fecha }}</td>
                             <td>{{ cita.hora }}</td>
@@ -82,14 +71,28 @@
                             </td>
                             <td>
                                 {% if cita.link_consulta %}
-                                    <a href="{{ cita.link_consulta }}" target="_blank" class="btn btn-sm btn-success">
+                                    <button class="btn btn-sm btn-success" onclick="openConsulta('{{ cita.link_consulta }}', '{{ loop.index }}', '{{ cita.id }}')">
                                         Entrar a consulta
-                                    </a>
+                                    </button>
                                 {% else %}
                                     <span class="text-muted">Pendiente</span>
                                 {% endif %}
                             </td>
                         </tr>
+                        <!-- Modal para escritorio -->
+                        <div class="modal fade" id="jitsiModal-{{ loop.index }}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Consulta en línea</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body p-0">
+                                        <div class="ratio ratio-16x9" id="iframe-{{ loop.index }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -100,5 +103,53 @@
     </div>
 </div>
 
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://meet.happypawsvet.shop/external_api.js"></script>
+
+<script>
+// Búsqueda rápida sin DataTables
+document.getElementById("busqueda").addEventListener("keyup", function() {
+    let filtro = this.value.toLowerCase();
+    let filas = document.querySelectorAll("#tablaCitas tbody tr");
+    filas.forEach(fila => {
+        let texto = fila.innerText.toLowerCase();
+        fila.style.display = texto.includes(filtro) ? "" : "none";
+    });
+});
+
+function openConsulta(link, index, citaId) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+        window.location.href = '/consulta/' + citaId;
+    } else {
+        const modalEl = document.getElementById("jitsiModal-" + index);
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+
+        const iframeContainer = document.getElementById("iframe-" + index);
+        iframeContainer.innerHTML = "";
+
+        const domain = "meet.happypawsvet.shop";
+        const roomName = link.replace("https://meet.happypawsvet.shop/", "");
+
+        const options = {
+            roomName: roomName,
+            parentNode: iframeContainer,
+            width: "100%",
+            height: "100%",
+            configOverwrite: { prejoinPageEnabled: false }
+        };
+
+        const api = new JitsiMeetExternalAPI(domain, options);
+
+        api.addEventListener("readyToClose", () => {
+            modal.hide();
+            iframeContainer.innerHTML = "";
+        });
+    }
+}
+</script>
 </body>
 </html>
