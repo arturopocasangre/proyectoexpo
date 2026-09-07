@@ -672,7 +672,7 @@ def panel_veterinario():
     conn = get_db_connection()
     with conn.cursor() as cursor:
         cursor.execute("""
-            SELECT c.fecha, c.hora, c.estado, c.link_consulta,cl.nombre AS cliente_nombre,
+            SELECT c.id, c.fecha, c.hora, c.estado, c.link_consulta,cl.nombre AS cliente_nombre,
                    cl.email AS cliente_email, cl.telefono AS cliente_telefono
             FROM citas c
             JOIN usuarios cl ON c.cliente_id = cl.id
