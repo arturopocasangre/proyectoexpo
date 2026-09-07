@@ -125,7 +125,7 @@ function openConsulta(link, index, citaId) {
         window.location.href = '/consulta/' + citaId;
     } else {
         const modalEl = document.getElementById("jitsiModal-" + index);
-        const modal = new bootstrap.Modal(modalEl);
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
         modal.show();
 
         const iframeContainer = document.getElementById("iframe-" + index);
@@ -144,9 +144,22 @@ function openConsulta(link, index, citaId) {
 
         const api = new JitsiMeetExternalAPI(domain, options);
 
-        api.addEventListener("readyToClose", () => {
+        // Función reutilizable para cerrar modal y limpiar API
+        const cerrarModalYLimpiar = () => {
             modal.hide();
+            api.dispose(); // Destruye el iframe y remueve event listeners de Jitsi
             iframeContainer.innerHTML = "";
+        };
+
+        // 1. Al colgar o salir de la reunión activa
+        api.addEventListener("readyToClose", cerrarModalYLimpiar);
+        api.addEventListener("videoConferenceLeft", cerrarModalYLimpiar);
+
+        // 2. Si el usuario cierra el modal manualmente (X, tecla ESC o clic fuera)
+        modalEl.addEventListener('hidden.bs.modal', function handler() {
+            api.dispose();
+            iframeContainer.innerHTML = "";
+            modalEl.removeEventListener('hidden.bs.modal', handler); // Limpia el listener del modal
         });
     }
 }

@@ -271,16 +271,14 @@ function openConsulta(link, index, citaId) {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     if (isMobile) {
-        // En móviles abrir tu propia vista con branding
         window.location.href = '/consulta/' + citaId;
     } else {
-        // En escritorio abrir modal con Jitsi incrustado
         const modalEl = document.getElementById("jitsiModal-" + index);
-        const modal = new bootstrap.Modal(modalEl);
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
         modal.show();
 
         const iframeContainer = document.getElementById("iframe-" + index);
-        iframeContainer.innerHTML = ""; // limpiar antes de incrustar
+        iframeContainer.innerHTML = "";
 
         const domain = "meet.happypawsvet.shop";
         const roomName = link.replace("https://meet.happypawsvet.shop/", "");
@@ -295,10 +293,22 @@ function openConsulta(link, index, citaId) {
 
         const api = new JitsiMeetExternalAPI(domain, options);
 
-        // Cerrar modal automáticamente cuando finaliza la reunión
-        api.addEventListener("readyToClose", () => {
+        // Función reutilizable para cerrar modal y limpiar API
+        const cerrarModalYLimpiar = () => {
             modal.hide();
-            iframeContainer.innerHTML = ""; // limpiar para reabrir
+            api.dispose(); // Destruye el iframe y remueve event listeners de Jitsi
+            iframeContainer.innerHTML = "";
+        };
+
+        // 1. Al colgar o salir de la reunión activa
+        api.addEventListener("readyToClose", cerrarModalYLimpiar);
+        api.addEventListener("videoConferenceLeft", cerrarModalYLimpiar);
+
+        // 2. Si el usuario cierra el modal manualmente (X, tecla ESC o clic fuera)
+        modalEl.addEventListener('hidden.bs.modal', function handler() {
+            api.dispose();
+            iframeContainer.innerHTML = "";
+            modalEl.removeEventListener('hidden.bs.modal', handler); // Limpia el listener del modal
         });
     }
 }
