@@ -141,7 +141,7 @@ def consulta(cita_id):
     if not cita:
         return "❌ Consulta no encontrada."
 
-    # Si link_consulta es "https://meet.jit.si/HappyPawsSala123"
+    # Si link_consulta es "happypawsvet.shop/HappyPawsSala123"
     # extraemos solo "HappyPawsSala123"
     room_name = cita["link_consulta"].split("/")[-1]
 
@@ -676,7 +676,8 @@ def panel_veterinario():
                    cl.email AS cliente_email, cl.telefono AS cliente_telefono
             FROM citas c
             JOIN usuarios cl ON c.cliente_id = cl.id
-            WHERE c.estado IN ('reservada','pagada')
+            WHERE c.estado IN ('','pagada')
+            AND TIMESTAMP(fecha, hora) > (NOW() - INTERVAL 1 HOUR)
             ORDER BY c.fecha, c.hora
         """)
         citas = cursor.fetchall()
