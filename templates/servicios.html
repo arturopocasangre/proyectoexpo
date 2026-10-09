@@ -1,205 +1,329 @@
-<!-- servicios.html -->
-
+```html
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Servicios | Happy Paws Vet</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
     <!-- NAVBAR -->
     <header>
-         <nav class="navbar">
+        <nav class="navbar">
 
-    <div class="logo">
-    <a href="/">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Happy Paws Vet">
-        <span>Happy Paws Vet</span>
-    </a>
-</div>
+            <div class="logo">
+                <a href="/">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}"
+                         alt="Happy Paws Vet">
+                    <span>Happy Paws Vet</span>
+                </a>
+            </div>
 
-    <div class="hamburguesa" onclick="toggleMenu()">
-        ☰
-    </div>
-    
+            <div class="hamburguesa"
+                 onclick="toggleMenu()">
+                ☰
+            </div>
 
-<ul class="menu" id="menu">
-    <div class="menu-header">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Happy Paws Vet">
+            <ul class="menu" id="menu">
 
-    <div class="menu-header-texto">
-        <h3>Happy Paws Vet</h3>
-        <p>Tu veterinaria en casa</p>
-    </div>
-</div>
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/servicios">Servicios</a></li>
-    <li><a href="/tienda">Tienda</a></li>
-    <li><a href="/nosotros">Nosotros</a></li>
-    <li><a href="/contacto">Contacto</a></li>
+                <div class="menu-header">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}"
+                         alt="Logo Happy Paws Vet">
 
+                    <div class="menu-header-texto">
+                        <h3>Happy Paws Vet</h3>
+                        <p>Tu veterinaria en casa</p>
+                    </div>
+                </div>
 
-    {% if session.get('usuario_id') %}
-        {% if session.get('rol') == 'admin' %}
-            <li><a href="{{ url_for('panel_admin') }}">Panel Admin</a></li>
-        {% elif session.get('rol') == 'veterinario' %}
-            <li><a href="{{ url_for('panel_veterinario') }}">Panel de Citas</a></li>
-        {% else %}
-            <li><a class="btn-cuenta" href="{{ url_for('panel_cliente') }}">Mi Cuenta</a></li>
-        {% endif %}
-        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-    {% else %}
-        <li><a class="btn-cuenta" href="{{ url_for('login') }}">Acceso</a></li>
-    {% endif %}
+                <li><a href="/">Inicio</a></li>
 
-</ul>
+                <li><a href="/servicios">Servicios</a></li>
 
-</nav>
+                <li><a href="/tienda">Tienda</a></li>
+
+                <li><a href="/nosotros">Nosotros</a></li>
+
+                <li><a href="/contacto">Contacto</a></li>
+
+                {% if session.get('usuario_id') %}
+
+                    {% if session.get('rol') == 'admin' %}
+
+                        <li>
+                            <a href="{{ url_for('panel_admin') }}">
+                                Panel Admin
+                            </a>
+                        </li>
+
+                    {% elif session.get('rol') == 'veterinario' %}
+
+                        <li>
+                            <a href="{{ url_for('panel_veterinario') }}">
+                                Panel de Citas
+                            </a>
+                        </li>
+
+                    {% else %}
+
+                        <li>
+                            <a class="btn-cuenta"
+                               href="{{ url_for('panel_cliente') }}">
+                                Mi Cuenta
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+                    <li>
+                        <a href="{{ url_for('logout') }}">
+                            Cerrar sesión
+                        </a>
+                    </li>
+
+                {% else %}
+
+                    <li>
+                        <a class="btn-cuenta"
+                           href="{{ url_for('login') }}">
+                            Acceso
+                        </a>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+        </nav>
     </header>
 
     <!-- SERVICIOS -->
-    <section class="servicios-premium">
+    <main>
+        <section class="servicios-premium">
 
-        <div class="titulo-servicios">
-            <h1>Servicios de Telemedicina Veterinaria</h1>
-            <p>
-                Cuidamos la salud de tu mascota desde donde estés.
-                Atención moderna, rápida y profesional sin salir de casa.
-            </p>
-        </div>
+            <!-- PRESENTACIÓN -->
+            <div class="titulo-servicios">
 
-        <!-- SERVICIOS PRINCIPALES -->
-        <div class="servicios-grid">
+                <h1>Servicios de Happy Paws Vet</h1>
 
-            <div class="servicio-card">
-                <h3>📹 Videoconsulta de Orientación</h3>
                 <p>
-                    Consulta rápida con un veterinario desde casa para dudas,
-                    síntomas leves o asesoría inicial.
+                    Facilitamos el cuidado de tus mascotas mediante
+                    una plataforma digital que integra la gestión
+                    de citas veterinarias, videoconsultas, información
+                    clínica y compras en línea en un mismo lugar.
                 </p>
+
             </div>
 
-            <div class="servicio-card">
-                <h3>📋 Seguimiento de Tratamientos</h3>
-                <p>
-                    Revisión de evolución, heridas, medicamentos y recuperación
-                    sin necesidad de traslado.
-                </p>
-            </div>
+            <!-- SERVICIOS PRINCIPALES -->
+            <div class="servicios-grid">
 
-            <div class="servicio-card">
-                <h3>🍎 Nutrición y Bienestar Digital</h3>
-                <p>
-                    Planes personalizados de alimentación y bienestar con informe PDF.
-                </p>
-            </div>
+                <div class="servicio-card">
 
-            <div class="servicio-card">
-                <h3>🧠 Consultoría de Comportamiento</h3>
-                <p>
-                    Evaluamos el entorno real de tu mascota para mejorar su conducta.
-                </p>
-            </div>
+                    <h3> Gestión de citas veterinarias</h3>
 
-        </div>
-
-        <!-- HERRAMIENTAS DIGITALES -->
-        <div class="herramientas">
-
-            <h2>🛠️ Herramientas Digitales Incluidas</h2>
-
-            <div class="herramientas-grid">
-
-                <div class="tool-card">
-                    <h3>📄 Receta Médica Electrónica</h3>
                     <p>
-                        Recibe tu receta digital válida para medicamentos.
+                        Consulta y gestiona la información de tus citas
+                        veterinarias desde la plataforma. Revisa los
+                        registros y estados disponibles en tu cuenta
+                        para mantener un mejor seguimiento de la
+                        atención de tu mascota.
                     </p>
+
                 </div>
 
-                <div class="tool-card">
-                    <h3>☁️ Historial Clínico en la Nube</h3>
+                <div class="servicio-card">
+
+                    <h3> Videoconsultas veterinarias</h3>
+
                     <p>
-                        Accede a reportes, fotos y consultas las 24 horas.
+                        Accede a la información de las videoconsultas
+                        registradas en el sistema. Consulta los datos
+                        disponibles de tus servicios y utiliza las
+                        opciones habilitadas para su gestión.
                     </p>
+
                 </div>
 
-                <div class="tool-card">
-                    <h3>💬 Chat de Soporte Inmediato</h3>
+                <div class="servicio-card">
+
+                    <h3> Historial clínico de mascotas</h3>
+
                     <p>
-                        Comunicación rápida con nuestro equipo médico post consulta.
+                        Consulta la información clínica registrada
+                        de tu mascota a través de las funcionalidades
+                        disponibles en la plataforma. Los datos pueden
+                        ser gestionados por los usuarios autorizados
+                        según sus permisos.
                     </p>
+
+                </div>
+
+                <div class="servicio-card">
+
+                    <h3> Tienda en línea</h3>
+
+                    <p>
+                        Explora el catálogo de productos para mascotas,
+                        consulta sus precios y realiza tus compras
+                        en línea. Accede a la información de las
+                        compras registradas desde las opciones
+                        disponibles en tu cuenta.
+                    </p>
+
                 </div>
 
             </div>
-        </div>
 
-        <!-- CÓMO FUNCIONA -->
-        <div class="proceso">
+            <!-- FUNCIONALIDADES DEL SISTEMA -->
+            <div class="herramientas">
 
-            <h2>💡 ¿Cómo funciona?</h2>
+                <h2> Funcionalidades de la plataforma</h2>
 
-            <div class="pasos-grid">
+                <div class="herramientas-grid">
 
-                <div class="paso">
-                    <h3>1. Reserva</h3>
-                    <p>Elige el especialista y horario ideal para ti.</p>
-                </div>
+                    <div class="tool-card">
 
-                <div class="paso">
-                    <h3>2. Conéctate</h3>
-                    <p>Recibes un link seguro para tu videollamada.</p>
-                </div>
+                        <h3> Panel del cliente</h3>
 
-                <div class="paso">
-                    <h3>3. Diagnóstico</h3>
-                    <p>El veterinario evalúa y guía la revisión.</p>
-                </div>
+                        <p>
+                            Accede a tu cuenta para consultar la
+                            información disponible de tus servicios,
+                            citas y compras registradas en el sistema.
+                        </p>
 
-                <div class="paso">
-                    <h3>4. Plan de Acción</h3>
-                    <p>Obtienes informe y receta digital al instante.</p>
+                    </div>
+
+                    <div class="tool-card">
+
+                        <h3> Pagos en línea</h3>
+
+                        <p>
+                            Realiza pagos de los servicios y productos
+                            habilitados para compra mediante el proceso
+                            de pago integrado en la plataforma.
+                        </p>
+
+                    </div>
+
+                    <div class="tool-card">
+
+                        <h3>📋 Panel administrativo</h3>
+
+                        <p>
+                            El personal autorizado dispone de un panel
+                            para consultar y gestionar los registros
+                            administrativos, las citas y las compras
+                            contempladas en el sistema.
+                        </p>
+
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
+            <!-- CÓMO FUNCIONA -->
+            <div class="proceso">
 
-    </section>
-<script>
-function toggleMenu() {
-    document.getElementById("menu").classList.toggle("active");
-}
-</script>
-<script>
-function toggleMenu(){
+                <h2> ¿Cómo funciona Happy Paws Vet?</h2>
 
-    document.getElementById("menu").classList.toggle("active");
+                <div class="pasos-grid">
 
-    document.getElementById("overlay").classList.toggle("active");
+                    <div class="paso">
 
-}
+                        <h3>1. Accede</h3>
 
-window.addEventListener("scroll", function(){
+                        <p>
+                            Inicia sesión o crea tu cuenta para acceder
+                            a las funcionalidades habilitadas para
+                            los clientes.
+                        </p>
 
-    const navbar = document.querySelector(".navbar");
+                    </div>
 
-    if(window.scrollY > 20){
+                    <div class="paso">
 
-        navbar.classList.add("scrolled");
+                        <h3>2. Explora</h3>
 
-    }else{
+                        <p>
+                            Consulta los servicios veterinarios
+                            disponibles y descubre los productos
+                            de nuestra tienda en línea.
+                        </p>
 
-        navbar.classList.remove("scrolled");
+                    </div>
 
-    }
+                    <div class="paso">
 
-});
-</script>
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+                        <h3>3. Gestiona</h3>
+
+                        <p>
+                            Sigue las opciones de la plataforma
+                            para gestionar tus citas o completar
+                            una compra.
+                        </p>
+
+                    </div>
+
+                    <div class="paso">
+
+                        <h3>4. Consulta</h3>
+
+                        <p>
+                            Revisa la información de tus servicios,
+                            citas y compras desde las opciones
+                            disponibles en tu cuenta.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+
+    <!-- OVERLAY DEL MENÚ -->
+    <div class="overlay"
+         id="overlay"
+         onclick="toggleMenu()">
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function toggleMenu() {
+
+            document.getElementById("menu").classList.toggle("active");
+
+            document.getElementById("overlay").classList.toggle("active");
+
+        }
+
+        window.addEventListener("scroll", function () {
+
+            const navbar = document.querySelector(".navbar");
+
+            if (window.scrollY > 20) {
+
+                navbar.classList.add("scrolled");
+
+            } else {
+
+                navbar.classList.remove("scrolled");
+
+            }
+
+        });
+    </script>
+
 </body>
 </html>
+```

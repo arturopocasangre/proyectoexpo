@@ -50,7 +50,29 @@
 <a>.</a>
 
 <div class="container my-5">
+
     <h2 class="text-center mb-4">🐾 Panel de Administración</h2>
+
+    <!-- Gestión financiera -->
+    <div class="gestion-financiera-card mb-4">
+        <div class="gestion-icono">
+            <i class="fa-solid fa-chart-line"></i>
+        </div>
+
+        <div class="gestion-contenido">
+            <h3>Gestión financiera</h3>
+            <p>
+                Consulta los ingresos, videoconsultas, ventas e inventario
+                de Happy Paws Vet.
+            </p>
+        </div>
+
+        <div class="gestion-boton">
+            <a href="{{ url_for('gestion_financiera') }}" class="btn-gestion-financiera">
+    Ver gestión <i class="fa-solid fa-arrow-right"></i>
+</a>
+        </div>
+    </div>
 
     <!-- Usuarios -->
     <div class="card mb-4 shadow-sm">
@@ -272,8 +294,102 @@ $(document).ready(function() {
 </div>
 {% endif %}
 
-<!-- CSS DE LA NOTIFICACIÓN -->
+
 <style>
+    /* =========================================================
+   TARJETA DE GESTIÓN FINANCIERA
+   ========================================================= */
+
+.gestion-financiera-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 25px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #f3e8ff, #fce7f3);
+    border: 1px solid #eadcff;
+    box-shadow: 0 8px 25px rgba(91, 61, 120, 0.10);
+    transition: all 0.3s ease;
+}
+
+.gestion-financiera-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(91, 61, 120, 0.16);
+}
+
+.gestion-icono {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    border-radius: 16px;
+    background: #8e5bb7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.gestion-contenido {
+    flex: 1;
+}
+
+.gestion-contenido h3 {
+    margin: 0 0 5px;
+    color: #4b315d;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.gestion-contenido p {
+    margin: 0;
+    color: #6d6073;
+    font-size: 14px;
+}
+
+.gestion-boton {
+    flex-shrink: 0;
+}
+
+.btn-gestion-financiera {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 18px;
+    border-radius: 12px;
+    background: #8e5bb7;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+
+.btn-gestion-financiera:hover {
+    background: #74459a;
+    color: white;
+    transform: translateX(3px);
+}
+
+/* Adaptación para celulares */
+@media (max-width: 600px) {
+
+    .gestion-financiera-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px 20px;
+    }
+
+    .gestion-boton {
+        width: 100%;
+    }
+
+    .btn-gestion-financiera {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
 .notificacion-overlay {
     position: fixed;
     top: 0;

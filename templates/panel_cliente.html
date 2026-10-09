@@ -247,6 +247,244 @@
 
 
 <style>
+    /* =========================================================
+   MIS COMPRAS
+========================================================= */
+
+.compras-tienda {
+    margin-top: 35px;
+    padding: 28px;
+    background: #ffffff;
+    border-radius: 22px;
+    box-shadow: 0 8px 25px rgba(91, 61, 120, 0.08);
+}
+
+
+.compras-titulo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+
+.compras-icono {
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
+    background: #f3e8ff;
+    color: #8e5bb7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 22px;
+}
+
+
+.compras-titulo h2 {
+    margin: 0 0 4px;
+    color: #4b315d;
+}
+
+
+.compras-titulo p {
+    margin: 0;
+    color: #7b6d82;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   TARJETA DE COMPRA
+========================================================= */
+
+.compra-card {
+    border: 1px solid #eadff0;
+    border-radius: 17px;
+    padding: 20px;
+    margin-bottom: 18px;
+    background: #fff;
+}
+
+
+.compra-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee5f1;
+}
+
+
+.compra-header h3 {
+    margin: 0 0 5px;
+    color: #4b315d;
+    font-size: 17px;
+}
+
+
+.compra-header span {
+    color: #8a7b91;
+    font-size: 13px;
+}
+
+
+.compra-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 12px;
+    border-radius: 20px;
+
+    background: #e4f5ed;
+    color: #28775f;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PRODUCTOS
+========================================================= */
+
+.productos-compra {
+    padding: 8px 0;
+}
+
+
+.producto-compra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #f0ebf2;
+}
+
+
+.producto-compra:last-child {
+    border-bottom: none;
+}
+
+
+.producto-compra strong {
+    display: block;
+    color: #4d3b54;
+    font-size: 14px;
+}
+
+
+.producto-compra small {
+    display: block;
+    margin-top: 4px;
+    color: #8b7d91;
+}
+
+
+.producto-compra-precio {
+    color: #32886f;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+.compra-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #eadff0;
+}
+
+
+.compra-total span {
+    color: #75677c;
+    font-weight: 600;
+}
+
+
+.compra-total strong {
+    color: #4b315d;
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   SIN COMPRAS
+========================================================= */
+
+.sin-compras {
+    text-align: center;
+    padding: 35px 20px;
+
+    border: 1px dashed #dbcbe3;
+    border-radius: 17px;
+
+    background: #fcf9fd;
+}
+
+
+.sin-compras > i {
+    font-size: 35px;
+    color: #b895c9;
+}
+
+
+.sin-compras h3 {
+    margin: 12px 0 5px;
+    color: #4b315d;
+}
+
+
+.sin-compras p {
+    margin: 0 0 18px;
+    color: #817287;
+}
+
+
+.sin-compras a {
+    display: inline-block;
+
+    padding: 10px 18px;
+
+    border-radius: 11px;
+
+    background: #8e5bb7;
+    color: white;
+
+    text-decoration: none;
+    font-weight: 700;
+}
+
+
+@media (max-width: 600px) {
+
+    .compras-tienda {
+        padding: 20px;
+    }
+
+    .compra-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .producto-compra {
+        gap: 12px;
+    }
+
+}
     .b-hora {
         transition: all 0.2s ease-in-out;
     }
@@ -313,6 +551,470 @@ function openConsulta(link, index, citaId) {
     }
 }
 </script>
+<!-- ============================================================
+     MIS COMPRAS
+============================================================ -->
 
+<section class="mis-compras">
+
+    <div class="compras-header">
+        <div>
+            <span class="compras-icono">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </span>
+
+            <div class="compras-titulo">
+                <h2>Mis compras</h2>
+                <p>Consulta el historial de productos que has adquirido.</p>
+            </div>
+        </div>
+    </div>
+
+
+    {% if compras_tienda %}
+
+        <div class="compras-lista">
+
+            {% for compra in compras_tienda %}
+
+                <div class="compra-card">
+
+                    <div class="compra-header">
+
+                        <div>
+                            <h3>
+                                <i class="fa-solid fa-receipt"></i>
+                                Compra realizada
+                            </h3>
+
+                            <p>
+                                Fecha:
+                                {{ compra.fecha.strftime('%d/%m/%Y %H:%M') if compra.fecha else '' }}
+                            </p>
+                        </div>
+
+                        <div class="compra-total">
+                            ${{ "%.2f"|format(compra.total) }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="productos-compra">
+
+                        {% for producto in compra.productos %}
+
+                            <div class="producto-compra">
+
+                                <div class="producto-info">
+
+                                    <span class="producto-icono">
+                                        <i class="fa-solid fa-paw"></i>
+                                    </span>
+
+                                    <div>
+                                        <strong>
+                                            {{ producto.producto_nombre }}
+                                        </strong>
+
+                                        <small>
+                                            Cantidad:
+                                            {{ producto.cantidad }}
+                                        </small>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="producto-precio">
+                                    ${{ "%.2f"|format(producto.total) }}
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+        <div id="paginacionCompras" style="
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:6px;
+    margin-top:20px;
+    flex-wrap:wrap;
+"></div>
+
+    {% else %}
+
+        <div class="sin-compras">
+
+            <i class="fa-solid fa-bag-shopping"></i>
+
+            <h3>Aún no tienes compras</h3>
+
+            <p>
+                Cuando realices una compra en nuestra tienda,
+                aparecerá aquí.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<style>
+
+.mis-compras {
+    margin: 30px 0;
+    padding: 25px;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(91, 61, 120, 0.08);
+    border: 1px solid #eee5f5;
+}
+
+.compras-header {
+    margin-bottom: 22px;
+}
+
+.compras-header > div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.compras-icono {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #8e5bb7, #c084c8);
+    color: white;
+    font-size: 21px;
+}
+
+.compras-titulo h2 {
+    margin: 0 0 4px;
+    color: #4b315d;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.compras-titulo p {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.compra-card {
+    margin-bottom: 18px;
+    padding: 20px;
+    border-radius: 16px;
+    background: #faf8fc;
+    border: 1px solid #eee5f5;
+}
+
+.compra-card:last-child {
+    margin-bottom: 0;
+}
+
+.compra-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eadff0;
+}
+
+.compra-header h3 {
+    margin: 0 0 5px;
+    color: #4b315d;
+    font-size: 16px;
+}
+
+.compra-header h3 i {
+    margin-right: 6px;
+    color: #8e5bb7;
+}
+
+.compra-header p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+.compra-total {
+    font-size: 22px;
+    font-weight: 800;
+    color: #74459a;
+    white-space: nowrap;
+}
+
+.productos-compra {
+    margin-top: 8px;
+}
+
+.producto-compra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 13px 0;
+    border-bottom: 1px solid #eee8f2;
+}
+
+.producto-compra:last-child {
+    border-bottom: none;
+}
+
+.producto-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.producto-icono {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #f0e4f7;
+    color: #8e5bb7;
+}
+
+.producto-info strong {
+    display: block;
+    color: #4b315d;
+    font-size: 14px;
+}
+
+.producto-info small {
+    display: block;
+    margin-top: 3px;
+    color: #888;
+    font-size: 12px;
+}
+
+.producto-precio {
+    color: #5d4a68;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sin-compras {
+    text-align: center;
+    padding: 45px 20px;
+    color: #777;
+}
+
+.sin-compras > i {
+    font-size: 42px;
+    color: #c8a9d8;
+    margin-bottom: 15px;
+}
+
+.sin-compras h3 {
+    margin: 0 0 7px;
+    color: #4b315d;
+}
+
+.sin-compras p {
+    margin: 0;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+
+    .mis-compras {
+        padding: 18px;
+    }
+
+    .compra-header {
+        align-items: flex-start;
+    }
+
+    .compra-total {
+        font-size: 19px;
+    }
+
+    .producto-compra {
+        align-items: flex-start;
+    }
+
+}
+
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const listaCompras = document.querySelector(".compras-lista");
+    const contenedorPaginacion = document.getElementById("paginacionCompras");
+
+    if (!listaCompras || !contenedorPaginacion) {
+        return;
+    }
+
+    const compras = Array.from(
+        listaCompras.querySelectorAll(".compra-card")
+    );
+
+    const comprasPorPagina = 10;
+
+    if (compras.length <= comprasPorPagina) {
+        return;
+    }
+
+    let paginaActual = 1;
+
+    const totalPaginas = Math.ceil(
+        compras.length / comprasPorPagina
+    );
+
+    function mostrarPagina(pagina) {
+
+        paginaActual = pagina;
+
+        const inicio =
+            (paginaActual - 1) * comprasPorPagina;
+
+        const fin =
+            inicio + comprasPorPagina;
+
+        compras.forEach(function (compra, indice) {
+
+            if (indice >= inicio && indice < fin) {
+                compra.style.display = "";
+            } else {
+                compra.style.display = "none";
+            }
+
+        });
+
+        contenedorPaginacion.innerHTML = "";
+
+        /* BOTÓN ANTERIOR */
+
+        const anterior = document.createElement("button");
+
+        anterior.type = "button";
+
+        anterior.innerHTML =
+            '<i class="fa-solid fa-chevron-left"></i> Anterior';
+
+        anterior.disabled = paginaActual === 1;
+
+        anterior.style.cssText = `
+            border:1px solid #e2d8e8;
+            background:white;
+            color:#6f527d;
+            padding:9px 13px;
+            border-radius:10px;
+            font-size:13px;
+            font-weight:700;
+            cursor:pointer;
+        `;
+
+        anterior.onclick = function () {
+
+            if (paginaActual > 1) {
+                mostrarPagina(paginaActual - 1);
+            }
+
+        };
+
+        contenedorPaginacion.appendChild(anterior);
+
+
+        /* NÚMEROS */
+
+        for (let i = 1; i <= totalPaginas; i++) {
+
+            const boton = document.createElement("button");
+
+            boton.type = "button";
+
+            boton.textContent = i;
+
+            boton.style.cssText = `
+                border:1px solid #e2d8e8;
+                background:white;
+                color:#6f527d;
+                min-width:38px;
+                height:38px;
+                border-radius:10px;
+                font-size:13px;
+                font-weight:700;
+                cursor:pointer;
+            `;
+
+            if (i === paginaActual) {
+
+                boton.style.background = "#8e5bb7";
+                boton.style.borderColor = "#8e5bb7";
+                boton.style.color = "white";
+
+            }
+
+            boton.onclick = function () {
+                mostrarPagina(i);
+            };
+
+            contenedorPaginacion.appendChild(boton);
+        }
+
+
+        /* BOTÓN SIGUIENTE */
+
+        const siguiente = document.createElement("button");
+
+        siguiente.type = "button";
+
+        siguiente.innerHTML =
+            'Siguiente <i class="fa-solid fa-chevron-right"></i>';
+
+        siguiente.disabled =
+            paginaActual === totalPaginas;
+
+        siguiente.style.cssText = `
+            border:1px solid #e2d8e8;
+            background:white;
+            color:#6f527d;
+            padding:9px 13px;
+            border-radius:10px;
+            font-size:13px;
+            font-weight:700;
+            cursor:pointer;
+        `;
+
+        siguiente.onclick = function () {
+
+            if (paginaActual < totalPaginas) {
+                mostrarPagina(paginaActual + 1);
+            }
+
+        };
+
+        contenedorPaginacion.appendChild(siguiente);
+    }
+
+    mostrarPagina(1);
+
+});
+</script>
 </body>
 </html>

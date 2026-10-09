@@ -2145,21 +2145,102 @@ function comprar() {
 
     if (carrito.length === 0) {
 
-        alert(
-            "Tu carrito está vacío."
-        );
+        alert("Tu carrito está vacío.");
 
         return;
-
     }
 
+    const botonComprar =
+        document.querySelector(".btn-comprar");
 
-    alert(
-        "Tu carrito está listo para comprar. El siguiente paso será conectar el pago."
-    );
+    if (botonComprar) {
+
+        botonComprar.disabled = true;
+
+        botonComprar.textContent =
+            "Procesando...";
+    }
+
+    fetch("/stripe_tienda_checkout", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            carrito: carrito
+        })
+
+    })
+
+    .then(response => {
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        if (data.error) {
+
+            alert(data.error);
+
+            if (botonComprar) {
+
+                botonComprar.disabled = false;
+
+                botonComprar.textContent =
+                    "Comprar";
+            }
+
+            return;
+        }
+
+        if (data.url) {
+
+            window.location.href = data.url;
+
+            return;
+        }
+
+        alert(
+            "No fue posible iniciar el pago."
+        );
+
+        if (botonComprar) {
+
+            botonComprar.disabled = false;
+
+            botonComprar.textContent =
+                "Comprar";
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Error:",
+            error
+        );
+
+        alert(
+            "Ocurrió un error al iniciar el pago."
+        );
+
+        if (botonComprar) {
+
+            botonComprar.disabled = false;
+
+            botonComprar.textContent =
+                "Comprar";
+        }
+
+    });
 
 }
-
 
 
 /* =====================================================

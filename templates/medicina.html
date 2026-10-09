@@ -3967,41 +3967,102 @@ function buscarProductos() {
 
 function comprar() {
 
+    if (carrito.length === 0) {
 
-    /*
-        Si no hay productos,
-        avisamos al usuario.
-    */
-
-    if (
-        carrito.length === 0
-    ) {
-
-        alert(
-            "Tu carrito está vacío."
-        );
+        alert("Tu carrito está vacío.");
 
         return;
-
     }
 
+    const botonComprar =
+        document.querySelector(".btn-comprar");
 
-    /*
-        Por ahora mostramos este mensaje.
+    if (botonComprar) {
 
-        Más adelante sustituiremos esto por
-        el verdadero proceso de compra.
-    */
+        botonComprar.disabled = true;
 
-    alert(
+        botonComprar.textContent =
+            "Procesando...";
+    }
 
-        "Tu carrito está listo para comprar. " +
+    fetch("/stripe_tienda_checkout", {
 
-        "El siguiente paso será conectar " +
+        method: "POST",
 
-        "el proceso de pago y pedido."
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-    );
+        body: JSON.stringify({
+            carrito: carrito
+        })
+
+    })
+
+    .then(response => {
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        if (data.error) {
+
+            alert(data.error);
+
+            if (botonComprar) {
+
+                botonComprar.disabled = false;
+
+                botonComprar.textContent =
+                    "Comprar";
+            }
+
+            return;
+        }
+
+        if (data.url) {
+
+            window.location.href = data.url;
+
+            return;
+        }
+
+        alert(
+            "No fue posible iniciar el pago."
+        );
+
+        if (botonComprar) {
+
+            botonComprar.disabled = false;
+
+            botonComprar.textContent =
+                "Comprar";
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Error:",
+            error
+        );
+
+        alert(
+            "Ocurrió un error al iniciar el pago."
+        );
+
+        if (botonComprar) {
+
+            botonComprar.disabled = false;
+
+            botonComprar.textContent =
+                "Comprar";
+        }
+
+    });
 
 }
 

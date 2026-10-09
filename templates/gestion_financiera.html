@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion financiera - Happy Paws Vet</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#f8f6fa;
+    font-family:"Segoe UI",Arial,sans-serif;
+    color:#352b3d
+}
+
+a{text-decoration:none}
+
+.pagina-header{
+    background:linear-gradient(135deg,#7f4aa8,#a65ab8);
+    color:white;
+    padding:30px 20px;
+    box-shadow:0 5px 20px rgba(91,61,120,.15)
+}
+
+.header-contenido{
+    max-width:1250px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px
+}
+
+.titulo-principal{
+    display:flex;
+    align-items:center;
+    gap:16px
+}
+
+.titulo-icono{
+    width:58px;
+    height:58px;
+    border-radius:17px;
+    background:rgba(255,255,255,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px
+}
+
+.titulo-principal h1{
+    margin:0;
+    font-size:28px;
+    font-weight:800
+}
+
+.titulo-principal p{
+    margin:4px 0 0;
+    opacity:.9;
+    font-size:14px
+}
+
+.btn-volver{
+    background:white;
+    color:#7f4aa8;
+    border-radius:12px;
+    padding:11px 18px;
+    font-weight:700;
+    transition:.25s ease;
+    white-space:nowrap
+}
+
+.btn-volver:hover{
+    color:#633887;
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px rgba(0,0,0,.15)
+}
+
+.contenedor-principal{
+    max-width:1250px;
+    margin:35px auto;
+    padding:0 20px
+}
+
+.menu-financiero{
+    background:white;
+    border-radius:16px;
+    padding:8px;
+    box-shadow:0 5px 18px rgba(65,40,80,.07);
+    display:flex;
+    gap:6px;
+    margin-bottom:30px;
+    overflow-x:auto
+}
+
+.menu-financiero a{
+    color:#665b6d;
+    padding:11px 18px;
+    border-radius:11px;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+    transition:.25s ease
+}
+
+.menu-financiero a:hover,
+.menu-financiero a.activo{
+    background:#f0e4f8;
+    color:#7f4aa8
+}
+
+.seccion-titulo{
+    margin-bottom:18px
+}
+
+.seccion-titulo h2{
+    font-size:21px;
+    font-weight:800;
+    margin:0;
+    color:#3f3048
+}
+
+.seccion-titulo p{
+    margin:5px 0 0;
+    color:#817687;
+    font-size:14px
+}
+
+.resumen-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:35px
+}
+
+.tarjeta-resumen{
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 6px 20px rgba(65,40,80,.07);
+    border:1px solid #eee8f2;
+    position:relative;
+    overflow:hidden
+}
+
+.tarjeta-resumen::after{
+    content:"";
+    position:absolute;
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:#f6eefb;
+    right:-25px;
+    top:-25px
+}
+
+.icono-resumen{
+    width:45px;
+    height:45px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:14px;
+    font-size:19px;
+    position:relative;
+    z-index:1
+}
+
+.icono-morado{
+    background:#eee2f8;
+    color:#814ca8
+}
+
+.icono-verde{
+    background:#e2f4ed;
+    color:#2f856c
+}
+
+.icono-amarillo{
+    background:#fff2d9;
+    color:#c58b27
+}
+
+.icono-rosa{
+    background:#fbe5ef;
+    color:#c05b82
+}
+
+.tarjeta-resumen h3{
+    margin:0;
+    font-size:27px;
+    font-weight:800;
+    color:#382b40
+}
+
+.tarjeta-resumen p{
+    margin:5px 0 0;
+    color:#7b707f;
+    font-size:13px
+}
+
+.seccion{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:30px;
+    box-shadow:0 6px 22px rgba(65,40,80,.07);
+    border:1px solid #eee8f2
+}
+
+.seccion-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px
+}
+
+.titulo-seccion{
+    display:flex;
+    align-items:center;
+    gap:12px
+}
+
+.titulo-seccion-icono{
+    width:43px;
+    height:43px;
+    border-radius:12px;
+    background:#f0e4f8;
+    color:#7f4aa8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px
+}
+
+.titulo-seccion h2{
+    margin:0;
+    font-size:20px;
+    font-weight:800;
+    color:#3d3046
+}
+
+.titulo-seccion p{
+    margin:3px 0 0;
+    font-size:13px;
+    color:#817687
+}
+
+.btn-principal{
+    background:#8e5bb7;
+    border:none;
+    color:white;
+    border-radius:10px;
+    padding:9px 15px;
+    font-size:13px;
+    font-weight:700
+}
+
+.btn-principal:hover{
+    background:#74459a;
+    color:white
+}
+
+.estado{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700
+}
+
+.estado-pagada{
+    background:#e4f5ed;
+    color:#28775f
+}
+
+.estado-pendiente{
+    background:#fff3d9;
+    color:#aa7720
+}
+
+.estado-cancelada{
+    background:#fde7ec;
+    color:#b44d6c
+}
+
+.estado-disponible{
+    background:#e4f1fb;
+    color:#39749c
+}
+
+.estado-stock{
+    background:#e4f5ed;
+    color:#28775f
+}
+
+.estado-poco{
+    background:#fff3d9;
+    color:#aa7720
+}
+
+.estado-agotado{
+    background:#fde7ec;
+    color:#b44d6c
+}
+
+.filtros{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:20px;
+    padding:15px;
+    background:#faf8fb;
+    border-radius:13px
+}
+
+.filtro{
+    min-width:180px
+}
+
+.filtro label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    color:#655a69;
+    margin-bottom:5px
+}
+
+.filtro input,
+.filtro select{
+    width:100%;
+    border:1px solid #ddd4e2;
+    border-radius:9px;
+    padding:8px 10px;
+    font-size:13px;
+    background:white;
+    color:#493e4d
+}
+
+.filtro input:focus,
+.filtro select:focus{
+    outline:none;
+    border-color:#9b68bf;
+    box-shadow:0 0 0 3px rgba(142,91,183,.10)
+}
+
+.tabla-contenedor{
+    overflow-x:auto
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:750px
+}
+
+table thead th{
+    background:#f7f3f9;
+    color:#5e5064;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    padding:13px 12px;
+    border-bottom:1px solid #e8e0eb;
+    white-space:nowrap
+}
+
+table tbody td{
+    padding:13px 12px;
+    font-size:13px;
+    color:#554a5b;
+    border-bottom:1px solid #f0ebf2;
+    vertical-align:middle
+}
+
+table tbody tr:hover{
+    background:#fcf9fd
+}
+
+.precio{
+    font-weight:800;
+    color:#75449a
+}
+
+.ingresos-destacados{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-bottom:25px
+}
+
+.ingreso-card{
+    border-radius:17px;
+    padding:22px;
+    color:white;
+    position:relative;
+    overflow:hidden
+}
+
+.ingreso-card.consultas{
+    background:linear-gradient(135deg,#7f4aa8,#a15db7)
+}
+
+.ingreso-card.tienda{
+    background:linear-gradient(135deg,#c15d89,#dc769e)
+}
+
+.ingreso-card::after{
+    content:"$";
+    position:absolute;
+    font-size:70px;
+    right:20px;
+    bottom:-15px;
+    opacity:.12
+}
+
+.ingreso-card span{
+    font-size:13px;
+    opacity:.9
+}
+
+.ingreso-card h3{
+    font-size:30px;
+    font-weight:800;
+    margin:7px 0 0
+}
+
+.stock-resumen{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap
+}
+
+.stock-indicador{
+    padding:7px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+    background:#f5f1f7;
+    color:#675a6c
+}
+
+.footer-modulo{
+    text-align:center;
+    color:#958a99;
+    font-size:12px;
+    padding:15px 0 35px
+}
+
+@media(max-width:1000px){
+    .resumen-grid{
+        grid-template-columns:repeat(2,1fr)
+    }
+}
+
+@media(max-width:700px){
+    .header-contenido{
+        flex-direction:column;
+        align-items:flex-start
+    }
+
+    .btn-volver{
+        width:100%;
+        text-align:center
+    }
+
+    .resumen-grid{
+        grid-template-columns:1fr
+    }
+
+    .ingresos-destacados{
+        grid-template-columns:1fr
+    }
+
+    .seccion{
+        padding:18px
+    }
+
+    .seccion-header{
+        flex-direction:column;
+        align-items:flex-start
+    }
+
+    .filtros{
+        flex-direction:column
+    }
+
+    .filtro{
+        width:100%
+    }
+}
+/* =====================================================
+   PAGINACIÓN DE INVENTARIO
+===================================================== */
+
+.paginacion-inventario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+}
+
+.paginacion-inventario button,
+.pagina-numero {
+    border: 1px solid #e2d8e8;
+    background: white;
+    color: #6f527d;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.paginacion-inventario button:hover,
+.pagina-numero:hover {
+    background: #f4eafa;
+    border-color: #c9a9dc;
+}
+
+.paginacion-inventario button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.pagina-numero.activo {
+    background: #8e5bb7;
+    border-color: #8e5bb7;
+    color: white;
+}
+
+#numerosPaginas {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="pagina-header">
+    <div class="header-contenido">
+        <div class="titulo-principal">
+            <div class="titulo-icono">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div>
+                <h1>Gesti&oacute;n financiera</h1>
+                <p>Administraci&oacute;n y control de Happy Paws Vet</p>
+            </div>
+        </div>
+
+        <a href="{{ url_for('panel_admin') }}" class="btn-volver">
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al panel
+        </a>
+    </div>
+</header>
+
+<main class="contenedor-principal">
+
+    <nav class="menu-financiero">
+        <a href="#resumen" class="activo">
+            <i class="fa-solid fa-house"></i>
+            Resumen
+        </a>
+
+        <a href="#videoconsultas">
+            <i class="fa-solid fa-video"></i>
+            Videoconsultas
+        </a>
+
+        <a href="#inventario">
+            <i class="fa-solid fa-box"></i>
+            Inventario
+        </a>
+
+        <a href="#ventas">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Ventas
+        </a>
+
+        <a href="#ingresos">
+            <i class="fa-solid fa-money-bill-trend-up"></i>
+            Ingresos
+        </a>
+    </nav>
+
+    <!-- RESUMEN -->
+    <section id="resumen">
+
+        <div class="seccion-titulo">
+            <h2>Resumen general</h2>
+            <p>Vista general de la actividad financiera de Happy Paws Vet.</p>
+        </div>
+
+        <div class="resumen-grid">
+
+            <div class="tarjeta-resumen">
+                <div class="icono-resumen icono-morado">
+                    <i class="fa-solid fa-video"></i>
+                </div>
+
+                <h3>{{ consultas_pagadas }}</h3>
+                <p>Videoconsultas pagadas</p>
+            </div>
+
+            <div class="tarjeta-resumen">
+                <div class="icono-resumen icono-verde">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+
+                <h3>${{ "%.2f"|format(ingresos_videoconsultas) }}</h3>
+                <p>Ingresos por videoconsultas</p>
+            </div>
+
+            <div class="tarjeta-resumen">
+                <div class="icono-resumen icono-amarillo">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+
+                <h3>{{ ventas_tienda }}</h3>
+                <p>Ventas de tienda</p>
+            </div>
+
+            <div class="tarjeta-resumen">
+                <div class="icono-resumen icono-rosa">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+
+                <h3>${{ "%.2f"|format(ingresos_totales) }}</h3>
+                <p>Ingresos totales</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- VIDEOCONSULTAS -->
+    <section class="seccion" id="videoconsultas">
+
+        <div class="seccion-header">
+            <div class="titulo-seccion">
+                <div class="titulo-seccion-icono">
+                    <i class="fa-solid fa-video"></i>
+                </div>
+
+                <div>
+                    <h2>Videoconsultas</h2>
+                    <p>Control de consultas y servicios veterinarios.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ingresos-destacados">
+
+            <div class="ingreso-card consultas">
+                <span>Ingresos por videoconsultas</span>
+                <h3>${{ "%.2f"|format(ingresos_videoconsultas) }}</h3>
+            </div>
+
+            <div class="ingreso-card tienda">
+                <span>Consultas pagadas</span>
+                <h3>{{ consultas_pagadas }}</h3>
+            </div>
+
+        </div>
+
+        <div class="filtros">
+
+            <div class="filtro">
+                <label>Desde</label>
+                <input type="date">
+            </div>
+
+            <div class="filtro">
+                <label>Hasta</label>
+                <input type="date">
+            </div>
+
+            <div class="filtro">
+                <label>Estado</label>
+                <select>
+                    <option value="">Todos</option>
+                    <option>Pagada</option>
+                    <option>Pendiente</option>
+                    <option>Cancelada</option>
+                </select>
+            </div>
+
+            <div class="filtro">
+                <label>Buscar cliente</label>
+                <input type="text" placeholder="Nombre del cliente">
+            </div>
+
+        </div>
+
+        <div class="tabla-contenedor">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Cliente</th>
+                        <th>Veterinario</th>
+                        <th>Estado</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for cita in videoconsultas %}
+
+                    <tr>
+                        <td>{{ cita.fecha }}</td>
+
+                        <td>{{ cita.hora }}</td>
+
+                        <td>
+                            {{ cita.cliente_nombre or 'Sin nombre' }}
+                        </td>
+
+                        <td>
+                            {{ cita.veterinario_nombre or 'Sin asignar' }}
+                        </td>
+
+                        <td>
+                            <span class="estado estado-pagada">
+                                <i class="fa-solid fa-circle-check"></i>
+                                Pagada
+                            </span>
+                        </td>
+
+                        <td class="precio">
+                            ${{ "%.2f"|format(cita.precio) }}
+                        </td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            No hay videoconsultas pagadas registradas.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- INVENTARIO -->
+   <section class="seccion" id="inventario">
+
+    <div class="seccion-header">
+
+        <div class="titulo-seccion">
+
+            <div class="titulo-seccion-icono">
+                <i class="fa-solid fa-box"></i>
+            </div>
+
+            <div>
+                <h2>Inventario</h2>
+
+                <p>
+                    Control de productos y existencias.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         INDICADORES
+    ========================================== -->
+
+    <div class="stock-resumen mb-4">
+
+        <div class="stock-indicador">
+            <i class="fa-solid fa-circle-check"></i>
+            Disponibles: {{ disponibles }}
+        </div>
+
+        <div class="stock-indicador">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Poco stock: {{ poco_stock }}
+        </div>
+
+        <div class="stock-indicador">
+            <i class="fa-solid fa-circle-xmark"></i>
+            Agotados: {{ agotados }}
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         TABLA
+    ========================================== -->
+
+    <div class="tabla-contenedor">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="inventarioTabla">
+
+                {% for producto in inventario %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ producto.nombre }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ producto.categoria }}
+                    </td>
+
+                    <td class="precio">
+                        ${{ "%.2f"|format(producto.precio) }}
+                    </td>
+
+                    <td>
+                        {{ producto.stock }}
+                    </td>
+
+                    <td>
+
+                        {% if producto.stock == 0 %}
+
+                            <span class="estado estado-agotado">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                                Agotado
+                            </span>
+
+                        {% elif producto.stock <= 5 %}
+
+                            <span class="estado estado-poco">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                Poco stock
+                            </span>
+
+                        {% else %}
+
+                            <span class="estado estado-stock">
+                                <i class="fa-solid fa-circle-check"></i>
+                                Disponible
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No hay productos registrados.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- =========================================
+         PAGINACIÓN
+    ========================================== -->
+
+    <div class="paginacion-inventario">
+
+        <button
+            type="button"
+            id="btnAnterior"
+            onclick="cambiarPaginaInventario(-1)">
+            <i class="fa-solid fa-chevron-left"></i>
+            Anterior
+        </button>
+
+        <div id="numerosPaginas"></div>
+
+        <button
+            type="button"
+            id="btnSiguiente"
+            onclick="cambiarPaginaInventario(1)">
+            Siguiente
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+    </div>
+
+</section>
+    <!-- VENTAS -->
+    <section class="seccion" id="ventas">
+
+        <div class="seccion-header">
+
+            <div class="titulo-seccion">
+
+                <div class="titulo-seccion-icono">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+
+                <div>
+                    <h2>Ventas de tienda</h2>
+                    <p>Registro de compras realizadas por los clientes.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tabla-contenedor">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% if detalle_ventas_tienda %}
+    {% for venta in detalle_ventas_tienda %}
+    <tr>
+        <td>
+            {{ venta.fecha }}
+        </td>
+        <td>
+            {{ venta.producto_nombre }}
+        </td>
+        <td>
+            {{ venta.cantidad }}
+        </td>
+        <td class="precio">
+            ${{ "%.2f"|format(venta.precio_unitario) }}
+        </td>
+        <td class="precio">
+            ${{ "%.2f"|format(venta.total) }}
+        </td>
+    </tr>
+    {% endfor %}
+{% else %}
+    <tr>
+        <td colspan="5" class="text-center">
+            Sin ventas registradas
+        </td>
+    </tr>
+{% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- INGRESOS -->
+    <section class="seccion" id="ingresos">
+
+        <div class="seccion-header">
+
+            <div class="titulo-seccion">
+
+                <div class="titulo-seccion-icono">
+                    <i class="fa-solid fa-money-bill-trend-up"></i>
+                </div>
+
+                <div>
+                    <h2>Resumen de ingresos</h2>
+                    <p>Ingresos generados por los servicios y la tienda.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="ingresos-destacados">
+
+            <div class="ingreso-card consultas">
+                <span>Ingresos por videoconsultas</span>
+                <h3>${{ "%.2f"|format(ingresos_videoconsultas) }}</h3>
+            </div>
+
+            <div class="ingreso-card tienda">
+                <span>Ingresos por ventas de tienda</span>
+                <h3>${{ "%.2f"|format(ingresos_tienda) }}</h3>
+            </div>
+
+        </div>
+
+        <div class="tarjeta-resumen">
+
+            <div class="icono-resumen icono-verde">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+
+            <h3>${{ "%.2f"|format(ingresos_totales) }}</h3>
+
+            <p>Ingresos totales</p>
+
+        </div>
+
+    </section>
+
+    <div class="footer-modulo">
+        Happy Paws Vet
+        <br>
+        Gesti&oacute;n administrativa y financiera
+    </div>
+
+</main>
+
+<script>
+document.querySelectorAll(".menu-financiero a").forEach(function(enlace){
+    enlace.addEventListener("click",function(){
+        document.querySelectorAll(".menu-financiero a").forEach(function(item){
+            item.classList.remove("activo");
+        });
+
+        this.classList.add("activo");
+    });
+});
+
+const secciones=document.querySelectorAll("section[id]");
+const enlacesMenu=document.querySelectorAll(".menu-financiero a");
+
+window.addEventListener("scroll",function(){
+
+    let posicionActual=window.scrollY+150;
+
+    secciones.forEach(function(seccion){
+
+        const inicio=seccion.offsetTop;
+        const final=inicio+seccion.offsetHeight;
+
+        if(posicionActual>=inicio && posicionActual<final){
+
+            enlacesMenu.forEach(function(enlace){
+
+                enlace.classList.remove("activo");
+
+                if(enlace.getAttribute("href")==="#"+seccion.id){
+                    enlace.classList.add("activo");
+                }
+
+            });
+
+        }
+
+    });
+
+});
+/* =====================================================
+   PAGINACIÓN DEL INVENTARIO
+===================================================== */
+
+let paginaInventario = 1;
+
+const productosPorPagina = 10;
+
+function mostrarPaginaInventario() {
+
+    const tabla = document.getElementById("inventarioTabla");
+
+    if (!tabla) {
+        return;
+    }
+
+    const filas = tabla.querySelectorAll("tr");
+
+    const totalProductos = filas.length;
+
+    const totalPaginas = Math.ceil(
+        totalProductos / productosPorPagina
+    );
+
+    if (totalPaginas === 0) {
+        return;
+    }
+
+    if (paginaInventario > totalPaginas) {
+        paginaInventario = totalPaginas;
+    }
+
+    if (paginaInventario < 1) {
+        paginaInventario = 1;
+    }
+
+
+    /* Mostrar solamente los 10 productos correspondientes */
+
+    filas.forEach(function(fila, indice) {
+
+        const inicio =
+            (paginaInventario - 1) * productosPorPagina;
+
+        const fin =
+            inicio + productosPorPagina;
+
+        if (indice >= inicio && indice < fin) {
+
+            fila.style.display = "";
+
+        } else {
+
+            fila.style.display = "none";
+
+        }
+
+    });
+
+
+    /* Botón anterior */
+
+    const btnAnterior =
+        document.getElementById("btnAnterior");
+
+    btnAnterior.disabled =
+        paginaInventario === 1;
+
+
+    /* Botón siguiente */
+
+    const btnSiguiente =
+        document.getElementById("btnSiguiente");
+
+    btnSiguiente.disabled =
+        paginaInventario === totalPaginas;
+
+
+    /* Números de página */
+
+    const contenedorPaginas =
+        document.getElementById("numerosPaginas");
+
+    contenedorPaginas.innerHTML = "";
+
+
+    for (
+        let pagina = 1;
+        pagina <= totalPaginas;
+        pagina++
+    ) {
+
+        const boton =
+            document.createElement("button");
+
+        boton.type = "button";
+
+        boton.className = "pagina-numero";
+
+        boton.textContent = pagina;
+
+
+        if (pagina === paginaInventario) {
+
+            boton.classList.add("activo");
+
+        }
+
+
+        boton.onclick = function() {
+
+            paginaInventario = pagina;
+
+            mostrarPaginaInventario();
+
+        };
+
+
+        contenedorPaginas.appendChild(boton);
+
+    }
+
+}
+
+
+/* Cambiar de página */
+
+function cambiarPaginaInventario(direccion) {
+
+    paginaInventario += direccion;
+
+    mostrarPaginaInventario();
+
+}
+
+
+/* Cargar paginación al abrir la página */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        mostrarPaginaInventario();
+
+    }
+);
+/* ============================================================
+   PAGINACIÓN DE VIDEOCONSULTAS Y VENTAS DE TIENDA
+============================================================ */
+
+function crearPaginacionTabla(selector, nombre) {
+
+    const tabla = document.querySelector(selector);
+
+    if (!tabla) {
+        return;
+    }
+
+    const tbody = tabla.querySelector("tbody");
+
+    if (!tbody) {
+        return;
+    }
+
+    const filas = Array.from(tbody.querySelectorAll("tr"));
+
+    if (filas.length <= 10) {
+        return;
+    }
+
+    const filasPorPagina = 10;
+    let paginaActual = 1;
+    const totalPaginas = Math.ceil(filas.length / filasPorPagina);
+
+    const paginacion = document.createElement("div");
+
+    paginacion.className = "paginacion-inventario";
+    paginacion.style.marginTop = "20px";
+
+    function mostrarPagina(pagina) {
+
+        paginaActual = pagina;
+
+        const inicio = (pagina - 1) * filasPorPagina;
+        const fin = inicio + filasPorPagina;
+
+        filas.forEach(function(fila, indice) {
+
+            if (indice >= inicio && indice < fin) {
+                fila.style.display = "";
+            } else {
+                fila.style.display = "none";
+            }
+
+        });
+
+        paginacion.innerHTML = "";
+
+        const botonAnterior = document.createElement("button");
+
+        botonAnterior.type = "button";
+        botonAnterior.innerHTML =
+            '<i class="fa-solid fa-chevron-left"></i> Anterior';
+
+        botonAnterior.disabled = paginaActual === 1;
+
+        botonAnterior.onclick = function() {
+            if (paginaActual > 1) {
+                mostrarPagina(paginaActual - 1);
+            }
+        };
+
+        paginacion.appendChild(botonAnterior);
+
+        for (let i = 1; i <= totalPaginas; i++) {
+
+            const boton = document.createElement("button");
+
+            boton.type = "button";
+            boton.className = "pagina-numero";
+            boton.textContent = i;
+
+            if (i === paginaActual) {
+                boton.classList.add("activo");
+            }
+
+            boton.onclick = function() {
+                mostrarPagina(i);
+            };
+
+            paginacion.appendChild(boton);
+        }
+
+        const botonSiguiente = document.createElement("button");
+
+        botonSiguiente.type = "button";
+        botonSiguiente.innerHTML =
+            'Siguiente <i class="fa-solid fa-chevron-right"></i>';
+
+        botonSiguiente.disabled = paginaActual === totalPaginas;
+
+        botonSiguiente.onclick = function() {
+            if (paginaActual < totalPaginas) {
+                mostrarPagina(paginaActual + 1);
+            }
+        };
+
+        paginacion.appendChild(botonSiguiente);
+    }
+
+    tabla.parentElement.appendChild(paginacion);
+
+    mostrarPagina(1);
+}
+
+
+/* VIDEOCONSULTAS */
+crearPaginacionTabla(
+    "#videoconsultas table",
+    "videoconsultas"
+);
+
+
+/* VENTAS DE TIENDA */
+crearPaginacionTabla(
+    "#ventas table",
+    "ventas"
+);
+
+</script>
+
+</body>
+</html>
