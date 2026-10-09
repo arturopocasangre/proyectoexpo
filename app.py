@@ -231,85 +231,683 @@ def stripe_checkout(cita_id):
     )
     return redirect(session.url, code=303)
 
-# -------------------
-# Pago confirmado
-# -------------------
-@app.route("/pago/success/<int:cita_id>")
-def pago_success(cita_id):
-    # Recuperar el session_id desde querystring
-    session_id = request.args.get("session_id")
+    # ============================================================
+# STRIPE CHECKOUT - TIENDA
+# ============================================================
+
+# ============================================================
+# STRIPE CHECKOUT - TIENDA
+# ============================================================
+
+@app.route("/stripe_tienda_checkout", methods=["POST"])
+def stripe_tienda_checkout():
+
+    # --------------------------------------------------------
+    # VERIFICAR SESIÓN
+    # --------------------------------------------------------
+
+    if "usuario_id" not in session:
+        return jsonify({
+            "error": "Debes iniciar sesión para realizar la compra."
+        }), 401
+
+    usuario_id = session["usuario_id"]
+
+    datos = request.get_json()
+
+    if not datos or "carrito" not in datos:
+        return jsonify({
+            "error": "No se recibió el carrito."
+        }), 400
+
+    carrito = datos["carrito"]
+
+    if not carrito:
+        return jsonify({
+            "error": "El carrito está vacío."
+        }), 400
+
+
+    conn = get_db_connection()
+
+    try:
+
+        line_items = []
+        productos_validos = []
+
+        with conn.cursor() as cursor:
+
+            # ==================================================
+            # VALIDAR CADA PRODUCTO
+            # ==================================================
+
+            for producto in carrito:
+
+                nombre = producto.get("nombre")
+                cantidad = int(producto.get("cantidad", 0))
+
+                if not nombre or cantidad <= 0:
+                    continue
+
+
+                cursor.execute("""
+                    SELECT
+                        id,
+                        nombre,
+                        precio,
+                        stock,
+                        activo
+                    FROM inventario
+                    WHERE nombre = %s
+                      AND activo = 1
+                    LIMIT 1
+                """, (nombre,))
+
+                producto_db = cursor.fetchone()
+
+
+                if not producto_db:
+
+                    return jsonify({
+                        "error":
+                            f"El producto '{nombre}' "
+                            "ya no está disponible."
+                    }), 400
+
+
+                # ==================================================
+                # VERIFICAR STOCK
+                # ==================================================
+
+                if producto_db["stock"] < cantidad:
+
+                    return jsonify({
+                        "error":
+                            f"No hay suficiente stock de "
+                            f"'{producto_db['nombre']}'. "
+                            f"Stock disponible: "
+                            f"{producto_db['stock']}."
+                    }), 400
+
+
+                # ==================================================
+                # PRECIO REAL DE MYSQL
+                # ==================================================
+
+                precio = float(producto_db["precio"])
+
+
+                line_items.append({
+
+                    "price_data": {
+
+                        "currency": "usd",
+
+                        "product_data": {
+                            "name": producto_db["nombre"]
+                        },
+
+                        "unit_amount":
+                            int(round(precio * 100))
+                    },
+
+                    "quantity": cantidad
+
+                })
+
+
+                productos_validos.append({
+
+                    "id":
+                        producto_db["id"],
+
+                    "nombre":
+                        producto_db["nombre"],
+
+                    "cantidad":
+                        cantidad,
+
+                    "precio":
+                        precio
+
+                })
+
+
+        # ========================================================
+        # VALIDAR PRODUCTOS
+        # ========================================================
+
+        if not line_items:
+
+            return jsonify({
+                "error":
+                    "No hay productos válidos para comprar."
+            }), 400
+
+
+        # ========================================================
+        # CREAR CHECKOUT STRIPE
+        # ========================================================
+
+        checkout_session = stripe.checkout.Session.create(
+
+            payment_method_types=["card"],
+
+            line_items=line_items,
+
+            mode="payment",
+
+            success_url=
+                url_for(
+                    "pago_tienda_success",
+                    _external=True
+                )
+                +
+                "?session_id={CHECKOUT_SESSION_ID}",
+
+            cancel_url=
+                url_for(
+                    "tienda",
+                    _external=True
+                ),
+
+            metadata={
+
+                "usuario_id":
+                    str(usuario_id)
+
+            }
+        )
+
+
+        # ========================================================
+        # GUARDAR INFORMACIÓN DEL CHECKOUT EN LA SESIÓN
+        # ========================================================
+
+        session["tienda_checkout"] = {
+
+            "stripe_session_id":
+                checkout_session.id,
+
+            "usuario_id":
+                usuario_id,
+
+            "productos":
+                productos_validos
+        }
+
+
+        return jsonify({
+
+            "url":
+                checkout_session.url
+
+        })
+
+
+    except Exception as e:
+
+        print(
+            "ERROR STRIPE TIENDA:",
+            e
+        )
+
+        return jsonify({
+
+            "error":
+                "No fue posible iniciar el pago."
+
+        }), 500
+
+
+    finally:
+
+        conn.close()
+
+
+
+# ============================================================
+# PAGO EXITOSO DE TIENDA
+# ============================================================
+
+@app.route("/pago_tienda_success")
+def pago_tienda_success():
+
+    session_id = request.args.get(
+        "session_id"
+    )
+
+
     if not session_id:
-        return "❌ Error: falta session_id"
 
-    # Recuperar la sesión de Stripe
-    session = stripe.checkout.Session.retrieve(session_id)
+        return (
+            "❌ Error: falta session_id."
+        )
 
-    # Obtener el PaymentIntent ID (referencia de pago)
-    referencia_pago = session.payment_intent
 
-    # Traer datos de la cita
+    # ========================================================
+    # RECUPERAR SESIÓN DE STRIPE
+    # ========================================================
+
+    try:
+
+        checkout_session = (
+            stripe.checkout.Session.retrieve(
+                session_id
+            )
+        )
+
+    except Exception as e:
+
+        print(
+            "ERROR RECUPERANDO STRIPE:",
+            e
+        )
+
+        return (
+            "❌ No fue posible verificar el pago."
+        )
+
+
+    # ========================================================
+    # VERIFICAR PAGO
+    # ========================================================
+
+    if checkout_session.payment_status != "paid":
+
+        return (
+            "❌ El pago no fue confirmado."
+        )
+
+
+    # ========================================================
+    # RECUPERAR DATOS DE LA COMPRA
+    # ========================================================
+
+    datos_checkout = session.get(
+        "tienda_checkout"
+    )
+
+
+    if not datos_checkout:
+
+        return """
+        ❌ No se encontró la información de la compra.
+        Por favor contacta al administrador.
+        """
+
+
+    if (
+        datos_checkout.get("stripe_session_id")
+        != session_id
+    ):
+
+        return (
+            "❌ La sesión de pago no coincide."
+        )
+
+
+    productos = datos_checkout.get(
+        "productos",
+        []
+    )
+
+    usuario_id = datos_checkout.get(
+        "usuario_id"
+    )
+
+
+    if not productos:
+
+        return (
+            "❌ No se encontraron productos "
+            "en la compra."
+        )
+
+
     conn = get_db_connection()
-    with conn.cursor() as cursor:
-        cursor.execute("""
-            SELECT c.fecha, c.hora, cl.nombre AS cliente_nombre, cl.email AS cliente_email
-            FROM citas c
-            JOIN usuarios cl ON c.cliente_id = cl.id
-            WHERE c.id=%s
-        """, (cita_id,))
-        cita = cursor.fetchone()
-    conn.close()
 
-    if not cita:
-        return "❌ Error: la cita no existe o no tiene cliente asociado."
 
-    enlace_jitsi = f"https://meet.happypawsvet.shop/{cita_id}"
+    try:
 
-    # Guardar enlace y referencia de pago en la cita
-    conn = get_db_connection()
-    with conn.cursor() as cursor:
-        cursor.execute("""
-            UPDATE citas 
-            SET link_consulta=%s, estado='pagada', referencia_pago=%s 
-            WHERE id=%s
-        """, (enlace_jitsi, referencia_pago, cita_id))
+        with conn.cursor() as cursor:
+
+
+            # ==================================================
+            # OBTENER DATOS DEL CLIENTE
+            # ==================================================
+
+            cursor.execute("""
+                SELECT
+                    id,
+                    nombre,
+                    email
+                FROM usuarios
+                WHERE id = %s
+            """, (usuario_id,))
+
+            cliente = cursor.fetchone()
+
+
+            if not cliente:
+
+                raise Exception(
+                    "No se encontró el cliente."
+                )
+
+
+            # ==================================================
+            # EVITAR DUPLICAR LA VENTA
+            # ==================================================
+
+            cursor.execute("""
+                SELECT id
+                FROM ventas_tienda
+                WHERE stripe_session_id = %s
+                LIMIT 1
+            """, (session_id,))
+
+            venta_existente = cursor.fetchone()
+
+
+            if venta_existente:
+
+                session.pop(
+                    "tienda_checkout",
+                    None
+                )
+
+                return redirect(
+                    url_for("panel_cliente")
+                )
+
+
+            # ==================================================
+            # REGISTRAR PRODUCTOS
+            # Y DESCONTAR STOCK
+            # ==================================================
+
+            for producto in productos:
+
+                producto_id = producto["id"]
+
+                cantidad = int(producto["cantidad"])
+
+                precio = float(producto["precio"])
+
+                # ------------------------------------------------
+                # BLOQUEAR REGISTRO DEL PRODUCTO
+                # ------------------------------------------------
+
+                cursor.execute("""
+                    SELECT
+                        id,
+                        nombre,
+                        stock
+                    FROM inventario
+                    WHERE id = %s
+                    FOR UPDATE
+                """, (producto_id,))
+
+
+                producto_actual = cursor.fetchone()
+
+
+                if not producto_actual:
+
+                    raise Exception(
+                        f"Producto ID "
+                        f"{producto_id} "
+                        "no existe."
+                    )
+
+
+                # ------------------------------------------------
+                # VERIFICAR STOCK
+                # ------------------------------------------------
+
+                if (
+                    producto_actual["stock"]
+                    < cantidad
+                ):
+
+                    raise Exception(
+                        f"Stock insuficiente "
+                        f"para {producto_actual['nombre']}."
+                    )
+
+
+                total = (
+                    precio *
+                    cantidad
+                )
+
+
+                # ------------------------------------------------
+                # INSERTAR VENTA
+                # ------------------------------------------------
+
+                cursor.execute("""
+                    INSERT INTO ventas_tienda
+                    (
+                        producto_id,
+                        cantidad,
+                        precio_unitario,
+                        total,
+                        stripe_session_id,
+                        usuario_id
+                    )
+                    VALUES
+                    (
+                        %s,
+                        %s,
+                        %s,
+                        %s,
+                        %s,
+                        %s
+                    )
+                """, (
+
+                    producto_id,
+                    cantidad,
+                    precio,
+                    total,
+                    session_id,
+                    usuario_id
+
+                ))
+
+
+                # ------------------------------------------------
+                # DESCONTAR STOCK
+                # ------------------------------------------------
+
+                cursor.execute("""
+                    UPDATE inventario
+                    SET stock = stock - %s
+                    WHERE id = %s
+                """, (
+
+                    cantidad,
+                    producto_id
+
+                ))
+
+
+        # ========================================================
+        # GUARDAR CAMBIOS
+        # ========================================================
+
         conn.commit()
-    conn.close()
-
-    # Enviar correo de confirmación
-    enviar_correo(cita["cliente_email"], cita["cliente_nombre"], cita["fecha"], cita["hora"], enlace_jitsi)
-
-    return redirect(url_for("panel_cliente"))
 
 
+        # ========================================================
+        # CALCULAR TOTAL
+        # ========================================================
 
-# -------------------
-# envia confirmacion
-# -------------------
-def enviar_correo(destinatario, nombre, fecha, hora, enlace):
+        total_compra = sum(
+
+            float(producto["precio"])
+            * int(producto["cantidad"])
+
+            for producto in productos
+
+        )
+
+
+        # ========================================================
+        # PREPARAR DETALLE DEL CORREO
+        # ========================================================
+
+        detalle_productos = ""
+
+        for producto in productos:
+
+            subtotal = (
+                float(producto["precio"])
+                *
+                int(producto["cantidad"])
+            )
+
+            detalle_productos += (
+                f"• {producto['nombre']} "
+                f"x {producto['cantidad']} "
+                f"— ${subtotal:.2f}\n"
+            )
+
+
+        # ========================================================
+        # ENVIAR CORREO
+        # ========================================================
+
+        try:
+
+            enviar_correo_compra(
+
+                cliente["email"],
+
+                cliente["nombre"],
+
+                detalle_productos,
+
+                total_compra,
+
+                session_id
+
+            )
+
+        except Exception as error_correo:
+
+            print(
+                "ERROR ENVIANDO CORREO "
+                "DE TIENDA:",
+                error_correo
+            )
+
+
+        # ========================================================
+        # LIMPIAR CHECKOUT
+        # ========================================================
+
+        session.pop(
+            "tienda_checkout",
+            None
+        )
+
+
+        return redirect(
+            url_for("panel_cliente")
+        )
+
+
+    except Exception as e:
+
+        conn.rollback()
+
+        print(
+            "ERROR REGISTRANDO VENTA:",
+            e
+        )
+
+        return """
+        ❌ El pago fue recibido, pero ocurrió
+        un problema registrando la compra.
+
+        Contacta al administrador.
+        """
+
+
+    finally:
+
+        conn.close()
+
+        # ============================================================
+# CORREO DE CONFIRMACIÓN DE COMPRA
+# ============================================================
+
+# ============================================================
+# CORREO DE CONFIRMACIÓN DE COMPRA
+# ============================================================
+
+def enviar_correo_compra(
+    destinatario,
+    nombre,
+    detalle_productos,
+    total,
+    session_id
+):
+
     remitente = "HappyPawsVet2026@gmail.com"
+
     mensaje = f"""
-    Hola {nombre},
+Hola {nombre}:
 
-    Tu cita ha sido confirmada:
-    📅 Fecha: {fecha}
-    ⏰ Hora: {hora}
-    🔗 Enlace de consulta: https://happypawsvet.shop/panel/cliente
+¡Gracias por tu compra en Happy Paws Vet! 🐾
 
-    ¡Gracias por confiar en Happy Paws Vet!
-    """
+Tu pago fue confirmado correctamente.
 
-    msg = MIMEText(mensaje, "plain", "utf-8")
-    msg["Subject"] = "Confirmación de cita - Happy Paws Vet"
+DETALLE DE LA COMPRA
+--------------------
+
+{detalle_productos}
+
+TOTAL PAGADO: ${total:.2f}
+
+Referencia de pago:
+{session_id}
+
+Puedes consultar tu compra desde tu panel de cliente.
+
+¡Gracias por confiar en Happy Paws Vet!
+
+🐾 Happy Paws Vet
+"""
+
+    msg = MIMEText(
+        mensaje,
+        "plain",
+        "utf-8"
+    )
+
+    msg["Subject"] = "Confirmación de compra - Happy Paws Vet"
     msg["From"] = remitente
     msg["To"] = destinatario
 
-    # Configuración SMTP (ejemplo con Gmail)
+    # MISMA CONFIGURACIÓN SMTP QUE YA FUNCIONA
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
+
         server.starttls()
-        server.login("HappyPawsVet2026@gmail.com ", "acxu anym uwvs brgd")
+            
+        server.login(
+        "HappyPawsVet2026@gmail.com",
+        os.environ.get("GMAIL_APP_PASSWORD")
+        )
 
-        server.sendmail(remitente, destinatario, msg.as_string())
-
+        server.sendmail(
+            remitente,
+            destinatario,
+            msg.as_string()
+        )
 
 # -------------------
 # Panel admin: listar configuración
@@ -663,6 +1261,161 @@ def panel_admin():
 
     return render_template("panel_admin.html", usuarios=usuarios, clientes=clientes, citas=citas)
 
+@app.route("/gestion-financiera")
+def gestion_financiera():
+    if session.get("rol") != "admin":
+        return "Acceso denegado"
+
+    conn = get_db_connection()
+
+    with conn.cursor() as cursor:
+
+        # ============================================================
+        # VIDEOCONSULTAS PAGADAS
+        # ============================================================
+
+        cursor.execute("""
+            SELECT
+                COUNT(*) AS consultas_pagadas,
+                COALESCE(SUM(precio), 0) AS ingresos_videoconsultas
+            FROM citas
+            WHERE estado = 'pagada'
+        """)
+
+        resumen_consultas = cursor.fetchone()
+
+        # ============================================================
+        # DETALLE DE VIDEOCONSULTAS
+        # ============================================================
+
+        cursor.execute("""
+            SELECT
+                c.id,
+                c.fecha,
+                c.hora,
+                c.precio,
+                cliente.nombre AS cliente_nombre,
+                veterinario.nombre AS veterinario_nombre
+            FROM citas c
+            LEFT JOIN usuarios cliente
+                ON c.cliente_id = cliente.id
+            LEFT JOIN usuarios veterinario
+                ON c.veterinario_id = veterinario.id
+            WHERE c.estado = 'pagada'
+            ORDER BY c.fecha DESC, c.hora DESC
+        """)
+
+        videoconsultas = cursor.fetchall()
+
+        # ============================================================
+        # INVENTARIO
+        # ============================================================
+
+        cursor.execute("""
+            SELECT
+                id,
+                nombre,
+                categoria,
+                precio,
+                imagen,
+                stock,
+                activo
+            FROM inventario
+            WHERE activo = 1
+            ORDER BY categoria, nombre
+        """)
+
+        inventario = cursor.fetchall()
+
+        # ============================================================
+        # RESUMEN DEL INVENTARIO
+        # ============================================================
+
+        cursor.execute("""
+            SELECT
+                COALESCE(SUM(CASE
+                    WHEN stock > 5 THEN 1
+                    ELSE 0
+                END), 0) AS disponibles,
+
+                COALESCE(SUM(CASE
+                    WHEN stock BETWEEN 1 AND 5 THEN 1
+                    ELSE 0
+                END), 0) AS poco_stock,
+
+                COALESCE(SUM(CASE
+                    WHEN stock = 0 THEN 1
+                    ELSE 0
+                END), 0) AS agotados
+
+            FROM inventario
+            WHERE activo = 1
+        """)
+
+        resumen_inventario = cursor.fetchone()
+
+        # ============================================================
+        # VENTAS DE TIENDA
+        # ============================================================
+
+        cursor.execute("""
+            SELECT
+                COALESCE(SUM(cantidad), 0) AS ventas_tienda,
+                COALESCE(SUM(total), 0) AS ingresos_tienda
+            FROM ventas_tienda
+        """)
+
+        resumen_tienda = cursor.fetchone()
+        cursor.execute("""
+            SELECT
+                v.fecha,
+                i.nombre AS producto_nombre,
+                v.cantidad,
+                v.precio_unitario,
+                v.total
+            FROM ventas_tienda v
+            INNER JOIN inventario i
+                ON v.producto_id = i.id
+            ORDER BY v.fecha DESC
+        """)
+
+        detalle_ventas_tienda = cursor.fetchall()
+    conn.close()
+
+    # ============================================================
+    # RESUMENES
+    # ============================================================
+
+    consultas_pagadas = resumen_consultas["consultas_pagadas"]
+    ingresos_videoconsultas = resumen_consultas["ingresos_videoconsultas"]
+
+    disponibles = resumen_inventario["disponibles"]
+    poco_stock = resumen_inventario["poco_stock"]
+    agotados = resumen_inventario["agotados"]
+
+    ventas_tienda = resumen_tienda["ventas_tienda"]
+    ingresos_tienda = resumen_tienda["ingresos_tienda"]
+
+    # ============================================================
+    # INGRESOS TOTALES
+    # ============================================================
+
+    ingresos_totales = ingresos_videoconsultas + ingresos_tienda
+
+    return render_template(
+        "gestion_financiera.html",
+        detalle_ventas_tienda=detalle_ventas_tienda,
+        consultas_pagadas=consultas_pagadas,
+        ingresos_videoconsultas=ingresos_videoconsultas,
+        videoconsultas=videoconsultas,
+        inventario=inventario,
+        disponibles=disponibles,
+        poco_stock=poco_stock,
+        agotados=agotados,
+        ventas_tienda=ventas_tienda,
+        ingresos_tienda=ingresos_tienda,
+        ingresos_totales=ingresos_totales
+    )
 
 @app.route("/panel/veterinario")
 def panel_veterinario():
@@ -790,8 +1543,64 @@ def panel_cliente():
     
     # Convertimos a diccionario normal para Jinja
     cupos_listos = dict(cupos_agrupados)
+    # ============================================================
+    # COMPRAS DE TIENDA DEL CLIENTE
+    # ============================================================
 
-    return render_template("panel_cliente.html", cupos=cupos_listos, citas=citas, vencidas=vencidas)
+    conn = get_db_connection()
+
+    with conn.cursor() as cursor:
+
+        cursor.execute("""
+            SELECT
+                v.stripe_session_id,
+                v.fecha,
+                v.cantidad,
+                v.precio_unitario,
+                v.total,
+                i.nombre AS producto_nombre
+            FROM ventas_tienda v
+            INNER JOIN inventario i
+                ON v.producto_id = i.id
+            WHERE v.usuario_id = %s
+            ORDER BY v.fecha DESC
+        """, (usuario_id,))
+
+        compras_tienda_raw = cursor.fetchall()
+
+    conn.close()
+
+    # Agrupar productos que pertenecen a la misma compra
+    compras_tienda_dict = {}
+
+    for compra in compras_tienda_raw:
+
+        referencia = compra["stripe_session_id"]
+
+        if referencia not in compras_tienda_dict:
+            compras_tienda_dict[referencia] = {
+                "fecha": compra["fecha"],
+                "productos": [],
+                "total": 0
+            }
+
+        compras_tienda_dict[referencia]["productos"].append(compra)
+
+        compras_tienda_dict[referencia]["total"] += float(
+            compra["total"]
+        )
+
+    compras_tienda = list(compras_tienda_dict.values())
+
+    compras_tienda = list(compras_tienda_dict.values())
+
+    return render_template(
+        "panel_cliente.html",
+        cupos=cupos_listos,
+        citas=citas,
+        vencidas=vencidas,
+        compras_tienda=compras_tienda
+    )
 
 
 # -------------------
